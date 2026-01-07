@@ -2,8 +2,11 @@ package Hsdemy.vn.HsdemyWeb.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import Hsdemy.vn.HsdemyWeb.domain.User;
 import Hsdemy.vn.HsdemyWeb.service.UserService;
 
 
@@ -17,14 +20,25 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping("/") // user: vao website
-    public String getHomePage(Model model) {// controller
-        String test = this.userService.handleHello();// model: goi toi model xu ly du lieu
-        model.addAttribute("roy", test); // sau khi model co data gui lai cho controller
-        model.addAttribute("royhung", "test h2 from controller with model"); // controller xu li
-                                                                             // data roi gui lai cho
-                                                                             // view
-        return "hello"; // view: render ra du lieu roi gui lai cho user
+    @RequestMapping("/")
+    public String getHomePage(Model model) {
+        String test = this.userService.handleHello();
+        model.addAttribute("roy", test);
+        model.addAttribute("royhung", "test h2 from controller with model");
+        return "hello";
     };
+
+    @RequestMapping("/admin/user")
+    public String getUserPage(Model model) {
+        model.addAttribute("newUser", new User());
+        return "admin/user/create";
+    };
+
+    @RequestMapping(value = "/admin/user/create1", method = RequestMethod.POST)
+    public String createUserPage(Model model, @ModelAttribute("newUser") User hung) {
+        System.out.println("run here " + hung);
+        return "hello";
+    };
+
 }
 
