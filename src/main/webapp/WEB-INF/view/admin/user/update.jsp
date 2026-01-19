@@ -7,7 +7,7 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Create-laptopWeb</title>
+                <title>Update-laptopWeb</title>
 
                 <!-- Bootstrap 5 CSS -->
                 <!-- Latest compiled and minified CSS -->
@@ -28,20 +28,22 @@
                 <div class="container mt-5">
                     <div class="row">
                         <div class="col-md-6 col-12 mx-auto">
-                            <h3>Create a user</h3>
+                            <h3>Update a user</h3>
                             <hr />
 
-                            <form:form method="POST" action="/admin/user/create" modelAttribute="newUser">
+                            <form:form method="POST" action="/admin/user/update" modelAttribute="newUser">
 
+                                <!-- ID -->
+                                <div class="mb-3" style="display: none;">
+                                    <label class="form-label">ID:</label>
+                                    <form:input path="id" cssClass="form-control" />
+
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">Email:</label>
-                                    <form:input path="email" cssClass="form-control" />
+                                    <form:input path="email" cssClass="form-control" disabled="true" />
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Password:</label>
-                                    <form:password path="password" cssClass="form-control" />
-                                </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Phone number:</label>
@@ -58,7 +60,7 @@
                                     <form:input path="address" cssClass="form-control" />
                                 </div>
 
-                                <button class="btn btn-primary">Create</button>
+                                <button class="btn btn-warning">Update</button>
                             </form:form>
 
                         </div>
