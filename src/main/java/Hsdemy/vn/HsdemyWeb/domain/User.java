@@ -25,7 +25,6 @@ public class User {
     private String avatar;
 
     @ManyToOne
-
     @JoinColumn(name = "role_id")
     private Role role;
 
