@@ -1,9 +1,14 @@
 package Hsdemy.vn.HsdemyWeb.domain;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -15,7 +20,20 @@ public class User {
     private String fullName;
     private String address;
     private String phone;
+    private String avatar;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
+    // ===== Quan hệ =====
+    @OneToMany(mappedBy = "createdBy")
+    private List<Course> courses; // Admin
+
+    @OneToMany(mappedBy = "user")
+    private List<Purchase> purchases; // Student
+
+    // getters & setters
     public long getId() {
         return id;
     }
@@ -62,6 +80,38 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public List<Purchase> getPurchases() {
+        return purchases;
+    }
+
+    public void setPurchases(List<Purchase> purchases) {
+        this.purchases = purchases;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override
