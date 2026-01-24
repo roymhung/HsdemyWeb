@@ -1,4 +1,4 @@
-package Hsdemy.vn.HsdemyWeb.controller;
+package Hsdemy.vn.HsdemyWeb.controller.admin;
 
 
 import java.util.List;
