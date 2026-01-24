@@ -1,6 +1,6 @@
 package Hsdemy.vn.HsdemyWeb.domain;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,31 +20,31 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String description;
-    // ===== IMAGE KHÓA HỌC =====
-    private String image; // course.png / url
-    private BigDecimal price;
-    private Boolean isFree;
-    private LocalDateTime create;
 
-    // ===== QUAN HỆ =====
+
+    private String title;
+    private double price;
+    private String thumbnail;
+    private String shortDesc;
+    private String detailDesc;
+
+    private String level;
+    private LocalDateTime createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "instructor_id")
+    private User instructor;
+
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by")
-    private User createdBy; // Admin
 
     @OneToMany(mappedBy = "course")
     private List<Chapter> chapters;
 
-    @OneToMany(mappedBy = "course")
-    private List<Purchase> purchases;
-
-    // getters & setters
-
+    // getter & setter
     public Long getId() {
         return id;
     }
@@ -61,44 +61,61 @@ public class Course {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public Boolean getIsFree() {
-        return isFree;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setIsFree(Boolean isFree) {
-        this.isFree = isFree;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
-    public LocalDateTime getCreate() {
-        return create;
+    public String getShortDesc() {
+        return shortDesc;
     }
 
-    public void setCreate(LocalDateTime create) {
-        this.create = create;
+    public void setShortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
+    }
+
+    public String getDetailDesc() {
+        return detailDesc;
+    }
+
+    public void setDetailDesc(String detailDesc) {
+        this.detailDesc = detailDesc;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public User getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(User instructor) {
+        this.instructor = instructor;
     }
 
     public Category getCategory() {
@@ -109,13 +126,6 @@ public class Course {
         this.category = category;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-    }
 
     public List<Chapter> getChapters() {
         return chapters;
@@ -123,14 +133,6 @@ public class Course {
 
     public void setChapters(List<Chapter> chapters) {
         this.chapters = chapters;
-    }
-
-    public List<Purchase> getPurchases() {
-        return purchases;
-    }
-
-    public void setPurchases(List<Purchase> purchases) {
-        this.purchases = purchases;
     }
 
 

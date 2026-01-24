@@ -30,21 +30,25 @@
             </head>
 
             <body class="sb-nav-fixed">
+                <!-- Start Header -->
                 <jsp:include page="../layout/header.jsp" />
+                <!-- End Header -->
 
                 <div id="layoutSidenav">
-                    <!-- side bar -->
+
+                    <!--Start Side bar -->
                     <jsp:include page="../layout/sidebar.jsp" />
-                    <!-- side nav content -->
+                    <!--End Side bar -->
+
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage User</h1>
+                                <h1 class="mt-4">Manage Users</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">
                                             Dashboard
                                         </a></li>
-                                    <li class="breadcrumb-item active">User</li>
+                                    <li class="breadcrumb-item active">Users</li>
                                 </ol>
 
                                 <!-- Start show user -->
@@ -103,10 +107,13 @@
                                     </div>
                                 </div>
                                 <!-- End show user -->
+
+
                             </div>
                         </main>
-                        <!-- footer -->
+                        <!-- Start footer -->
                         <jsp:include page="../layout/footer.jsp" />
+                        <!-- End footer -->
                     </div>
                 </div>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"

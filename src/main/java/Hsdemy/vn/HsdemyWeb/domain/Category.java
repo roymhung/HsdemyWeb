@@ -1,6 +1,5 @@
 package Hsdemy.vn.HsdemyWeb.domain;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -17,16 +16,13 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String categoryName;
     private String description;
-    private LocalDateTime create;
-
 
     @OneToMany(mappedBy = "category")
     private List<Course> courses;
 
-    // getters & setters
-
+    // getter & setter
     public Long getId() {
         return id;
     }
@@ -35,12 +31,13 @@ public class Category {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getDescription() {
@@ -51,13 +48,6 @@ public class Category {
         this.description = description;
     }
 
-    public LocalDateTime getCreate() {
-        return create;
-    }
-
-    public void setCreate(LocalDateTime create) {
-        this.create = create;
-    }
 
     public List<Course> getCourses() {
         return courses;

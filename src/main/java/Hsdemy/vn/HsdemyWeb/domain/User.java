@@ -1,5 +1,7 @@
 package Hsdemy.vn.HsdemyWeb.domain;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -23,17 +25,27 @@ public class User {
     private String avatar;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+
+    @JoinColumn(name = "role_id")
     private Role role;
 
-    // ===== Quan hệ =====
-    @OneToMany(mappedBy = "createdBy")
-    private List<Course> courses; // Admin
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "instructor")
+    private List<Course> courses;
 
     @OneToMany(mappedBy = "user")
-    private List<Purchase> purchases; // Student
+    private List<Order> orders;
 
-    // getters & setters
+    // getter & setter
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public long getId() {
         return id;
     }
@@ -90,6 +102,16 @@ public class User {
         this.role = role;
     }
 
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+
     public List<Course> getCourses() {
         return courses;
     }
@@ -98,28 +120,21 @@ public class User {
         this.courses = courses;
     }
 
-    public List<Purchase> getPurchases() {
-        return purchases;
+
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setPurchases(List<Purchase> purchases) {
-        this.purchases = purchases;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 
     @Override
     public String toString() {
         return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName="
                 + fullName + ", address=" + address + ", phone=" + phone + "]";
     }
-
 
 
 }

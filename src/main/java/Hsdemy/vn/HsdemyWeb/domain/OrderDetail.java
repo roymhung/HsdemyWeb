@@ -1,32 +1,31 @@
 package Hsdemy.vn.HsdemyWeb.domain;
 
-import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+
 @Entity
-@Table(name = "chapters")
-public class Chapter {
+@Table(name = "order_details")
+public class OrderDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private int position;
+
+    private double price;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
-
-    @OneToMany(mappedBy = "chapter")
-    private List<Lesson> lessons;
 
     // getter & setter
     public Long getId() {
@@ -37,22 +36,20 @@ public class Chapter {
         this.id = id;
     }
 
-
-    public String getTitle() {
-        return title;
+    public double getPrice() {
+        return price;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-
-    public int getPosition() {
-        return position;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public Course getCourse() {
@@ -61,14 +58,6 @@ public class Chapter {
 
     public void setCourse(Course course) {
         this.course = course;
-    }
-
-    public List<Lesson> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(List<Lesson> lessons) {
-        this.lessons = lessons;
     }
 
 

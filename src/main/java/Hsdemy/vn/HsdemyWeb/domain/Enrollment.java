@@ -1,6 +1,6 @@
 package Hsdemy.vn.HsdemyWeb.domain;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,25 +8,26 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "chapters")
-public class Chapter {
+@Table(name = "enrollments")
+public class Enrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private int position;
+
+    private int progress;
+    private LocalDateTime enrolledAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
-
-    @OneToMany(mappedBy = "chapter")
-    private List<Lesson> lessons;
 
     // getter & setter
     public Long getId() {
@@ -37,22 +38,28 @@ public class Chapter {
         this.id = id;
     }
 
-
-    public String getTitle() {
-        return title;
+    public int getProgress() {
+        return progress;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 
-
-    public int getPosition() {
-        return position;
+    public LocalDateTime getEnrolledAt() {
+        return enrolledAt;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setEnrolledAt(LocalDateTime enrolledAt) {
+        this.enrolledAt = enrolledAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Course getCourse() {
@@ -62,15 +69,6 @@ public class Chapter {
     public void setCourse(Course course) {
         this.course = course;
     }
-
-    public List<Lesson> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(List<Lesson> lessons) {
-        this.lessons = lessons;
-    }
-
 
 
 }

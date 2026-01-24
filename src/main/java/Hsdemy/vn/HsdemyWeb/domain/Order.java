@@ -1,7 +1,7 @@
 package Hsdemy.vn.HsdemyWeb.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,29 +9,29 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "purchases")
-public class Purchase {
+@Table(name = "orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private BigDecimal price;
+
+    private double totalPrice;
     private String status;
-    private LocalDateTime create;
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> orderDetails;
 
-    // getters & setters
-
+    // getter & setter
     public Long getId() {
         return id;
     }
@@ -40,12 +40,12 @@ public class Purchase {
         this.id = id;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public String getStatus() {
@@ -56,12 +56,12 @@ public class Purchase {
         this.status = status;
     }
 
-    public LocalDateTime getCreated() {
-        return create;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated(LocalDateTime create) {
-        this.create = create;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public User getUser() {
@@ -72,12 +72,12 @@ public class Purchase {
         this.user = user;
     }
 
-    public Course getCourse() {
-        return course;
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 
 
