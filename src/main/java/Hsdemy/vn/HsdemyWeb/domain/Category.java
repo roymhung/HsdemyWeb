@@ -16,30 +16,31 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
-    private String categoryName;
+    private Long id;
+    private String name;
     private String description;
-    private LocalDateTime createdAt;
+    private LocalDateTime create;
 
 
     @OneToMany(mappedBy = "category")
     private List<Course> courses;
 
     // getters & setters
-    public Long getCategoryId() {
-        return categoryId;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -50,12 +51,12 @@ public class Category {
         this.description = description;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreate() {
+        return create;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreate(LocalDateTime create) {
+        this.create = create;
     }
 
     public List<Course> getCourses() {
@@ -65,7 +66,6 @@ public class Category {
     public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
-
 
 
 }

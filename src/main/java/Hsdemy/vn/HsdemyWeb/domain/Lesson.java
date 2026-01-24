@@ -17,9 +17,9 @@ public class Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long lessonId;
+    private Long id;
     private String title;
-    private String videoUrl;
+    private String video;
     private Integer duration;
 
     @ManyToOne
@@ -30,20 +30,13 @@ public class Lesson {
     private List<Attachment> attachments;
 
     // getters & setters
-    public Long getLessonId() {
-        return lessonId;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setLessonId(Long lessonId) {
-        this.lessonId = lessonId;
-    }
-
-    public Chapter getChapter() {
-        return chapter;
-    }
-
-    public void setChapter(Chapter chapter) {
-        this.chapter = chapter;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -54,12 +47,12 @@ public class Lesson {
         this.title = title;
     }
 
-    public String getVideoUrl() {
-        return videoUrl;
+    public String getVideo() {
+        return video;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public void setVideo(String video) {
+        this.video = video;
     }
 
     public Integer getDuration() {
@@ -70,6 +63,14 @@ public class Lesson {
         this.duration = duration;
     }
 
+    public Chapter getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(Chapter chapter) {
+        this.chapter = chapter;
+    }
+
     public List<Attachment> getAttachments() {
         return attachments;
     }
@@ -77,6 +78,7 @@ public class Lesson {
     public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
     }
+
 
 
 }

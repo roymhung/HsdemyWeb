@@ -15,21 +15,29 @@ public class Attachment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long attachmentId;
-    private String fileUrl;
-    private String fileType;
+    private Long id;
+    private String file;
 
     @ManyToOne
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 
     // getters & setters
-    public Long getAttachmentId() {
-        return attachmentId;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setAttachmentId(Long attachmentId) {
-        this.attachmentId = attachmentId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 
     public Lesson getLesson() {
@@ -40,20 +48,5 @@ public class Attachment {
         this.lesson = lesson;
     }
 
-    public String getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
-    }
-
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
 
 }

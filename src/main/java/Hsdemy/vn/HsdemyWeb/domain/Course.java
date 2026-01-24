@@ -19,14 +19,14 @@ public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long courseId;
+    private Long id;
     private String title;
     private String description;
     // ===== IMAGE KHÓA HỌC =====
     private String image; // course.png / url
     private BigDecimal price;
     private Boolean isFree;
-    private LocalDateTime createdAt;
+    private LocalDateTime create;
 
     // ===== QUAN HỆ =====
     @ManyToOne
@@ -44,28 +44,13 @@ public class Course {
     private List<Purchase> purchases;
 
     // getters & setters
-    public Long getCourseId() {
-        return courseId;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -84,6 +69,14 @@ public class Course {
         this.description = description;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -100,20 +93,28 @@ public class Course {
         this.isFree = isFree;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreate() {
+        return create;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreate(LocalDateTime create) {
+        this.create = create;
     }
 
-    public String getImage() {
-        return image;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     public List<Chapter> getChapters() {
@@ -131,6 +132,7 @@ public class Course {
     public void setPurchases(List<Purchase> purchases) {
         this.purchases = purchases;
     }
+
 
 
 }

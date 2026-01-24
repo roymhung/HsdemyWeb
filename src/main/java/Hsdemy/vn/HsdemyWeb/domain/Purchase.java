@@ -17,10 +17,10 @@ public class Purchase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long purchaseId;
-    private BigDecimal totalPrice;
+    private Long id;
+    private BigDecimal price;
     private String status;
-    private LocalDateTime createdAt;
+    private LocalDateTime create;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -32,12 +32,36 @@ public class Purchase {
 
     // getters & setters
 
-    public Long getPurchaseId() {
-        return purchaseId;
+    public Long getId() {
+        return id;
     }
 
-    public void setPurchaseId(Long purchaseId) {
-        this.purchaseId = purchaseId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreated() {
+        return create;
+    }
+
+    public void setCreated(LocalDateTime create) {
+        this.create = create;
     }
 
     public User getUser() {
@@ -56,28 +80,6 @@ public class Purchase {
         this.course = course;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 
 }

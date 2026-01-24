@@ -17,7 +17,7 @@ public class Chapter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chapterId;
+    private Long id;
     private String title;
     private Integer orderIndex;
 
@@ -29,12 +29,13 @@ public class Chapter {
     private List<Lesson> lessons;
 
     // getters & setters
-    public Long getChapterId() {
-        return chapterId;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setChapterId(Long chapterId) {
-        this.chapterId = chapterId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Course getCourse() {
@@ -68,6 +69,7 @@ public class Chapter {
     public void setLessons(List<Lesson> lessons) {
         this.lessons = lessons;
     }
+
 
 
 }
