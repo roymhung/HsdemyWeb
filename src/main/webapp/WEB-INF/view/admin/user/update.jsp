@@ -22,30 +22,30 @@
                 </script>
 
                 <!-- jQuery (tùy chọn, nếu bạn cần dùng) -->
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
                 <script>
                     $(document).ready(() => {
                         const orgAvatar = "${newUser.avatar}";
+                        const avatarFile = $("#avatarFile");
+                        const avatarPreview = $("#avatarPreview");
 
                         // Hiển thị avatar cũ khi load form
                         if (orgAvatar) {
                             const urlAvatar = "/images/avatar/" + orgAvatar;
-                            $("#avatarPreview").attr("src", urlAvatar);
-                            $("#avatarPreview").css({ display: "block" });
+                            avatarPreview.attr("src", urlAvatar).show();
                         }
 
                         // Preview avatar mới khi chọn file
-                        avatarFile.change(function (e) {
-                            const imgURL = URL.createObjectURL(e.target.files[0]);
-                            $("#avatarPreview").attr("src", imgURL);
-                            $("#avatarPreview").css({ display: "block" });
+                        avatarFile.on("change", function (e) {
+                            if (e.target.files && e.target.files[0]) {
+                                const imgURL = URL.createObjectURL(e.target.files[0]);
+                                avatarPreview.attr("src", imgURL).show();
+                            }
                         });
                     });
                 </script>
+
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
             </head>
 

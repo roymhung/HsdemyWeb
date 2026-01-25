@@ -3,8 +3,12 @@ package Hsdemy.vn.HsdemyWeb.controller.admin;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,11 +29,13 @@ public class UserController {
     // DI : dependency injection
     private final UserService userService;
     private final UploadService uploadService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UploadService uploadService) {
+    public UserController(UserService userService, UploadService uploadService,
+            PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.uploadService = uploadService;
-
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping("/")
@@ -63,10 +69,24 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/create")
-    public String createUserPage(Model model, @ModelAttribute("newUser") User royhung,
-            @RequestParam("hungFile") MultipartFile file) {
+    public String createUserPage(Model model, @ModelAttribute("newUser") @Validated User royhung,
+            BindingResult newUserBindingResult, @RequestParam("hungFile") MultipartFile file) {
+
+        // validate
+        List<FieldError> errors = newUserBindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            System.out.println(error.getField() + " - " + error.getDefaultMessage());
+        }
+
+        if (newUserBindingResult.hasErrors()) {
+            return "admin/user/create";
+        }
+        //
+
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+        String hashPassword = this.passwordEncoder.encode(royhung.getPassword());
         royhung.setAvatar(avatar);
+        royhung.setPassword(hashPassword);
         royhung.setRole(this.userService.getRoleByName(royhung.getRole().getName()));
         this.userService.handleSaveUser(royhung);
         return "redirect:/admin/user";
@@ -80,13 +100,31 @@ public class UserController {
     }
 
     @PostMapping("admin/user/update")
-    public String postUpdateUser(Model model, @ModelAttribute("newUser") User royhung) {
+    public String postUpdateUser(Model model, @ModelAttribute("newUser") User royhung,
+            @RequestParam("hungFile") MultipartFile file) {
         User currentUser = this.userService.getUserById(royhung.getId());
 
         if (currentUser != null) {
+
+            // update info
             currentUser.setAddress(royhung.getAddress());
             currentUser.setFullName(royhung.getFullName());
             currentUser.setPhone(royhung.getPhone());
+
+            // CHỈ xử lý avatar khi user upload file mới
+            if (file != null && !file.isEmpty()) {
+
+                // 1. xoá avatar cũ
+                this.uploadService.handleDeleteUploadFile(currentUser.getAvatar(), "avatar");
+
+                // 2. lưu avatar mới
+                String newAvatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+                currentUser.setAvatar(newAvatar);
+            }
+
+            // role
+            currentUser.setRole(this.userService.getRoleByName(currentUser.getRole().getName()));
+
             this.userService.handleSaveUser(currentUser);
         }
         return "redirect:/admin/user";
