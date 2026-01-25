@@ -16,7 +16,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name; // ADMIN, INSTRUCTOR, STUDENT
+    private String name; // ADMIN, USER
     private String description;
 
     @OneToMany(mappedBy = "role")
@@ -58,10 +58,7 @@ public class Role {
 
     @Override
     public String toString() {
-        return "Role [id=" + id + ", name=" + name + ", description=" + description + ", getId()="
-                + getId() + ", getName()=" + getName() + ", getDescription()=" + getDescription()
-                + ", getUsers()=" + getUsers() + ", getClass()=" + getClass() + ", hashCode()="
-                + hashCode() + ", toString()=" + super.toString() + "]";
+        return "Role [id=" + id + ", name=" + name + ", description=" + description + "]";
     }
 
 

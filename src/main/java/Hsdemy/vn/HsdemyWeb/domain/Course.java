@@ -8,8 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -20,9 +18,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
-    private String title;
+    private String name;
     private double price;
     private String thumbnail;
     private String shortDesc;
@@ -31,18 +27,11 @@ public class Course {
     private String level;
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "instructor_id")
-    private User instructor;
-
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-
     @OneToMany(mappedBy = "course")
     private List<Chapter> chapters;
+
+    @OneToMany(mappedBy = "course")
+    private List<OrderDetail> orderDetails;
 
     // getter & setter
     public Long getId() {
@@ -53,14 +42,13 @@ public class Course {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
-
 
     public double getPrice() {
         return price;
@@ -110,29 +98,20 @@ public class Course {
         this.createdAt = createdAt;
     }
 
-    public User getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(User instructor) {
-        this.instructor = instructor;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-
     public List<Chapter> getChapters() {
         return chapters;
     }
 
     public void setChapters(List<Chapter> chapters) {
         this.chapters = chapters;
+    }
+
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 
 

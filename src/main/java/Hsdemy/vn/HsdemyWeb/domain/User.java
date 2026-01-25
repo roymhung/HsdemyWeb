@@ -18,20 +18,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String email;
-    private String password;
     private String fullName;
-    private String address;
+    private String password;
     private String phone;
     private String avatar;
+    private String address;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
     private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "instructor")
-    private List<Course> courses;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
@@ -111,15 +108,6 @@ public class User {
     }
 
 
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
-
-
     public List<Order> getOrders() {
         return orders;
     }
@@ -127,6 +115,7 @@ public class User {
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
 
     @Override
     public String toString() {
