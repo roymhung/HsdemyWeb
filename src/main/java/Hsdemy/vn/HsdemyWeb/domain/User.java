@@ -128,12 +128,13 @@ public class User {
         this.orders = orders;
     }
 
-
     @Override
     public String toString() {
         return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName="
-                + fullName + ", address=" + address + ", phone=" + phone + "]";
+                + fullName + ", address=" + address + ", phone=" + phone + ", avatar=" + avatar
+                + ", createdAt=" + createdAt + "]";
     }
+
 
 
 }

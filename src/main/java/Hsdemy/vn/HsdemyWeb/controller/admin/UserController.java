@@ -66,8 +66,9 @@ public class UserController {
     public String createUserPage(Model model, @ModelAttribute("newUser") User royhung,
             @RequestParam("hungFile") MultipartFile file) {
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
-
-        // this.userService.handleSaveUser(royhung);
+        royhung.setAvatar(avatar);
+        royhung.setRole(this.userService.getRoleByName(royhung.getRole().getName()));
+        this.userService.handleSaveUser(royhung);
         return "redirect:/admin/user";
     }
 
