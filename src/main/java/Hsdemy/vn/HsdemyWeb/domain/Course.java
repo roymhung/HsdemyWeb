@@ -4,12 +4,16 @@ package Hsdemy.vn.HsdemyWeb.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "courses")
@@ -18,10 +22,21 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Size(min = 3, max = 255, message = "Tên sản phẩm không được để trống phải từ 3 đến 255 ký tự")
     private String name;
+
+    @DecimalMin(value = "0", inclusive = false, message = "Giá phải lớn hơn 0")
     private double price;
     private String thumbnail;
+
+    @Size(min = 5, max = 255,
+            message = "Mô tả ngắn không được để trống phải có ít nhất từ 5 đến 255 ký tự")
     private String shortDesc;
+
+    @NotNull
+    @Size(min = 10, message = "Mô tả chi tiết không được để trống phải có ít nhất 10 ký tự")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String detailDesc;
 
     private String level;

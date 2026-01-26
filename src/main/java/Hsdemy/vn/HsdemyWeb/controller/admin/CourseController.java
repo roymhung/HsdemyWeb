@@ -55,10 +55,10 @@ public class CourseController {
 
     @PostMapping("/admin/course/create")
     public String postCreateCourse(@ModelAttribute("newCourse") @Validated Course course,
-            BindingResult newProductBindingResult,
+            BindingResult newCourseBindingResult,
             @RequestParam("thumbnailFile") MultipartFile file) {
 
-        if (newProductBindingResult.hasErrors()) {
+        if (newCourseBindingResult.hasErrors()) {
             return "admin/course/create";
         }
 
@@ -142,7 +142,7 @@ public class CourseController {
         if (currentCourse != null) {
 
             // xoá ảnh
-            this.uploadService.handleDeleteUploadFile(currentCourse.getThumbnail(), "Course");
+            this.uploadService.handleDeleteUploadFile(currentCourse.getThumbnail(), "course");
 
             // xoá Course
             this.courseService.deleteCourse(course.getId());
