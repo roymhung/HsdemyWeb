@@ -55,7 +55,7 @@
                                                 </div>
                                                 <hr />
 
-                                                <div class="card" style="width: 32rem;">
+                                                <div class="card" style="width: 72rem;">
                                                     <div class="card-header">
                                                         Course Information
                                                     </div>
