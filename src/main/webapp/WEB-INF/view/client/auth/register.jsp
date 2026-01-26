@@ -93,6 +93,21 @@
                                     <form:form method="post" action="/register" modelAttribute="registerUser">
                                         <div class="row g-3">
 
+                                            <!-- ERROR VARS -->
+                                            <c:set var="errorPassword">
+                                                <form:errors path="confirmPassword"
+                                                    cssClass="invalid-feedback d-block" />
+                                            </c:set>
+
+                                            <c:set var="errorEmail">
+                                                <form:errors path="email" cssClass="invalid-feedback d-block" />
+                                            </c:set>
+
+                                            <c:set var="errorPassword">
+                                                <form:errors path="confirmPassword"
+                                                    cssClass="invalid-feedback d-block" />
+                                            </c:set>
+
                                             <!-- HỌ & TÊN -->
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold">Họ (Last name)</label>
@@ -109,15 +124,20 @@
                                             <!-- EMAIL -->
                                             <div class="col-12">
                                                 <label class="form-label fw-semibold">Email</label>
-                                                <form:input class="form-control" type="email" path="email"
-                                                    placeholder="name@example.com" />
+                                                <form:input
+                                                    class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
+                                                    type="email" path="email" placeholder="name@example.com" />
+                                                ${errorEmail}
                                             </div>
 
                                             <!-- PASSWORD -->
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold">Mật khẩu</label>
-                                                <form:input class="form-control" type="password" path="password"
-                                                    placeholder="Tối thiểu 6 ký tự" />
+                                                <form:input
+                                                    class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
+                                                    type="password" path="password" placeholder="Tối thiểu 6 ký tự" />
+                                                <form:errors path="confirmPassword" />
+                                                ${errorPassword}
                                             </div>
 
                                             <div class="col-md-6">

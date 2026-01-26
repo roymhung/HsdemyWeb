@@ -81,17 +81,11 @@ public class CourseController {
     @PostMapping("/admin/course/update")
     public String postUpdateCourse(Model model,
             @ModelAttribute("newCourse") @Validated Course course,
-            BindingResult newUserBindingResult, @RequestParam("thumbnailFile") MultipartFile file) {
-
-
-        // validate
-        List<FieldError> errors = newUserBindingResult.getFieldErrors();
-        for (FieldError error : errors) {
-            System.out.println(error.getField() + " - " + error.getDefaultMessage());
-        }
+            BindingResult newCourseBindingResult,
+            @RequestParam("thumbnailFile") MultipartFile file) {
 
         // validate
-        if (newUserBindingResult.hasErrors()) {
+        if (newCourseBindingResult.hasErrors()) {
             return "admin/course/update";
         }
         //

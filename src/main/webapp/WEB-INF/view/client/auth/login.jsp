@@ -26,8 +26,9 @@
                 </head>
 
                 <body class="bg-light" data-page="signup">
+                    hello
                     <!-- Navigation -->
-                    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+                    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
                         <div class="container">
                             <a class="navbar-brand fw-bold text-primary" href="index.html">
                                 <i class="bi bi-code-slash me-2"></i>Hstudemyweb
@@ -72,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                    </nav>
+                    </nav> -->
 
                     <!-- Page main -->
                     <!-- <div class="row align-items-center justify-content-center min-vh-100"> -->
