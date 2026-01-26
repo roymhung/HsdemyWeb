@@ -1,5 +1,8 @@
 package Hsdemy.vn.HsdemyWeb.domain.dto;
 
+import Hsdemy.vn.HsdemyWeb.service.validator.RegisterChecked;
+
+@RegisterChecked
 public class RegisterDTO {
 
     private String firstName;
