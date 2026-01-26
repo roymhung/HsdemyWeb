@@ -1,0 +1,54 @@
+/* ===================================
+   Auth Pages (Signin, Signup, Cart) - Purple Theme
+   =================================== */
+
+:root {
+  --primary-color: #6610f2;
+}
+
+body[data-page="signin"],
+body[data-page="signup"],
+body[data-page="cart"] {
+  --primary-color: #6610f2;
+}
+
+body[data-page="signin"] .btn-primary,
+body[data-page="signup"] .btn-primary,
+body[data-page="cart"] .btn-primary {
+  background-color: #6610f2;
+  border-color: #6610f2;
+}
+
+body[data-page="signin"] .btn-primary:hover,
+body[data-page="signup"] .btn-primary:hover,
+body[data-page="cart"] .btn-primary:hover {
+  background-color: #5500d1;
+  border-color: #5500d1;
+}
+
+body[data-page="signin"] .btn-outline-primary,
+body[data-page="signup"] .btn-outline-primary,
+body[data-page="cart"] .btn-outline-primary {
+  color: #6610f2;
+  border-color: #6610f2;
+}
+
+body[data-page="signin"] .btn-outline-primary:hover,
+body[data-page="signup"] .btn-outline-primary:hover,
+body[data-page="cart"] .btn-outline-primary:hover {
+  background-color: #6610f2;
+  border-color: #6610f2;
+  color: #fff;
+}
+
+body[data-page="signin"] .text-primary,
+body[data-page="signup"] .text-primary,
+body[data-page="cart"] .text-primary {
+  color: #6610f2 !important;
+}
+
+body[data-page="signin"] .bg-primary,
+body[data-page="signup"] .bg-primary,
+body[data-page="cart"] .bg-primary {
+  background-color: #6610f2 !important;
+}
