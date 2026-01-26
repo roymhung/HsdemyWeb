@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import Hsdemy.vn.HsdemyWeb.domain.Role;
 import Hsdemy.vn.HsdemyWeb.domain.User;
+import Hsdemy.vn.HsdemyWeb.domain.dto.RegisterDTO;
 import Hsdemy.vn.HsdemyWeb.repository.RoleRepository;
 import Hsdemy.vn.HsdemyWeb.repository.UserRepository;
 
@@ -46,4 +47,11 @@ public class UserService {
         return this.roleRepository.findByName(name);
     }
 
+    public User registerDTOtoUser(RegisterDTO registerDTO) {
+        User user = new User();
+        user.setFullName(registerDTO.getFirstName() + " " + registerDTO.getLastName());
+        user.setEmail(registerDTO.getEmail());
+        user.setPassword(registerDTO.getPassword());
+        return user;
+    }
 }

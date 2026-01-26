@@ -8,7 +8,7 @@
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Đăng ký | Hstudemyweb</title>
+                    <title>Đăng nhập | Hstudemyweb</title>
 
                     <!-- Bootstrap CSS -->
                     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -74,7 +74,6 @@
                         </div>
                     </nav>
 
-
                     <!-- Page main -->
                     <div class="row align-items-center justify-content-center min-vh-100">
                         <!-- CỘT BÊN TRÁI: HÌNH ẢNH -->
@@ -83,75 +82,42 @@
                                 style="max-height: 500px;">
                         </div>
 
-                        <!-- CỘT BÊN PHẢI: FORM ĐĂNG KÝ -->
+                        <!-- CỘT BÊN PHẢI: FORM ĐĂNG NHẬP -->
                         <div class="col-lg-4 col-md-6">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-body p-4 p-md-5">
-                                    <h3 class="fw-bold mb-1">Tạo tài khoản Hstudemyweb</h3>
-                                    <p class="text-muted mb-4">Tham gia để học tập và theo dõi tiến độ của bạn.</p>
+                                    <h3 class="fw-bold mb-1">Chào mừng bạn quay lại</h3>
+                                    <p class="text-muted mb-4">Đăng nhập để tiếp tục hành trình học tập.</p>
 
                                     <form:form method="post" action="/register" modelAttribute="registerUser">
-                                        <div class="row g-3">
-
-                                            <!-- HỌ & TÊN -->
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Họ (Last name)</label>
-                                                <form:input class="form-control" type="text" path="lastName"
-                                                    placeholder="Nguyễn" />
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Tên (First name)</label>
-                                                <form:input class="form-control" type="text" path="firstName"
-                                                    placeholder="Văn A" />
-                                            </div>
-
-                                            <!-- EMAIL -->
-                                            <div class="col-12">
-                                                <label class="form-label fw-semibold">Email</label>
-                                                <form:input class="form-control" type="email" path="email"
-                                                    placeholder="name@example.com" />
-                                            </div>
-
-                                            <!-- PASSWORD -->
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Mật khẩu</label>
-                                                <form:input class="form-control" type="password" path="password"
-                                                    placeholder="Tối thiểu 6 ký tự" />
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Xác nhận mật khẩu</label>
-                                                <form:input class="form-control" type="password" path="confirmPassword"
-                                                    placeholder="Nhập lại mật khẩu" />
-                                            </div>
-
-                                            <!-- TERMS -->
-                                            <div class="col-12">
-                                                <div class="form-check">
-                                                    <form:input class="form-check-input" type="checkbox" id="terms" />
-                                                    <label class="form-check-label" for="terms">
-                                                        Tôi đồng ý với điều khoản và chính sách
-                                                    </label>
-                                                </div>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Email</label>
+                                            <form:input class="form-control" type="email" path="email"
+                                                placeholder="name@example.com" />
                                         </div>
-
-                                        <button class="btn btn-primary w-100 mt-4" type="submit">
-                                            Tạo tài khoản
-                                        </button>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Mật khẩu</label>
+                                            <form:input class="form-control" type="password" path="password"
+                                                placeholder="••••••••" />
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                            <div class="form-check">
+                                                <form:input class="form-check-input" type="checkbox" id="remember">
+                                                    <label class="form-check-label" for="remember">Ghi nhớ</label>
+                                            </div>
+                                            <a href="#" class="small text-decoration-none">Quên mật khẩu?</a>
+                                        </div>
+                                        <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
                                     </form:form>
 
                                     <div class="text-center mt-4">
-                                        <span class="text-muted">Đã có tài khoản?</span>
-                                        <a href="signin.html" class="text-primary fw-semibold text-decoration-none">
-                                            Đăng nhập
-                                        </a>
+                                        <span class="text-muted">Chưa có tài khoản?</span>
+                                        <a href="signup.html" class="text-primary fw-semibold text-decoration-none">Đăng
+                                            ký</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
 
                     </div>
 
