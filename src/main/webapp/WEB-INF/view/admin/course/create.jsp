@@ -90,6 +90,10 @@
                                                     <form:errors path="name" cssClass="invalid-feedback d-block" />
                                                 </c:set>
 
+                                                <c:set var="errorAuthor">
+                                                    <form:errors path="author" cssClass="invalid-feedback d-block" />
+                                                </c:set>
+
                                                 <c:set var="errorPrice">
                                                     <form:errors path="price" cssClass="invalid-feedback d-block" />
                                                 </c:set>
@@ -104,11 +108,19 @@
                                                 </c:set>
 
                                                 <!-- Name course -->
-                                                <div class="mb-3 col-12">
+                                                <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label">Course Name:</label>
                                                     <form:input path="name"
                                                         cssClass="form-control ${not empty errorName ? 'is-invalid' : ''}" />
                                                     ${errorName}
+                                                </div>
+
+                                                <!-- Name course -->
+                                                <div class="mb-3 col-12 col-md-6">
+                                                    <label class="form-label">Course Author:</label>
+                                                    <form:input path="author"
+                                                        cssClass="form-control ${not empty errorAuthor ? 'is-invalid' : ''}" />
+                                                    ${errorAuthor}
                                                 </div>
 
                                                 <!-- PRICE -->
@@ -143,6 +155,19 @@
                                                         <form:option value="ADVANCED">Advanced</form:option>
                                                     </form:select>
                                                 </div>
+
+                                                <!-- Title -->
+                                                <div class="mb-3 col-12 col-md-6">
+                                                    <label class="form-label">Chủ đề:</label>
+                                                    <form:select path="title" class="form-select">
+                                                        <form:option value="LANGUAGE">Ngoại ngữ</form:option>
+                                                        <form:option value="SOFT_SKILLS">Kỹ năng mềm</form:option>
+                                                        <form:option value="BUSINESS_MARKETING">Kinh doanh & Marketing
+                                                        </form:option>
+                                                        <form:option value="IT_DESIGN">Tin học & Thiết kế</form:option>
+                                                    </form:select>
+                                                </div>
+
 
                                                 <!-- SHORT DESC -->
                                                 <div class="mb-3 col-12">

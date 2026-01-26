@@ -8,7 +8,7 @@
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Java Spring MVC - Chi Tiết Khóa Học | DevAcademy</title>
+                    <title>${course.name} - Hstudemy </title>
 
                     <!-- Bootstrap CSS -->
                     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -34,13 +34,13 @@
                         <div class="container py-5">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item"><a href="index.html"
+                                    <li class="breadcrumb-item"><a href="/"
                                             class="text-white text-decoration-none">Trang
                                             chủ</a></li>
                                     <li class="breadcrumb-item"><a href="courses.html"
                                             class="text-white text-decoration-none">Khóa
                                             học</a></li>
-                                    <li class="breadcrumb-item active text-white">Java Spring MVC</li>
+                                    <li class="breadcrumb-item active text-white">${course.name}</li>
                                 </ol>
                             </nav>
                         </div>
@@ -50,28 +50,20 @@
                         <div class="container py-5">
                             <div class="row">
                                 <div class="col-lg-8">
-                                    <h1 class="display-5 fw-bold mb-3">Java Spring MVC - Xây Dựng FullStack Website với
-                                        Spring Boot</h1>
-                                    <p class="lead mb-4">Học Spring MVC Chưa Từng Dễ Tới Vậy - Master backend
-                                        architecture and security.
+                                    <h1 class="display-5 fw-bold mb-3">${course.name}</h1>
+                                    <p class="lead mb-4">${course.shortDesc}
                                     </p>
                                     <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
                                         <div class="d-flex align-items-center">
-                                            <span class="text-warning me-1">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-half"></i>
-                                            </span>
-                                            <span class="ms-2">4.6</span>
+                                            LEVEL:
+                                            <span class="ms-2">${course.level}</span>
                                             <span class="text-muted ms-1">(275 đánh giá)</span>
                                         </div>
-                                        <span><i class="bi bi-people me-1"></i>1,193 học viên</span>
+                                        <span>Ngày tạo:
+                                            ${course.createdAt.toString().substring(8,10)}/${course.createdAt.toString().substring(5,7)}/${course.createdAt.toString().substring(0,4)}</span>
                                     </div>
                                     <p class="mb-0">Được tạo bởi: <a href="#"
-                                            class="text-white text-decoration-none">Hỏi Dân IT
-                                            @hoidanit</a></p>
+                                            class="text-white text-decoration-none">${course.author}</a></p>
                                 </div>
                             </div>
                         </div>
@@ -83,51 +75,6 @@
                             <div class="row">
                                 <!-- Left Content -->
                                 <div class="col-lg-8">
-                                    <!-- What You'll Learn -->
-                                    <div class="card border-0 shadow-sm mb-4">
-                                        <div class="card-body p-4">
-                                            <h3 class="fw-bold mb-4">Bạn sẽ học được gì?</h3>
-                                            <div class="row g-3">
-                                                <div class="col-md-6">
-                                                    <div class="d-flex align-items-start">
-                                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                                                        <span>Xây dựng niềm đam mê với một ngôn ngữ lập trình
-                                                            Java</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="d-flex align-items-start">
-                                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                                                        <span>Học Java Spring không khó đến vậy</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="d-flex align-items-start">
-                                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                                                        <span>Nắm vững kiến thức của Spring và mô hình MVC</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="d-flex align-items-start">
-                                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                                                        <span>Thực hành Spring MVC để tạo một website hoàn chỉnh</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="d-flex align-items-start">
-                                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                                                        <span>Debug Ứng Dụng Java Spring Siêu Dễ</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="d-flex align-items-start">
-                                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                                                        <span>Học và hiểu rõ cơ chế Spring Security</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     <!-- Course Content -->
                                     <div class="card border-0 shadow-sm mb-4">
@@ -222,72 +169,25 @@
                                         </div>
                                     </div>
 
-                                    <!-- Requirements -->
-                                    <div class="card border-0 shadow-sm mb-4">
-                                        <div class="card-body p-4">
-                                            <h3 class="fw-bold mb-4">Yêu cầu</h3>
-                                            <ul class="list-unstyled">
-                                                <li class="mb-2"><i class="bi bi-check-circle me-2 text-primary"></i>Có
-                                                    hiểu biết về
-                                                    Java là một lợi thế</li>
-                                                <li class="mb-2"><i class="bi bi-check-circle me-2 text-primary"></i>Có
-                                                    kiến thức về cú
-                                                    pháp HTML, CSS và Javascript là lợi thế</li>
-                                            </ul>
-                                        </div>
-                                    </div>
+
 
                                     <!-- Description -->
                                     <div class="card border-0 shadow-sm mb-4">
                                         <div class="card-body p-4">
                                             <h3 class="fw-bold mb-4">Mô tả</h3>
-                                            <p>Spring Framework là công cụ rất nổi tiếng trong cộng đồng Java, và một
-                                                trong các tác dụng
-                                                của nó là xây dựng một website hoàn chỉnh và chuyên nghiệp.</p>
-                                            <p>Bằng cách áp dụng mô hình MVC (Model-View-Controller) và kiến trúc của
-                                                Spring giúp chúng
-                                                ta tiết kiệm thời gian xây dựng một website.</p>
+                                            <p>${course.detailDesc}</p>
                                         </div>
                                     </div>
 
-                                    <!-- Instructor -->
-                                    <div class="card border-0 shadow-sm">
-                                        <div class="card-body p-4">
-                                            <h3 class="fw-bold mb-4">Giảng viên</h3>
-                                            <div class="d-flex gap-4">
-                                                <img src="img/avatar.jpg" alt="Instructor" class="rounded-circle"
-                                                    style="width: 100px; height: 100px; object-fit: cover;">
-                                                <div>
-                                                    <h5 class="fw-bold mb-1"><a href="#"
-                                                            class="text-primary text-decoration-none">Hỏi
-                                                            Dân IT @hoidanit</a></h5>
-                                                    <p class="text-muted mb-3">Expert Fullstack Developer</p>
-                                                    <div class="row g-3">
-                                                        <div class="col-auto">
-                                                            <i class="bi bi-star-fill text-warning"></i>
-                                                            <span>4.8 xếp hạng giảng viên</span>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <i class="bi bi-people"></i>
-                                                            <span>9,056 học viên</span>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <i class="bi bi-play-circle"></i>
-                                                            <span>18 khóa học</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
 
                                 <!-- Right Sidebar -->
                                 <div class="col-lg-4">
                                     <div class="card border-0 shadow-lg sticky-top" style="top: 80px;">
                                         <div class="position-relative">
-                                            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=450&fit=crop"
-                                                class="card-img-top" alt="Java Spring MVC Course Preview"
+                                            <img src="/images/course/${course.thumbnail}" class="card-img-top"
+                                                alt="Java Spring MVC Course Preview"
                                                 style="height: 200px; object-fit: cover;">
                                             <div class="position-absolute top-50 start-50 translate-middle">
                                                 <button class="btn btn-light btn-lg rounded-circle"
@@ -298,7 +198,11 @@
                                         </div>
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h3 class="fw-bold mb-0 text-primary">699.000đ</h3>
+                                                <h3 class="fw-bold mb-0 text-primary"> <span>
+                                                        <fmt:formatNumber value="${course.price}" type="number"
+                                                            groupingUsed="true" maxFractionDigits="0" />
+                                                        ₫
+                                                    </span></h3>
                                             </div>
                                             <a href="course-player.html" class="btn btn-primary w-100 btn-lg mb-3">Vào
                                                 học ngay</a>

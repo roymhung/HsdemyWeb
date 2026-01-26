@@ -54,6 +54,7 @@
                                                         <tr>
                                                             <th>ID</th>
                                                             <th>Name Course</th>
+                                                            <th>Name Author</th>
                                                             <th>Price</th>
                                                             <th>Level</th>
                                                             <th>Thumbnail</th>
@@ -66,6 +67,7 @@
                                                             <tr>
                                                                 <td>${course.id}</td>
                                                                 <td>${course.name}</td>
+                                                                <td>${course.author}</td>
                                                                 <td>
                                                                     <fmt:formatNumber value="${course.price}"
                                                                         type="number" groupingUsed="true" /> vnd
@@ -76,6 +78,7 @@
                                                                         ${course.level}
                                                                     </span>
                                                                 </td>
+
                                                                 <td>
                                                                     <c:if test="${not empty course.thumbnail}">
                                                                         <img src="${pageContext.request.contextPath}/images/course/${course.thumbnail}"

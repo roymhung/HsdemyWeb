@@ -73,7 +73,58 @@
 
 
                     <!-- Start feature -->
-                    <jsp:include page="../layout/feature.jsp" />
+                    <!-- Featured Courses Section -->
+                    <section class="py-5 bg-light">
+                        <div class="container">
+                            <div class="d-flex justify-content-between align-items-center mb-5">
+                                <h2 class="fw-bold mb-0">Khóa Học Nổi Bật</h2>
+                                <a href="courses.html" class="btn btn-outline-primary">Xem tất cả <i
+                                        class="bi bi-arrow-right"></i></a>
+                            </div>
+                            <div class="row g-4">
+
+                                <c:forEach var="course" items="${courses}">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="card course-card h-100 border-0 shadow-sm">
+                                            <div class="position-relative">
+                                                <img src="/images/course/${course.thumbnail}" class="card-img-top"
+                                                    alt="course" style="height: 200px; object-fit: cover;">
+                                                <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                                                    ${course.createdAt.toString().substring(8,10)}/${course.createdAt.toString().substring(5,7)}/${course.createdAt.toString().substring(0,4)}
+                                                </span>
+
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                    <span
+                                                        class="badge bg-primary bg-opacity-10 text-primary">${course.level}</span>
+                                                    <a href="/cart/add/${course.id}" class="btn btn-sm btn-warning">
+                                                        <i class="bi bi-cart-plus"></i>
+                                                        Thêm vào giỏ
+                                                    </a>
+                                                </div>
+                                                <h5 class="card-title fw-bold">${course.name}</h5>
+                                                <p class="text-muted small mb-2">${course.author}</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <span class="fw-bold text-primary fs-5">
+                                                            <fmt:formatNumber value="${course.price}" type="number"
+                                                                groupingUsed="true" maxFractionDigits="0" />
+                                                            ₫
+                                                        </span>
+                                                    </div>
+                                                    <a href="/course/${course.id}" class="btn btn-sm btn-primary">Xem
+                                                        chi
+                                                        tiết</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+
+                            </div>
+                        </div>
+                    </section>
                     <!-- End feature -->
 
 

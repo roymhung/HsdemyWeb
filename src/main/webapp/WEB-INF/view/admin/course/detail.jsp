@@ -66,6 +66,10 @@
                                                         </li>
 
                                                         <li class="list-group-item">
+                                                            <strong>Author:</strong> ${course.author}
+                                                        </li>
+
+                                                        <li class="list-group-item">
                                                             <strong>Price:</strong>
                                                             <fmt:formatNumber value="${course.price}" pattern="#,##0" />
                                                             VNĐ
@@ -73,6 +77,10 @@
 
                                                         <li class="list-group-item">
                                                             <strong>Level:</strong> ${course.level}
+                                                        </li>
+
+                                                        <li class="list-group-item">
+                                                            <strong>Title:</strong> ${course.title}
                                                         </li>
 
                                                         <li class="list-group-item">

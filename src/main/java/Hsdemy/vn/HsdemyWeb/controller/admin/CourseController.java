@@ -80,7 +80,7 @@ public class CourseController {
 
     @PostMapping("/admin/course/update")
     public String postUpdateCourse(Model model,
-            @ModelAttribute("newProduct") @Validated Course course,
+            @ModelAttribute("newCourse") @Validated Course course,
             BindingResult newUserBindingResult, @RequestParam("thumbnailFile") MultipartFile file) {
 
 
@@ -101,10 +101,12 @@ public class CourseController {
 
             // update info
             currentCourse.setName(course.getName());
+            currentCourse.setAuthor(course.getAuthor());
             currentCourse.setPrice(course.getPrice());
             currentCourse.setShortDesc(course.getShortDesc());
             currentCourse.setDetailDesc(course.getDetailDesc());
             currentCourse.setLevel(course.getLevel());
+            currentCourse.setTitle(course.getTitle());
 
             // không update createdAt (chỉ set lúc tạo)
             // currentCourse.setCreatedAt(course.getCreatedAt());
