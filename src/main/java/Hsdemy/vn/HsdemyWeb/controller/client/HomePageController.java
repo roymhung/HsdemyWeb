@@ -52,6 +52,7 @@ public class HomePageController {
         // save
         this.userService.handleSaveUser(user);
         return "redirect:/login";
+
     }
 
     @GetMapping("/login")

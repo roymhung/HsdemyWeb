@@ -129,7 +129,7 @@
                                             <!-- TERMS -->
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <form:input class="form-check-input" type="checkbox" id="terms" />
+                                                    <input class="form-check-input" type="checkbox" id="terms" />
                                                     <label class="form-check-label" for="terms">
                                                         Tôi đồng ý với điều khoản và chính sách
                                                     </label>

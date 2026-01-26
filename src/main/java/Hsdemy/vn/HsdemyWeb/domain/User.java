@@ -4,6 +4,7 @@ package Hsdemy.vn.HsdemyWeb.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,12 +38,12 @@ public class User {
     @Size(min = 2, message = "Password phải có tối thiểu 2 ký tự")
     private String password;
 
-    @NotNull
+    @Column(nullable = true)
     @Pattern(regexp = "^(0[0-9]{9,10})$", message = "Số điện thoại không hợp lệ")
     private String phone;
     private String avatar;
 
-    @NotNull
+    @Column(nullable = true)
     @Size(min = 5, message = "Địa chỉ phải có tối thiểu 5 ký tự")
     private String address;
 

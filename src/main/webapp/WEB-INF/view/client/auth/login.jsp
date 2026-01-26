@@ -75,21 +75,21 @@
                     </nav>
 
                     <!-- Page main -->
-                    <div class="row align-items-center justify-content-center min-vh-100">
-                        <!-- CỘT BÊN TRÁI: HÌNH ẢNH -->
-                        <div class="col-lg-6 d-none d-lg-flex justify-content-center">
+                    <!-- <div class="row align-items-center justify-content-center min-vh-100"> -->
+                    <!-- CỘT BÊN TRÁI: HÌNH ẢNH -->
+                    <!-- <div class="col-lg-6 d-none d-lg-flex justify-content-center">
                             <img src="/images/signin_signup/anh.png" alt="Login Image" class="img-fluid"
                                 style="max-height: 500px;">
-                        </div>
+                        </div> -->
 
-                        <!-- CỘT BÊN PHẢI: FORM ĐĂNG NHẬP -->
-                        <div class="col-lg-4 col-md-6">
+                    <!-- CỘT BÊN PHẢI: FORM ĐĂNG NHẬP -->
+                    <!-- <div class="col-lg-4 col-md-6">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-body p-4 p-md-5">
                                     <h3 class="fw-bold mb-1">Chào mừng bạn quay lại</h3>
                                     <p class="text-muted mb-4">Đăng nhập để tiếp tục hành trình học tập.</p>
 
-                                    <form:form method="post" action="/register" modelAttribute="registerUser">
+                                    <form:form method="post" action="/login" modelAttribute="loginUser">
                                         <div class="mb-3">
                                             <label class="form-label fw-semibold">Email</label>
                                             <form:input class="form-control" type="email" path="email"
@@ -102,8 +102,9 @@
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center mb-4">
                                             <div class="form-check">
-                                                <form:input class="form-check-input" type="checkbox" id="remember">
-                                                    <label class="form-check-label" for="remember">Ghi nhớ</label>
+                                                <form:checkbox path="rememberMe" class="form-check-input"
+                                                    id="remember" />
+                                                <label class="form-check-label" for="remember">Ghi nhớ</label>
                                             </div>
                                             <a href="#" class="small text-decoration-none">Quên mật khẩu?</a>
                                         </div>
@@ -119,7 +120,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> -->
 
 
                     <!-- Footer -->
