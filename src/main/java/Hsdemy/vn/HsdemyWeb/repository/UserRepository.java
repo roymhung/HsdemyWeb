@@ -19,9 +19,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findById(long id);
 
-    List<User> findByEmail(String email);
+    // nếu email có thể trùng
+    List<User> findAllByEmail(String email);
 
     List<User> findByEmailAndAddress(String email, String address);
 
     boolean existsByEmail(String email);
+
+    // nếu email là UNIQUE
+    User findByEmail(String email);
+
 }

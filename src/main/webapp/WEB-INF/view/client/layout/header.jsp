@@ -38,8 +38,8 @@
                                         style="font-size: 10px;">2</span>
                                 </a>
 
-                                <a href="#" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
-                                <a href="#" class="btn btn-primary btn-sm">Đăng ký</a>
+                                <a href="/login" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+                                <a href="/register" class="btn btn-primary btn-sm">Đăng ký</a>
                             </div>
                         </div>
                     </div>

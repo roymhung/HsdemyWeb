@@ -2,6 +2,7 @@ package Hsdemy.vn.HsdemyWeb.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import Hsdemy.vn.HsdemyWeb.domain.Role;
@@ -15,10 +16,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> getAllUsers() {
@@ -26,7 +30,7 @@ public class UserService {
     }
 
     public List<User> getAllUsersByEmail(String email) {
-        return this.userRepository.findByEmail(email);
+        return this.userRepository.findAllByEmail(email);
     }
 
     public User handleSaveUser(User user) {
@@ -51,12 +55,17 @@ public class UserService {
         User user = new User();
         user.setFullName(registerDTO.getFirstName() + " " + registerDTO.getLastName());
         user.setEmail(registerDTO.getEmail());
-        user.setPassword(registerDTO.getPassword());
+        // user.setPassword(registerDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         return user;
     }
 
     public boolean checkEmailExist(String email) {
         return this.userRepository.existsByEmail(email);
+    }
+
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
     }
 
 }

@@ -29,7 +29,7 @@
                     <!-- Navigation -->
                     <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
                         <div class="container">
-                            <a class="navbar-brand fw-bold text-primary" href="index.html">
+                            <a class="navbar-brand fw-bold text-primary" href="/">
                                 <i class="bi bi-code-slash me-2"></i>Hstudemyweb
                             </a>
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -49,8 +49,8 @@
                                             style="font-size: 10px;">0</span>
                                     </a>
                                     <div data-auth-area="guest" class="d-flex gap-2">
-                                        <a href="signin.html" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
-                                        <a href="signup.html" class="btn btn-primary btn-sm">Đăng ký</a>
+                                        <a href="/login" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+                                        <a href="/register" class="btn btn-primary btn-sm">Đăng ký</a>
                                     </div>
                                     <div data-auth-area="user" class="d-none">
                                         <div class="dropdown">
@@ -94,9 +94,12 @@
                                         <div class="row g-3">
 
                                             <!-- ERROR VARS -->
-                                            <c:set var="errorPassword">
-                                                <form:errors path="confirmPassword"
-                                                    cssClass="invalid-feedback d-block" />
+                                            <c:set var="errorFirstName">
+                                                <form:errors path="firstName" cssClass="invalid-feedback d-block" />
+                                            </c:set>
+
+                                            <c:set var="errorLastName">
+                                                <form:errors path="lastName" cssClass="invalid-feedback d-block" />
                                             </c:set>
 
                                             <c:set var="errorEmail">
@@ -108,44 +111,48 @@
                                                     cssClass="invalid-feedback d-block" />
                                             </c:set>
 
-                                            <!-- HỌ & TÊN -->
+                                            <!-- HỌ -->
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Họ (Last name)</label>
-                                                <form:input class="form-control" type="text" path="lastName"
+                                                <label class="form-label fw-semibold">Họ</label>
+                                                <form:input path="lastName"
+                                                    cssClass="form-control ${not empty errorLastName ? 'is-invalid' : ''}"
                                                     placeholder="Nguyễn" />
+                                                ${errorLastName}
                                             </div>
 
+                                            <!-- TÊN -->
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Tên (First name)</label>
-                                                <form:input class="form-control" type="text" path="firstName"
+                                                <label class="form-label fw-semibold">Tên</label>
+                                                <form:input path="firstName"
+                                                    cssClass="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
                                                     placeholder="Văn A" />
+                                                ${errorFirstName}
                                             </div>
 
                                             <!-- EMAIL -->
                                             <div class="col-12">
                                                 <label class="form-label fw-semibold">Email</label>
-                                                <form:input
-                                                    class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
-                                                    type="email" path="email" placeholder="name@example.com" />
+                                                <form:input path="email" type="email"
+                                                    cssClass="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
+                                                    placeholder="name@example.com" />
                                                 ${errorEmail}
                                             </div>
 
                                             <!-- PASSWORD -->
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold">Mật khẩu</label>
-                                                <form:input
-                                                    class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
-                                                    type="password" path="password" placeholder="Tối thiểu 6 ký tự" />
-                                                <form:errors path="confirmPassword" />
+                                                <form:password path="password"
+                                                    cssClass="form-control ${not empty errorPassword ? 'is-invalid' : ''}"
+                                                    placeholder="Tối thiểu 6 ký tự" />
                                                 ${errorPassword}
                                             </div>
 
+                                            <!-- CONFIRM PASSWORD -->
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold">Xác nhận mật khẩu</label>
-                                                <form:input class="form-control" type="password" path="confirmPassword"
+                                                <form:password path="confirmPassword" cssClass="form-control "
                                                     placeholder="Nhập lại mật khẩu" />
                                             </div>
-
                                             <!-- TERMS -->
                                             <div class="col-12">
                                                 <div class="form-check">
@@ -164,14 +171,13 @@
 
                                     <div class="text-center mt-4">
                                         <span class="text-muted">Đã có tài khoản?</span>
-                                        <a href="signin.html" class="text-primary fw-semibold text-decoration-none">
+                                        <a href="/login" class="text-primary fw-semibold text-decoration-none">
                                             Đăng nhập
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
 
                     </div>
 

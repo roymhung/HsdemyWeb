@@ -95,13 +95,15 @@
 
                                             </div>
                                             <div class="card-body">
-                                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                                    <span
+                                                <div class="d-flex justify-content-between align-items-start mb-2"><span
                                                         class="badge bg-primary bg-opacity-10 text-primary">${course.level}</span>
-                                                    <a href="/cart/add/${course.id}" class="btn btn-sm btn-warning">
-                                                        <i class="bi bi-cart-plus"></i>
-                                                        Thêm vào giỏ
-                                                    </a>
+                                                    <form action="/add-course-to-cart/${course.id}" method="post">
+                                                        <button class="btn btn-sm btn-warning">
+                                                            <i class="bi bi-cart-plus"></i>
+                                                            Thêm vào giỏ
+                                                        </button>
+                                                    </form>
+
                                                 </div>
                                                 <h5 class="card-title fw-bold">${course.name}</h5>
                                                 <p class="text-muted small mb-2">${course.author}</p>

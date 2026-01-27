@@ -26,11 +26,10 @@
                 </head>
 
                 <body class="bg-light" data-page="signup">
-                    hello
                     <!-- Navigation -->
-                    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
                         <div class="container">
-                            <a class="navbar-brand fw-bold text-primary" href="index.html">
+                            <a class="navbar-brand fw-bold text-primary" href="/">
                                 <i class="bi bi-code-slash me-2"></i>Hstudemyweb
                             </a>
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -39,7 +38,7 @@
                             </button>
                             <div class="collapse navbar-collapse" id="navbarNav">
                                 <ul class="navbar-nav me-auto">
-                                    <li class="nav-item"><a class="nav-link" href="index.html">Trang chủ</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
                                     <li class="nav-item"><a class="nav-link" href="courses.html">Khóa học</a></li>
                                 </ul>
                                 <div class="d-flex align-items-center gap-3">
@@ -50,8 +49,8 @@
                                             style="font-size: 10px;">0</span>
                                     </a>
                                     <div data-auth-area="guest" class="d-flex gap-2">
-                                        <a href="signin.html" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
-                                        <a href="signup.html" class="btn btn-primary btn-sm">Đăng ký</a>
+                                        <a href="/login" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+                                        <a href="/register" class="btn btn-primary btn-sm">Đăng ký</a>
                                     </div>
                                     <div data-auth-area="user" class="d-none">
                                         <div class="dropdown">
@@ -73,55 +72,65 @@
                                 </div>
                             </div>
                         </div>
-                    </nav> -->
+                    </nav>
 
                     <!-- Page main -->
-                    <!-- <div class="row align-items-center justify-content-center min-vh-100"> -->
-                    <!-- CỘT BÊN TRÁI: HÌNH ẢNH -->
-                    <!-- <div class="col-lg-6 d-none d-lg-flex justify-content-center">
+                    <div class="row align-items-center justify-content-center min-vh-100">
+                        <!-- CỘT BÊN TRÁI: HÌNH ẢNH -->
+                        <div class="col-lg-6 d-none d-lg-flex justify-content-center">
                             <img src="/images/signin_signup/anh.png" alt="Login Image" class="img-fluid"
                                 style="max-height: 500px;">
-                        </div> -->
+                        </div>
 
-                    <!-- CỘT BÊN PHẢI: FORM ĐĂNG NHẬP -->
-                    <!-- <div class="col-lg-4 col-md-6">
+
+
+                        <!-- CỘT BÊN PHẢI: FORM ĐĂNG NHẬP -->
+                        <div class="col-lg-4 col-md-6">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-body p-4 p-md-5">
                                     <h3 class="fw-bold mb-1">Chào mừng bạn quay lại</h3>
                                     <p class="text-muted mb-4">Đăng nhập để tiếp tục hành trình học tập.</p>
 
-                                    <form:form method="post" action="/login" modelAttribute="loginUser">
+                                    <form method="post" action="/login">
+
+
+
                                         <div class="mb-3">
                                             <label class="form-label fw-semibold">Email</label>
-                                            <form:input class="form-control" type="email" path="email"
-                                                placeholder="name@example.com" />
+                                            <input class="form-control" type="email" name="username"
+                                                placeholder="name@example.com" required>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label fw-semibold">Mật khẩu</label>
-                                            <form:input class="form-control" type="password" path="password"
-                                                placeholder="••••••••" />
+                                            <input class="form-control" type="password" name="password"
+                                                placeholder="••••••••" required>
                                         </div>
+
+                                        <div><input type="hidden" name="${_csrf.parameterName}"
+                                                value="${_csrf.token}" /></div>
+
                                         <div class="d-flex justify-content-between align-items-center mb-4">
                                             <div class="form-check">
-                                                <form:checkbox path="rememberMe" class="form-check-input"
-                                                    id="remember" />
+                                                <input class="form-check-input" type="checkbox" id="remember">
                                                 <label class="form-check-label" for="remember">Ghi nhớ</label>
                                             </div>
                                             <a href="#" class="small text-decoration-none">Quên mật khẩu?</a>
                                         </div>
+                                        <c:if test="${param.error != null}">
+                                            <div class="my-2" style="color: red;">Thông tin không chính xác.</div>
+                                        </c:if>
                                         <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
-                                    </form:form>
+                                    </form>
 
                                     <div class="text-center mt-4">
                                         <span class="text-muted">Chưa có tài khoản?</span>
-                                        <a href="signup.html" class="text-primary fw-semibold text-decoration-none">Đăng
+                                        <a href="/register" class="text-primary fw-semibold text-decoration-none">Đăng
                                             ký</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                    </div> -->
+                    </div>
 
 
                     <!-- Footer -->
@@ -163,6 +172,7 @@
                                         </a>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-2 col-md-6 col-sm-6">
                                     <h6 class="fw-bold mb-3 text-primary">Khóa học</h6>
                                     <ul class="list-unstyled">
