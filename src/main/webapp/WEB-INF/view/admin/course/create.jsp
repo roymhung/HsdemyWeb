@@ -55,6 +55,31 @@
                 </script>
 
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+                <style>
+                    .flow-card {
+                        border: 1px solid #e9ecef;
+                        border-radius: 0.9rem;
+                        transition: all .2s ease;
+                        height: 100%;
+                    }
+
+                    .flow-card:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 0.75rem 1.5rem rgba(13, 110, 253, 0.12);
+                    }
+
+                    .flow-index {
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 50%;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #0d6efd;
+                        background: #e7f1ff;
+                        font-weight: 700;
+                    }
+                </style>
             </head>
 
             <body class="sb-nav-fixed">
@@ -74,6 +99,62 @@
                                     <li class="breadcrumb-item"><a href="/admin/course">Courses</a></li>
                                     <li class="breadcrumb-item active">Create</li>
                                 </ol>
+
+                                <div class="card mb-4">
+                                    <div class="card-header fw-semibold">
+                                        <i class="fas fa-diagram-project me-2 text-primary"></i>
+                                        System Flow cho My Course
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-lg-6">
+                                                <div class="flow-card p-3">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="flow-index">1</span>
+                                                        <h6 class="mb-0">Add Course</h6>
+                                                    </div>
+                                                    <p class="mb-2 text-muted small">
+                                                        Nhập thông tin course, submit và lưu DB. Sau đó course hiển thị trong My Listed Course.
+                                                    </p>
+                                                    <p class="mb-0"><strong>Formula:</strong> finalPrice = price - (price * discount / 100)</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="flow-card p-3">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="flow-index">2</span>
+                                                        <h6 class="mb-0">Add Chapter</h6>
+                                                    </div>
+                                                    <p class="mb-0 text-muted small">
+                                                        Từ course detail, thêm chapter theo Sr No, section name, section description.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="flow-card p-3">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="flow-index">3</span>
+                                                        <h6 class="mb-0">Add Topic (Video)</h6>
+                                                    </div>
+                                                    <p class="mb-0 text-muted small">
+                                                        Vào chapter để thêm topic, upload video, lưu đường dẫn file và tăng số lượng video.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="flow-card p-3">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="flow-index">4</span>
+                                                        <h6 class="mb-0">Student Purchase</h6>
+                                                    </div>
+                                                    <p class="mb-0 text-muted small">
+                                                        Student thanh toán course giá discount và có quyền xem video khi mua thành công.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- create user -->
                                 <div class="mt-5">

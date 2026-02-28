@@ -22,6 +22,59 @@
                         rel="stylesheet">
                     <!-- Custom CSS -->
                     <link rel="stylesheet" href="/client/css/style.css">
+                    <style>
+                        .preview-modal .modal-content {
+                            border: 1px solid rgba(255, 255, 255, .14);
+                            border-radius: 1.1rem;
+                            overflow: hidden;
+                            background: linear-gradient(160deg, #0f172a 0%, #121b34 45%, #111827 100%);
+                            box-shadow: 0 24px 50px rgba(2, 8, 23, .55);
+                            backdrop-filter: blur(8px);
+                        }
+
+                        .preview-modal .modal-header {
+                            background: linear-gradient(90deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .02));
+                            border-bottom: 1px solid rgba(255, 255, 255, .12);
+                            padding: .95rem 1.1rem;
+                        }
+
+                        .preview-modal .modal-title {
+                            color: #f8fafc;
+                            font-weight: 600;
+                        }
+
+                        .preview-modal .btn-close {
+                            filter: invert(1) brightness(1.15);
+                            opacity: .9;
+                        }
+
+                        .video-container {
+                            width: 94%;
+                            aspect-ratio: 16 / 9;
+                            background: #0b1020;
+                            overflow: hidden;
+                            position: relative;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin: 16px auto 18px;
+                            border-radius: .8rem;
+                            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
+                        }
+
+                        .preview-modal .modal-body {
+                            background: radial-gradient(circle at top, rgba(99, 102, 241, .08), rgba(15, 23, 42, .96));
+                        }
+
+                        .video-container video {
+                            position: absolute;
+                            inset: 0;
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            display: block;
+                        }
+                    </style>
                 </head>
 
                 <body>
@@ -83,90 +136,71 @@
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between align-items-center mb-4">
                                                 <h3 class="fw-bold mb-0">Nội dung khóa học</h3>
-                                                <button class="btn btn-sm btn-outline-primary">Mở rộng tất cả</button>
+                                                <span class="text-muted small">${chapters.size()} chương</span>
                                             </div>
                                             <div class="accordion" id="courseAccordion">
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header">
-                                                        <button class="accordion-button" type="button"
-                                                            data-bs-toggle="collapse" data-bs-target="#section1">
-                                                            <div class="d-flex justify-content-between w-100 me-3">
-                                                                <span><strong>Phần 1: Giới thiệu & Cài
-                                                                        đặt</strong></span>
-                                                                <span class="text-muted small">5 bài giảng • 45
-                                                                    phút</span>
-                                                            </div>
-                                                        </button>
-                                                    </h2>
-                                                    <div id="section1" class="accordion-collapse collapse show"
-                                                        data-bs-parent="#courseAccordion">
-                                                        <div class="accordion-body">
-                                                            <div class="list-group list-group-flush">
-                                                                <a href="course-player.html"
-                                                                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                                                    <div>
-                                                                        <i class="bi bi-play-circle me-2"></i>
-                                                                        1. Lời chào và giới thiệu khóa học
-                                                                    </div>
-                                                                    <span class="badge bg-secondary">05:35</span>
-                                                                </a>
-                                                                <a href="course-player.html"
-                                                                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                                                    <div>
-                                                                        <i class="bi bi-play-circle me-2"></i>
-                                                                        2. Hướng dẫn cài đặt môi trường Java
-                                                                    </div>
-                                                                    <span class="badge bg-secondary">12:10</span>
-                                                                </a>
-                                                                <a href="course-player.html"
-                                                                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                                                    <div>
-                                                                        <i class="bi bi-play-circle me-2"></i>
-                                                                        3. Spring Boot là gì?
-                                                                    </div>
-                                                                    <span class="badge bg-secondary">08:45</span>
-                                                                </a>
+                                                <c:forEach var="chapter" items="${chapters}" varStatus="status">
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header">
+                                                            <button class="accordion-button ${status.first ? '' : 'collapsed'}"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#section${chapter.id}">
+                                                                <div class="d-flex justify-content-between w-100 me-3">
+                                                                    <span>
+                                                                        <strong>Phần ${chapter.position}: ${chapter.title}</strong>
+                                                                    </span>
+                                                                    <span class="text-muted small">${chapter.lessons.size()} bài giảng</span>
+                                                                </div>
+                                                            </button>
+                                                        </h2>
+                                                        <div id="section${chapter.id}"
+                                                            class="accordion-collapse collapse ${status.first ? 'show' : ''}"
+                                                            data-bs-parent="#courseAccordion">
+                                                            <div class="accordion-body">
+                                                                <c:if test="${not empty chapter.description}">
+                                                                    <p class="text-muted mb-3">${chapter.description}</p>
+                                                                </c:if>
+                                                                <div class="list-group list-group-flush">
+                                                                    <c:forEach var="topic" items="${chapter.lessons}">
+                                                                        <c:choose>
+                                                                            <c:when test="${topic.preview}">
+                                                                                <button type="button"
+                                                                                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center open-video-topic border-0 text-start w-100"
+                                                                                    data-video-url="${topic.videoUrl}"
+                                                                                    data-video-title="${topic.title}"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#previewModal">
+                                                                                    <div>
+                                                                                        <i class="bi bi-play-circle me-2"></i>
+                                                                                        ${topic.position}. ${topic.title}
+                                                                                        <span class="badge bg-success ms-2">Preview</span>
+                                                                                    </div>
+                                                                                    <span class="badge bg-secondary">${topic.duration} phút</span>
+                                                                                </button>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <div
+                                                                                    class="list-group-item d-flex justify-content-between align-items-center text-muted">
+                                                                                    <div>
+                                                                                        <i class="bi bi-lock me-2"></i>
+                                                                                        ${topic.position}. ${topic.title}
+                                                                                    </div>
+                                                                                    <span class="badge bg-secondary">${topic.duration} phút</span>
+                                                                                </div>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </c:forEach>
+                                                                    <c:if test="${empty chapter.lessons}">
+                                                                        <p class="text-muted mb-0">Nội dung sẽ được cập nhật...</p>
+                                                                    </c:if>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header">
-                                                        <button class="accordion-button collapsed" type="button"
-                                                            data-bs-toggle="collapse" data-bs-target="#section2">
-                                                            <div class="d-flex justify-content-between w-100 me-3">
-                                                                <span><strong>Phần 2: Kiến trúc MVC Cơ
-                                                                        bản</strong></span>
-                                                                <span class="text-muted small">8 bài giảng • 1 giờ 20
-                                                                    phút</span>
-                                                            </div>
-                                                        </button>
-                                                    </h2>
-                                                    <div id="section2" class="accordion-collapse collapse"
-                                                        data-bs-parent="#courseAccordion">
-                                                        <div class="accordion-body">
-                                                            <p class="text-muted">Nội dung sẽ được cập nhật...</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header">
-                                                        <button class="accordion-button collapsed" type="button"
-                                                            data-bs-toggle="collapse" data-bs-target="#section3">
-                                                            <div class="d-flex justify-content-between w-100 me-3">
-                                                                <span><strong>Phần 3: Database & JPA</strong></span>
-                                                                <span class="text-muted small">12 bài giảng • 2 giờ 45
-                                                                    phút</span>
-                                                            </div>
-                                                        </button>
-                                                    </h2>
-                                                    <div id="section3" class="accordion-collapse collapse"
-                                                        data-bs-parent="#courseAccordion">
-                                                        <div class="accordion-body">
-                                                            <p class="text-muted">Nội dung sẽ được cập nhật...</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                </c:forEach>
+                                                <c:if test="${empty chapters}">
+                                                    <p class="text-muted">Nội dung khóa học đang được cập nhật...</p>
+                                                </c:if>
                                             </div>
                                         </div>
                                     </div>
@@ -193,7 +227,10 @@
                                                 style="height: 200px; object-fit: cover;">
                                             <div class="position-absolute top-50 start-50 translate-middle">
                                                 <button class="btn btn-light btn-lg rounded-circle"
-                                                    data-bs-toggle="modal" data-bs-target="#previewModal">
+                                                    data-bs-toggle="modal" data-bs-target="#previewModal"
+                                                    data-video-url="${firstPreviewVideoUrl}"
+                                                    data-video-title="${firstPreviewVideoTitle}"
+                                                    id="defaultPreviewBtn">
                                                     <i class="bi bi-play-fill fs-3"></i>
                                                 </button>
                                             </div>
@@ -206,17 +243,18 @@
                                                         ₫
                                                     </span></h3>
                                             </div>
-                                            <a href="course-player.html" class="btn btn-primary w-100 btn-lg mb-3">Vào
-                                                học ngay</a>
+                                            <a href="/course/${course.id}/start" class="btn btn-primary w-100 btn-lg mb-3">
+                                                Vào học ngay
+                                            </a>
                                             <p class="text-center text-muted small mb-4">Đảm bảo hoàn tiền trong 30 ngày
                                             </p>
                                             <div>
                                                 <h6 class="fw-bold mb-3">Khóa học này bao gồm:</h6>
                                                 <ul class="list-unstyled">
-                                                    <li class="mb-2"><i class="bi bi-play-circle me-2"></i>30,5 giờ
-                                                        video theo yêu cầu
+                                                    <li class="mb-2"><i class="bi bi-play-circle me-2"></i>${totalVideos} video theo yêu cầu
                                                     </li>
-                                                    <li class="mb-2"><i class="bi bi-file-text me-2"></i>3 bài viết</li>
+                                                    <li class="mb-2"><i class="bi bi-clock me-2"></i>${totalMinutes} phút nội dung video</li>
+                                                    <li class="mb-2"><i class="bi bi-file-text me-2"></i>${chapters.size()} chương học</li>
                                                     <li class="mb-2"><i class="bi bi-phone me-2"></i>Truy cập trên thiết
                                                         bị di động và
                                                         TV</li>
@@ -232,17 +270,19 @@
                     </section>
 
                     <!-- Preview Modal -->
-                    <div class="modal fade" id="previewModal" tabindex="-1">
+                    <div class="modal fade preview-modal" id="previewModal" tabindex="-1">
                         <div class="modal-dialog modal-lg modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Xem trước khóa học</h5>
+                                    <h5 class="modal-title" id="previewModalTitle">Xem trước khóa học</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body p-0">
-                                    <div class="ratio ratio-16x9">
-                                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                                            allowfullscreen></iframe>
+                                    <div class="video-container">
+                                        <video id="coursePreviewVideo" controls>
+                                            <source id="coursePreviewSource" src="" type="video/mp4">
+                                            Trình duyệt của bạn không hỗ trợ video.
+                                        </video>
                                     </div>
                                 </div>
                             </div>
@@ -255,6 +295,40 @@
 
                     <!-- Bootstrap JS -->
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                    <script>
+                        const previewModal = document.getElementById("previewModal");
+                        const modalTitle = document.getElementById("previewModalTitle");
+                        const video = document.getElementById("coursePreviewVideo");
+                        const source = document.getElementById("coursePreviewSource");
+
+                        document.querySelectorAll(".open-video-topic").forEach((item) => {
+                            item.addEventListener("click", () => {
+                                const url = item.getAttribute("data-video-url");
+                                const title = item.getAttribute("data-video-title");
+                                modalTitle.textContent = title || "Xem trước khóa học";
+                                source.src = url || "";
+                                video.load();
+                            });
+                        });
+
+                        document.querySelectorAll("[data-bs-target='#previewModal']").forEach((item) => {
+                            item.addEventListener("click", () => {
+                                if (item.classList.contains("open-video-topic")) {
+                                    return;
+                                }
+                                const url = item.getAttribute("data-video-url");
+                                const title = item.getAttribute("data-video-title");
+                                modalTitle.textContent = title || "Xem trước khóa học";
+                                source.src = url || "";
+                                video.load();
+                            });
+                        });
+
+                        previewModal.addEventListener("hidden.bs.modal", () => {
+                            video.pause();
+                            video.currentTime = 0;
+                        });
+                    </script>
                     <!-- Custom JS -->
                     <script src="js/main.js"></script>
                 </body>

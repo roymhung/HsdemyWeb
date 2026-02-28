@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import Hsdemy.vn.HsdemyWeb.domain.Chapter;
 import Hsdemy.vn.HsdemyWeb.domain.Course;
+import Hsdemy.vn.HsdemyWeb.service.ChapterService;
 import Hsdemy.vn.HsdemyWeb.service.CourseService;
 import Hsdemy.vn.HsdemyWeb.service.UploadService;
 
@@ -22,10 +24,12 @@ import Hsdemy.vn.HsdemyWeb.service.UploadService;
 public class CourseController {
 
     private final CourseService courseService;
+    private final ChapterService chapterService;
     private final UploadService uploadService;
 
-    public CourseController(CourseService courseService, UploadService uploadService) {
+    public CourseController(CourseService courseService, ChapterService chapterService, UploadService uploadService) {
         this.courseService = courseService;
+        this.chapterService = chapterService;
         this.uploadService = uploadService;
     }
 
@@ -41,7 +45,17 @@ public class CourseController {
     @GetMapping("/admin/course/{id}")
     public String getCourseDetailPage(Model model, @PathVariable long id) {
         Course course = this.courseService.getCourseById(id);
+        List<Chapter> chapters = this.chapterService.fetchByCourseId(id);
+        int nextSrNo = chapters.isEmpty() ? 1 : chapters.get(chapters.size() - 1).getPosition() + 1;
+
         model.addAttribute("course", course);
+        model.addAttribute("chapters", chapters);
+        if (!model.containsAttribute("newChapter")) {
+            Chapter chapter = new Chapter();
+            chapter.setPosition(nextSrNo);
+            chapter.setStatus("ACTIVE");
+            model.addAttribute("newChapter", chapter);
+        }
         model.addAttribute("id", id);
         return "admin/course/detail";
     }

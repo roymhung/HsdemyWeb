@@ -1,616 +1,269 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-        <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="en">
 
-            <!DOCTYPE html>
-            <html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Admin Dashboard</title>
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        .hero-dashboard {
+            background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            color: #fff;
+        }
 
-            <head>
-                <meta charset="utf-8" />
-                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-                <meta name="description" content="" />
-                <meta name="author" content="" />
-                <title>Dashboard - SB Admin</title>
-                <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-                <link href="/css/styles.css" rel="stylesheet" />
-                <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-            </head>
+        .quick-card,
+        .flow-card {
+            border: 1px solid #e9ecef;
+            border-radius: 0.9rem;
+            transition: all .2s ease;
+            height: 100%;
+        }
 
-            <body class="sb-nav-fixed">
+        .quick-card:hover,
+        .flow-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.75rem 1.5rem rgba(13, 110, 253, 0.12);
+        }
 
-                <!-- Start Header -->
-                <jsp:include page="../layout/header.jsp" />
-                <!-- End Header -->
+        .flow-index {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #0d6efd;
+            background: #e7f1ff;
+            font-weight: 700;
+        }
+    </style>
+</head>
 
-                <div id="layoutSidenav">
+<body class="sb-nav-fixed">
+    <jsp:include page="../layout/header.jsp" />
 
-                    <!--Start Side bar -->
-                    <jsp:include page="../layout/sidebar.jsp" />
-                    <!--End Side bar -->
+    <div id="layoutSidenav">
+        <jsp:include page="../layout/sidebar.jsp" />
 
-                    <div id="layoutSidenav_content">
-                        <main>
-                            <div class="container-fluid px-4">
-                                <h1 class="mt-4">Dashboard</h1>
-                                <c:if test="${param.concurrentLogin != null}">
-                                    <div class="alert alert-warning">
-                                        Tài khoản của bạn đang được đăng nhập ở nơi khác. Phiên trước đó đã bị đăng xuất.
-                                    </div>
-                                </c:if>
-                                <ol class="breadcrumb mb-4">
-                                    <li class="breadcrumb-item active">Dashboard</li>
-                                </ol>
-                                <div class="row">
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="card bg-primary text-white mb-4">
-                                            <div class="card-body">Primary Card</div>
-                                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                            </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Admin Course Dashboard</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+
+                    <c:if test="${param.concurrentLogin != null}">
+                        <div class="alert alert-warning">
+                            Tài khoản của bạn đang được đăng nhập ở nơi khác. Phiên trước đó đã bị đăng xuất.
+                        </div>
+                    </c:if>
+
+                    <div class="hero-dashboard mb-4">
+                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-start align-items-lg-center">
+                            <div>
+                                <h4 class="mb-2">Quản trị nội dung khóa học theo quy trình chuẩn</h4>
+                                <p class="mb-0 opacity-75">
+                                    Flow tập trung vào 4 bước chính: Add Course, Add Chapter, Add Topic (Video), Student Purchase.
+                                </p>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="/admin/course/create" class="btn btn-light btn-sm fw-semibold">
+                                    <i class="fas fa-plus-circle me-1"></i> Add Course
+                                </a>
+                                <a href="/admin/course" class="btn btn-outline-light btn-sm fw-semibold">
+                                    <i class="fas fa-table me-1"></i> My Listed Course
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="quick-card p-3 bg-white">
+                                <p class="text-muted small mb-2">Quick Action</p>
+                                <h6 class="mb-2">Tạo khóa học mới</h6>
+                                <p class="small text-muted mb-3">Nhập title, mô tả, category, pricing và thumbnail.</p>
+                                <a href="/admin/course/create" class="btn btn-primary btn-sm">Start</a>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="quick-card p-3 bg-white">
+                                <p class="text-muted small mb-2">Quick Action</p>
+                                <h6 class="mb-2">Danh sách khóa học</h6>
+                                <p class="small text-muted mb-3">Theo dõi toàn bộ khóa học đã publish.</p>
+                                <a href="/admin/course" class="btn btn-outline-primary btn-sm">Open List</a>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="quick-card p-3 bg-white">
+                                <p class="text-muted small mb-2">Quick Action</p>
+                                <h6 class="mb-2">Chi tiết từng khóa học</h6>
+                                <p class="small text-muted mb-3">Đi vào từng course để quản trị chapter/topic.</p>
+                                <a href="/admin/course" class="btn btn-outline-primary btn-sm">Go to Detail</a>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="quick-card p-3 bg-white">
+                                <p class="text-muted small mb-2">Quick Action</p>
+                                <h6 class="mb-2">Purchased Courses</h6>
+                                <p class="small text-muted mb-3">Kiểm tra các khóa học đã mua của user.</p>
+                                <a href="/account/purchase-history" class="btn btn-outline-primary btn-sm">View</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header fw-semibold">
+                            <i class="fas fa-diagram-project me-2 text-primary"></i>
+                            Kịch bản hệ thống (System Flow)
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-lg-6">
+                                    <div class="flow-card p-3">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <span class="flow-index">1</span>
+                                            <h6 class="mb-0">Admin thêm Course</h6>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="card bg-warning text-white mb-4">
-                                            <div class="card-body">Warning Card</div>
-                                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="card bg-success text-white mb-4">
-                                            <div class="card-body">Success Card</div>
-                                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="card bg-danger text-white mb-4">
-                                            <div class="card-body">Danger Card</div>
-                                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                            </div>
-                                        </div>
+                                        <p class="mb-2 text-muted small">Đăng nhập → Add Course → Submit → Lưu DB → Hiển thị trong My Listed Course.</p>
+                                        <p class="mb-0"><strong>Data:</strong> Title, Description, Category, Type, Price, Discount, Author note, Special note, Prerequisite, Thumbnail.</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xl-6">
-                                        <div class="card mb-4">
-                                            <div class="card-header">
-                                                <i class="fas fa-chart-area me-1"></i>
-                                                Area Chart Example
-                                            </div>
-                                            <div class="card-body"><canvas id="myAreaChart" width="100%"
-                                                    height="40"></canvas></div>
+                                <div class="col-lg-6">
+                                    <div class="flow-card p-3">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <span class="flow-index">2</span>
+                                            <h6 class="mb-0">Admin thêm Chapter</h6>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-6">
-                                        <div class="card mb-4">
-                                            <div class="card-header">
-                                                <i class="fas fa-chart-bar me-1"></i>
-                                                Bar Chart Example
-                                            </div>
-                                            <div class="card-body"><canvas id="myBarChart" width="100%"
-                                                    height="40"></canvas></div>
-                                        </div>
+                                        <p class="mb-2 text-muted small">Vào chi tiết Course → Add Chapter → Lưu DB → Hiển thị trong danh sách chapter.</p>
+                                        <p class="mb-0"><strong>Data:</strong> Sr No, Section Name, Section Description.</p>
                                     </div>
                                 </div>
-
-                                <!-- DataTable -->
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-table me-1"></i>
-                                        DataTable Example
+                                <div class="col-lg-6">
+                                    <div class="flow-card p-3">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <span class="flow-index">3</span>
+                                            <h6 class="mb-0">Admin thêm Topic (Video)</h6>
+                                        </div>
+                                        <p class="mb-2 text-muted small">Vào Chapter → Add Topic → Upload Video → Lưu DB + lưu file → tăng video count.</p>
+                                        <p class="mb-0"><strong>Data:</strong> Sr No (1.1, 1.2...), Topic Name, Description, Video.</p>
                                     </div>
-                                    <div class="card-body">
-                                        <table id="datatablesSimple">
-                                            <thead>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="flow-card p-3">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <span class="flow-index">4</span>
+                                            <h6 class="mb-0">Student mua Course</h6>
+                                        </div>
+                                        <p class="mb-2 text-muted small">Student xem course giá discount → Purchase → Thanh toán → course nằm trong Purchased Courses.</p>
+                                        <p class="mb-0"><strong>Outcome:</strong> Student có quyền xem video khóa học đã mua.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-xl-7">
+                            <div class="card h-100">
+                                <div class="card-header fw-semibold">
+                                    <i class="fas fa-list-check me-2 text-primary"></i>
+                                    Phân tích chức năng
+                                </div>
+                                <div class="card-body table-responsive">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Function</th>
+                                                <th>Validation / Logic</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Add Course</strong></td>
+                                                <td>
+                                                    Title/Description/Category required; Type = Free/Paid; Price >= 0; Discount 0-100; Thumbnail là image.
+                                                    <br />
+                                                    <span class="text-primary">finalPrice = price - (price * discount / 100)</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Add Chapter</strong></td>
+                                                <td>Quan hệ 1 Course - nhiều Chapter. Sr No phải unique trong từng course.</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Add Topic</strong></td>
+                                                <td>Quan hệ 1 Chapter - nhiều Topic (video). Upload video, lưu đường dẫn, tăng video count.</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>My Listed Course</strong></td>
+                                                <td>Hiển thị thumbnail, name, description, type, price, discount và action update/delete.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-5">
+                            <div class="card h-100">
+                                <div class="card-header fw-semibold">
+                                    <i class="fas fa-table me-2 text-primary"></i>
+                                    My Listed Course
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-3 text-muted">
+                                        Danh sách quản trị khóa học nên hiển thị theo format rõ ràng để thao tác nhanh:
+                                    </p>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered align-middle">
+                                            <thead class="table-light">
                                                 <tr>
+                                                    <th>Thumbnail</th>
                                                     <th>Name</th>
-                                                    <th>Position</th>
-                                                    <th>Office</th>
-                                                    <th>Age</th>
-                                                    <th>Start date</th>
-                                                    <th>Salary</th>
+                                                    <th>Description</th>
+                                                    <th>Type</th>
+                                                    <th>Price</th>
+                                                    <th>Discount</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Position</th>
-                                                    <th>Office</th>
-                                                    <th>Age</th>
-                                                    <th>Start date</th>
-                                                    <th>Salary</th>
-                                                </tr>
-                                            </tfoot>
                                             <tbody>
                                                 <tr>
-                                                    <td>Tiger Nixon</td>
-                                                    <td>System Architect</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>61</td>
-                                                    <td>2011/04/25</td>
-                                                    <td>$320,800</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Garrett Winters</td>
-                                                    <td>Accountant</td>
-                                                    <td>Tokyo</td>
-                                                    <td>63</td>
-                                                    <td>2011/07/25</td>
-                                                    <td>$170,750</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Ashton Cox</td>
-                                                    <td>Junior Technical Author</td>
-                                                    <td>San Francisco</td>
-                                                    <td>66</td>
-                                                    <td>2009/01/12</td>
-                                                    <td>$86,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Cedric Kelly</td>
-                                                    <td>Senior Javascript Developer</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>22</td>
-                                                    <td>2012/03/29</td>
-                                                    <td>$433,060</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Airi Satou</td>
-                                                    <td>Accountant</td>
-                                                    <td>Tokyo</td>
-                                                    <td>33</td>
-                                                    <td>2008/11/28</td>
-                                                    <td>$162,700</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Brielle Williamson</td>
-                                                    <td>Integration Specialist</td>
-                                                    <td>New York</td>
-                                                    <td>61</td>
-                                                    <td>2012/12/02</td>
-                                                    <td>$372,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Herrod Chandler</td>
-                                                    <td>Sales Assistant</td>
-                                                    <td>San Francisco</td>
-                                                    <td>59</td>
-                                                    <td>2012/08/06</td>
-                                                    <td>$137,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Rhona Davidson</td>
-                                                    <td>Integration Specialist</td>
-                                                    <td>Tokyo</td>
-                                                    <td>55</td>
-                                                    <td>2010/10/14</td>
-                                                    <td>$327,900</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Colleen Hurst</td>
-                                                    <td>Javascript Developer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>39</td>
-                                                    <td>2009/09/15</td>
-                                                    <td>$205,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Sonya Frost</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>23</td>
-                                                    <td>2008/12/13</td>
-                                                    <td>$103,600</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jena Gaines</td>
-                                                    <td>Office Manager</td>
-                                                    <td>London</td>
-                                                    <td>30</td>
-                                                    <td>2008/12/19</td>
-                                                    <td>$90,560</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Quinn Flynn</td>
-                                                    <td>Support Lead</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>22</td>
-                                                    <td>2013/03/03</td>
-                                                    <td>$342,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Charde Marshall</td>
-                                                    <td>Regional Director</td>
-                                                    <td>San Francisco</td>
-                                                    <td>36</td>
-                                                    <td>2008/10/16</td>
-                                                    <td>$470,600</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Haley Kennedy</td>
-                                                    <td>Senior Marketing Designer</td>
-                                                    <td>London</td>
-                                                    <td>43</td>
-                                                    <td>2012/12/18</td>
-                                                    <td>$313,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Tatyana Fitzpatrick</td>
-                                                    <td>Regional Director</td>
-                                                    <td>London</td>
-                                                    <td>19</td>
-                                                    <td>2010/03/17</td>
-                                                    <td>$385,750</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Michael Silva</td>
-                                                    <td>Marketing Designer</td>
-                                                    <td>London</td>
-                                                    <td>66</td>
-                                                    <td>2012/11/27</td>
-                                                    <td>$198,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Paul Byrd</td>
-                                                    <td>Chief Financial Officer (CFO)</td>
-                                                    <td>New York</td>
-                                                    <td>64</td>
-                                                    <td>2010/06/09</td>
-                                                    <td>$725,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Gloria Little</td>
-                                                    <td>Systems Administrator</td>
-                                                    <td>New York</td>
-                                                    <td>59</td>
-                                                    <td>2009/04/10</td>
-                                                    <td>$237,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Bradley Greer</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>London</td>
-                                                    <td>41</td>
-                                                    <td>2012/10/13</td>
-                                                    <td>$132,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Dai Rios</td>
-                                                    <td>Personnel Lead</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>35</td>
-                                                    <td>2012/09/26</td>
-                                                    <td>$217,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jenette Caldwell</td>
-                                                    <td>Development Lead</td>
-                                                    <td>New York</td>
-                                                    <td>30</td>
-                                                    <td>2011/09/03</td>
-                                                    <td>$345,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Yuri Berry</td>
-                                                    <td>Chief Marketing Officer (CMO)</td>
-                                                    <td>New York</td>
-                                                    <td>40</td>
-                                                    <td>2009/06/25</td>
-                                                    <td>$675,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Caesar Vance</td>
-                                                    <td>Pre-Sales Support</td>
-                                                    <td>New York</td>
-                                                    <td>21</td>
-                                                    <td>2011/12/12</td>
-                                                    <td>$106,450</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Doris Wilder</td>
-                                                    <td>Sales Assistant</td>
-                                                    <td>Sidney</td>
-                                                    <td>23</td>
-                                                    <td>2010/09/20</td>
-                                                    <td>$85,600</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Angelica Ramos</td>
-                                                    <td>Chief Executive Officer (CEO)</td>
-                                                    <td>London</td>
-                                                    <td>47</td>
-                                                    <td>2009/10/09</td>
-                                                    <td>$1,200,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Gavin Joyce</td>
-                                                    <td>Developer</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>42</td>
-                                                    <td>2010/12/22</td>
-                                                    <td>$92,575</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jennifer Chang</td>
-                                                    <td>Regional Director</td>
-                                                    <td>Singapore</td>
-                                                    <td>28</td>
-                                                    <td>2010/11/14</td>
-                                                    <td>$357,650</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Brenden Wagner</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>28</td>
-                                                    <td>2011/06/07</td>
-                                                    <td>$206,850</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Fiona Green</td>
-                                                    <td>Chief Operating Officer (COO)</td>
-                                                    <td>San Francisco</td>
-                                                    <td>48</td>
-                                                    <td>2010/03/11</td>
-                                                    <td>$850,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Shou Itou</td>
-                                                    <td>Regional Marketing</td>
-                                                    <td>Tokyo</td>
-                                                    <td>20</td>
-                                                    <td>2011/08/14</td>
-                                                    <td>$163,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Michelle House</td>
-                                                    <td>Integration Specialist</td>
-                                                    <td>Sidney</td>
-                                                    <td>37</td>
-                                                    <td>2011/06/02</td>
-                                                    <td>$95,400</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Suki Burks</td>
-                                                    <td>Developer</td>
-                                                    <td>London</td>
-                                                    <td>53</td>
-                                                    <td>2009/10/22</td>
-                                                    <td>$114,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Prescott Bartlett</td>
-                                                    <td>Technical Author</td>
-                                                    <td>London</td>
-                                                    <td>27</td>
-                                                    <td>2011/05/07</td>
-                                                    <td>$145,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Gavin Cortez</td>
-                                                    <td>Team Leader</td>
-                                                    <td>San Francisco</td>
-                                                    <td>22</td>
-                                                    <td>2008/10/26</td>
-                                                    <td>$235,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Martena Mccray</td>
-                                                    <td>Post-Sales support</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>46</td>
-                                                    <td>2011/03/09</td>
-                                                    <td>$324,050</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Unity Butler</td>
-                                                    <td>Marketing Designer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>47</td>
-                                                    <td>2009/12/09</td>
-                                                    <td>$85,675</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Howard Hatfield</td>
-                                                    <td>Office Manager</td>
-                                                    <td>San Francisco</td>
-                                                    <td>51</td>
-                                                    <td>2008/12/16</td>
-                                                    <td>$164,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Hope Fuentes</td>
-                                                    <td>Secretary</td>
-                                                    <td>San Francisco</td>
-                                                    <td>41</td>
-                                                    <td>2010/02/12</td>
-                                                    <td>$109,850</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Vivian Harrell</td>
-                                                    <td>Financial Controller</td>
-                                                    <td>San Francisco</td>
-                                                    <td>62</td>
-                                                    <td>2009/02/14</td>
-                                                    <td>$452,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Timothy Mooney</td>
-                                                    <td>Office Manager</td>
-                                                    <td>London</td>
-                                                    <td>37</td>
-                                                    <td>2008/12/11</td>
-                                                    <td>$136,200</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jackson Bradshaw</td>
-                                                    <td>Director</td>
-                                                    <td>New York</td>
-                                                    <td>65</td>
-                                                    <td>2008/09/26</td>
-                                                    <td>$645,750</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Olivia Liang</td>
-                                                    <td>Support Engineer</td>
-                                                    <td>Singapore</td>
-                                                    <td>64</td>
-                                                    <td>2011/02/03</td>
-                                                    <td>$234,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Bruno Nash</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>London</td>
-                                                    <td>38</td>
-                                                    <td>2011/05/03</td>
-                                                    <td>$163,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Sakura Yamamoto</td>
-                                                    <td>Support Engineer</td>
-                                                    <td>Tokyo</td>
-                                                    <td>37</td>
-                                                    <td>2009/08/19</td>
-                                                    <td>$139,575</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Thor Walton</td>
-                                                    <td>Developer</td>
-                                                    <td>New York</td>
-                                                    <td>61</td>
-                                                    <td>2013/08/11</td>
-                                                    <td>$98,540</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Finn Camacho</td>
-                                                    <td>Support Engineer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>47</td>
-                                                    <td>2009/07/07</td>
-                                                    <td>$87,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Serge Baldwin</td>
-                                                    <td>Data Coordinator</td>
-                                                    <td>Singapore</td>
-                                                    <td>64</td>
-                                                    <td>2012/04/09</td>
-                                                    <td>$138,575</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Zenaida Frank</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>New York</td>
-                                                    <td>63</td>
-                                                    <td>2010/01/04</td>
-                                                    <td>$125,250</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Zorita Serrano</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>56</td>
-                                                    <td>2012/06/01</td>
-                                                    <td>$115,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jennifer Acosta</td>
-                                                    <td>Junior Javascript Developer</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>43</td>
-                                                    <td>2013/02/01</td>
-                                                    <td>$75,650</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Cara Stevens</td>
-                                                    <td>Sales Assistant</td>
-                                                    <td>New York</td>
-                                                    <td>46</td>
-                                                    <td>2011/12/06</td>
-                                                    <td>$145,600</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Hermione Butler</td>
-                                                    <td>Regional Director</td>
-                                                    <td>London</td>
-                                                    <td>47</td>
-                                                    <td>2011/03/21</td>
-                                                    <td>$356,250</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Lael Greer</td>
-                                                    <td>Systems Administrator</td>
-                                                    <td>London</td>
-                                                    <td>21</td>
-                                                    <td>2009/02/27</td>
-                                                    <td>$103,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jonas Alexander</td>
-                                                    <td>Developer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>30</td>
-                                                    <td>2010/07/14</td>
-                                                    <td>$86,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Shad Decker</td>
-                                                    <td>Regional Director</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>51</td>
-                                                    <td>2008/11/13</td>
-                                                    <td>$183,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Michael Bruce</td>
-                                                    <td>Javascript Developer</td>
-                                                    <td>Singapore</td>
-                                                    <td>29</td>
-                                                    <td>2011/06/27</td>
-                                                    <td>$183,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Donna Snider</td>
-                                                    <td>Customer Support</td>
-                                                    <td>New York</td>
-                                                    <td>27</td>
-                                                    <td>2011/01/25</td>
-                                                    <td>$112,000</td>
+                                                    <td colspan="7" class="text-center text-muted">
+                                                        Dữ liệu thực tế hiển thị tại trang quản lý khóa học.
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
+                                    <a href="/admin/course" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-arrow-right me-1"></i> Đi tới My Listed Course
+                                    </a>
                                 </div>
-                                <!-- DataTable -->
-
                             </div>
-                        </main>
-
-                        <!-- Start footer -->
-                        <jsp:include page="../layout/footer.jsp" />
-                        <!-- End footer -->
+                        </div>
                     </div>
                 </div>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-                    crossorigin="anonymous"></script>
-                <script src="js/scripts.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
-                    crossorigin="anonymous"></script>
-                <script src="js/chart-area-demo.js"></script>
-                <script src="js/chart-bar-demo.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-                    crossorigin="anonymous"></script>
-                <script src="js/datatables-simple-demo.js"></script>
-            </body>
+            </main>
 
-            </html>
+            <jsp:include page="../layout/footer.jsp" />
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="/js/scripts.js"></script>
+</body>
+
+</html>

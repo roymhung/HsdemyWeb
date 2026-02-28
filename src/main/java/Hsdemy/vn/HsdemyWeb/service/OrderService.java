@@ -47,6 +47,14 @@ public class OrderService {
         return new ArrayList<>(purchasedCourses.values());
     }
 
+    public boolean hasPurchasedCourse(Long userId, Long courseId) {
+        if (userId == null || courseId == null) {
+            return false;
+        }
+        return getPaidCoursesByUserId(userId).stream()
+                .anyMatch(course -> course != null && course.getId() != null && course.getId().equals(courseId));
+    }
+
     private boolean isSuccessfulOrder(Order order) {
         if (order == null || order.getStatus() == null) {
             return false;
