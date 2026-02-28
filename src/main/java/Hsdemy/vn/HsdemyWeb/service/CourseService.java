@@ -1,6 +1,8 @@
 package Hsdemy.vn.HsdemyWeb.service;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,5 +53,26 @@ public class CourseService {
     // CHECK EXIST
     public boolean existsById(long id) {
         return courseRepository.existsById(id);
+    }
+
+    public int renameCategoryTitle(String oldTitle, String newTitle) {
+        if (oldTitle == null || newTitle == null) {
+            return 0;
+        }
+        String oldNormalized = oldTitle.trim();
+        String newNormalized = newTitle.trim();
+        if (oldNormalized.isEmpty() || newNormalized.isEmpty()
+                || oldNormalized.equalsIgnoreCase(newNormalized)) {
+            return 0;
+        }
+
+        List<Course> courses = courseRepository.findByTitleIgnoreCase(oldNormalized);
+        if (courses.isEmpty()) {
+            return 0;
+        }
+        String finalNewTitle = newNormalized.toUpperCase(Locale.ROOT);
+        List<Course> updated = courses.stream().peek(course -> course.setTitle(finalNewTitle)).collect(Collectors.toList());
+        courseRepository.saveAll(updated);
+        return updated.size();
     }
 }

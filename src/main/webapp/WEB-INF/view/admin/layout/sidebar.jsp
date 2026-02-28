@@ -4,6 +4,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <c:set var="currentUri" value="${pageContext.request.requestURI}" />
 <c:set var="courseOpen" value="${currentUri == '/admin/course' || currentUri == '/admin/course/create' || fn:startsWith(currentUri, '/admin/course/')}" />
+<c:set var="analyticsOpen" value="${fn:startsWith(currentUri, '/admin/analytics/')}" />
 
 <div id="layoutSidenav_nav">
     <nav class="sb-sidenav accordion sb-sidenav-dark admin-sidenav" id="sidenavAccordion">
@@ -34,6 +35,30 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-cart-shopping"></i></div>
                     Purchases
                 </a>
+
+                <div class="sb-sidenav-menu-heading">Analytics</div>
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                    data-bs-target="#collapseAnalytics" aria-expanded="${analyticsOpen}" aria-controls="collapseAnalytics">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
+                    Charts
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse ${analyticsOpen ? 'show' : ''}" id="collapseAnalytics" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link ${currentUri == '/admin/analytics/revenue' ? 'active' : ''}" href="/admin/analytics/revenue">
+                            <i class="fas fa-sack-dollar me-2"></i>Revenue
+                        </a>
+                        <a class="nav-link ${currentUri == '/admin/analytics/orders' ? 'active' : ''}" href="/admin/analytics/orders">
+                            <i class="fas fa-circle-nodes me-2"></i>Orders
+                        </a>
+                        <a class="nav-link ${currentUri == '/admin/analytics/categories' ? 'active' : ''}" href="/admin/analytics/categories">
+                            <i class="fas fa-layer-group me-2"></i>Categories
+                        </a>
+                        <a class="nav-link ${currentUri == '/admin/analytics/purchases' ? 'active' : ''}" href="/admin/analytics/purchases">
+                            <i class="fas fa-bag-shopping me-2"></i>Purchases
+                        </a>
+                    </nav>
+                </div>
 
                 <div class="sb-sidenav-menu-heading">Course Builder</div>
                 <a class="nav-link collapsed ${courseOpen ? '' : ''}" href="#" data-bs-toggle="collapse"

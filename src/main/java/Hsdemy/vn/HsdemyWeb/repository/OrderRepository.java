@@ -10,4 +10,5 @@ import Hsdemy.vn.HsdemyWeb.domain.Order;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUserIdOrderByCreatedAtDesc(Long userId);
+    List<Order> findAllByOrderByCreatedAtDesc();
 }

@@ -52,13 +52,13 @@
                                                 <table class="table table-bordered table-hover align-middle">
                                                     <thead class="table-dark">
                                                         <tr>
-                                                            <th>ID</th>
+                                                            <th width="50">ID</th>
                                                             <th>Name Course</th>
-                                                            <th>Name Author</th>
+                                                            <th width="100">Name Author</th>
                                                             <th>Price</th>
-                                                            <th>Level</th>
+                                                            <th width="100">Level</th>
                                                             <th>Thumbnail</th>
-                                                            <th width="260">Action</th>
+                                                            <th width="350">Action</th>
                                                         </tr>
                                                     </thead>
 
@@ -89,7 +89,7 @@
                                                                 <td>
                                                                     <a href="/admin/course/${course.id}"
                                                                         class="btn btn-success btn-sm">
-                                                                        View
+                                                                        Thiết kế khoá học
                                                                     </a>
 
                                                                     <a href="/admin/course/update/${course.id}"

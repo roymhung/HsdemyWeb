@@ -12,6 +12,7 @@
     <title>Admin Dashboard</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="sb-nav-fixed">
@@ -26,7 +27,7 @@
                     <div class="admin-page-heading">
                         <div>
                             <h1 class="mt-4 mb-1">Admin Dashboard</h1>
-                            <p class="text-muted mb-4">Theo dõi hoạt động học tập, doanh thu và quản trị nội dung tại một nơi.</p>
+                            <p class="text-muted mb-4">Trung tâm phân tích người dùng để tối ưu hiệu quả học tập và chất lượng nội dung.</p>
                         </div>
                     </div>
 
@@ -39,18 +40,18 @@
                     <div class="admin-hero-card mb-4">
                         <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-start align-items-lg-center">
                             <div>
-                                <span class="badge bg-light text-primary mb-2 px-3 py-2 rounded-pill">System Health: Stable</span>
-                                <h4 class="mb-2">Vận hành hệ thống e-learning theo flow rõ ràng</h4>
+                                <span class="badge bg-light text-primary mb-2 px-3 py-2 rounded-pill">Learning Analytics Hub</span>
+                                <h4 class="mb-2">Phân tích hành vi học tập để nâng cao chất lượng đào tạo</h4>
                                 <p class="mb-0 text-white-50">
-                                    Tập trung vào 4 bước cốt lõi: tạo khóa học, xây chương-bài, xuất bản nội dung và xử lý mua hàng.
+                                    Dashboard tập trung vào mức độ tham gia của học viên, tỷ lệ thanh toán, phân bổ category và độ sâu nội dung khóa học.
                                 </p>
                             </div>
                             <div class="d-flex gap-2 flex-wrap">
-                                <a href="/admin/course/create" class="btn btn-light btn-sm fw-semibold px-3">
-                                    <i class="fas fa-plus-circle me-1"></i> Tạo khóa học
+                                <a href="/admin/purchase" class="btn btn-light btn-sm fw-semibold px-3">
+                                    <i class="fas fa-cart-shopping me-1"></i> Xem Purchase
                                 </a>
-                                <a href="/admin/course" class="btn btn-outline-light btn-sm fw-semibold px-3">
-                                    <i class="fas fa-table me-1"></i> Danh sách khóa học
+                                <a href="/admin/order" class="btn btn-outline-light btn-sm fw-semibold px-3">
+                                    <i class="fas fa-receipt me-1"></i> Quản lý Orders
                                 </a>
                             </div>
                         </div>
@@ -60,33 +61,33 @@
                         <div class="col-xl-3 col-md-6">
                             <div class="admin-stat-card">
                                 <div class="admin-stat-icon bg-primary-subtle text-primary">
-                                    <i class="fas fa-book"></i>
+                                    <i class="fas fa-users"></i>
                                 </div>
                                 <div>
-                                    <div class="text-muted small">Tổng khóa học</div>
-                                    <h4 class="mb-0">128</h4>
+                                    <div class="text-muted small">Tổng người dùng</div>
+                                    <h4 class="mb-0">${totalUsers}</h4>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-6">
                             <div class="admin-stat-card">
                                 <div class="admin-stat-icon bg-success-subtle text-success">
-                                    <i class="fas fa-video"></i>
+                                    <i class="fas fa-user-check"></i>
                                 </div>
                                 <div>
-                                    <div class="text-muted small">Tổng bài học video</div>
-                                    <h4 class="mb-0">1,584</h4>
+                                    <div class="text-muted small">Học viên đã thanh toán</div>
+                                    <h4 class="mb-0">${paidLearners}</h4>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-6">
                             <div class="admin-stat-card">
                                 <div class="admin-stat-icon bg-warning-subtle text-warning">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-fire"></i>
                                 </div>
                                 <div>
-                                    <div class="text-muted small">Học viên hoạt động</div>
-                                    <h4 class="mb-0">3,926</h4>
+                                    <div class="text-muted small">Active learners (30 ngày)</div>
+                                    <h4 class="mb-0">${activeLearners30d}</h4>
                                 </div>
                             </div>
                         </div>
@@ -96,8 +97,8 @@
                                     <i class="fas fa-wallet"></i>
                                 </div>
                                 <div>
-                                    <div class="text-muted small">Doanh thu tháng</div>
-                                    <h4 class="mb-0">742M</h4>
+                                    <div class="text-muted small">Doanh thu PAID (VND)</div>
+                                    <h4 class="mb-0">${paidRevenue}</h4>
                                 </div>
                             </div>
                         </div>
@@ -108,41 +109,12 @@
                             <div class="card admin-card h-100">
                                 <div class="card-header bg-white border-0 pb-0">
                                     <h5 class="fw-semibold mb-1">
-                                        <i class="fas fa-diagram-project me-2 text-primary"></i>Kịch bản hệ thống
+                                        <i class="fas fa-chart-line me-2 text-primary"></i>Xu hướng học viên hoạt động (6 tháng)
                                     </h5>
-                                    <p class="text-muted small mb-0">Quy trình quản trị từ tạo khóa học đến thanh toán của học viên.</p>
+                                    <p class="text-muted small mb-0">Số lượng học viên có đơn PAID theo từng tháng.</p>
                                 </div>
                                 <div class="card-body">
-                                    <div class="admin-flow-timeline">
-                                        <div class="admin-flow-item">
-                                            <div class="admin-flow-dot">1</div>
-                                            <div>
-                                                <h6 class="mb-1">Admin thêm Course</h6>
-                                                <p class="text-muted mb-0 small">Nhập thông tin khóa học, kiểm tra validation, submit và lưu DB.</p>
-                                            </div>
-                                        </div>
-                                        <div class="admin-flow-item">
-                                            <div class="admin-flow-dot">2</div>
-                                            <div>
-                                                <h6 class="mb-1">Admin thêm Chapter</h6>
-                                                <p class="text-muted mb-0 small">Vào trang chi tiết khóa học, thêm chương theo thứ tự và mô tả.</p>
-                                            </div>
-                                        </div>
-                                        <div class="admin-flow-item">
-                                            <div class="admin-flow-dot">3</div>
-                                            <div>
-                                                <h6 class="mb-1">Admin thêm Topic (Video)</h6>
-                                                <p class="text-muted mb-0 small">Upload video, cập nhật metadata bài học, bật/tắt preview.</p>
-                                            </div>
-                                        </div>
-                                        <div class="admin-flow-item">
-                                            <div class="admin-flow-dot">4</div>
-                                            <div>
-                                                <h6 class="mb-1">Student mua Course</h6>
-                                                <p class="text-muted mb-0 small">Học viên thanh toán thành công qua VNPAY và được mở quyền học.</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <canvas id="learnerTrendChart" height="95"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -150,106 +122,80 @@
                             <div class="card admin-card h-100">
                                 <div class="card-header bg-white border-0 pb-0">
                                     <h5 class="fw-semibold mb-1">
-                                        <i class="fas fa-bolt me-2 text-primary"></i>Quick Actions
+                                        <i class="fas fa-circle-nodes me-2 text-primary"></i>Tỷ lệ trạng thái đơn
                                     </h5>
                                 </div>
-                                <div class="card-body d-grid gap-2">
-                                    <a href="/admin/course/create" class="btn btn-primary">
-                                        <i class="fas fa-circle-plus me-1"></i> Tạo khóa học mới
-                                    </a>
-                                    <a href="/admin/course" class="btn btn-outline-primary">
-                                        <i class="fas fa-table-list me-1"></i> Quản lý khóa học
-                                    </a>
-                                    <a href="/admin/user" class="btn btn-outline-secondary">
-                                        <i class="fas fa-users me-1"></i> Quản lý người dùng
-                                    </a>
-                                    <a href="/admin/order" class="btn btn-outline-secondary">
-                                        <i class="fas fa-file-invoice-dollar me-1"></i> Theo dõi đơn hàng
-                                    </a>
+                                <div class="card-body">
+                                    <canvas id="statusChart"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row g-4 mb-4">
-                        <div class="col-xl-7">
+                        <div class="col-xl-6">
                             <div class="card admin-card h-100">
                                 <div class="card-header bg-white">
                                     <h5 class="fw-semibold mb-0">
-                                        <i class="fas fa-list-check me-2 text-primary"></i>Phân tích chức năng trọng tâm
+                                        <i class="fas fa-layer-group me-2 text-primary"></i>Phân bổ lượt mua theo category
                                     </h5>
                                 </div>
-                                <div class="card-body table-responsive">
-                                    <table class="table table-hover align-middle mb-0 admin-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Function</th>
-                                                <th>Validation / Logic</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>Add Course</strong></td>
-                                                <td>
-                                                    Title/Description/Category required; Type = Free/Paid; Price >= 0; Discount 0-100; Thumbnail là image.
-                                                    <br />
-                                                    <span class="text-primary">finalPrice = price - (price * discount / 100)</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Add Chapter</strong></td>
-                                                <td>Quan hệ 1 Course - nhiều Chapter. Sr No phải unique trong từng course.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Add Topic</strong></td>
-                                                <td>Quan hệ 1 Chapter - nhiều Topic (video). Upload video, lưu đường dẫn, tăng video count.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>My Listed Course</strong></td>
-                                                <td>Hiển thị thumbnail, name, description, type, price, discount và action update/delete.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div class="card-body">
+                                    <canvas id="categoryChart" height="120"></canvas>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-xl-5">
+                        <div class="col-xl-6">
                             <div class="card admin-card h-100">
                                 <div class="card-header bg-white">
                                     <h5 class="fw-semibold mb-0">
-                                        <i class="fas fa-table me-2 text-primary"></i>My Listed Course
+                                        <i class="fas fa-book-open-reader me-2 text-primary"></i>Độ sâu nội dung khóa học
                                     </h5>
                                 </div>
                                 <div class="card-body">
-                                    <p class="mb-3 text-muted">
-                                        Danh sách quản trị khóa học nên hiển thị theo format rõ ràng để thao tác nhanh:
-                                    </p>
-                                    <div class="table-responsive">
-                                        <table class="table table-sm align-middle admin-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Thumbnail</th>
-                                                    <th>Name</th>
-                                                    <th>Description</th>
-                                                    <th>Type</th>
-                                                    <th>Price</th>
-                                                    <th>Discount</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="7" class="text-center text-muted">
-                                                        Dữ liệu thực tế hiển thị tại trang quản lý khóa học.
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <canvas id="depthChart" height="120"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-12">
+                            <div class="card admin-card">
+                                <div class="card-header bg-white">
+                                    <h5 class="fw-semibold mb-0"><i class="fas fa-lightbulb me-2 text-primary"></i>Gợi ý tối ưu hiệu quả học tập</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-lg-4">
+                                            <div class="admin-flow-item h-100">
+                                                <div class="admin-flow-dot"><i class="fas fa-graduation-cap"></i></div>
+                                                <div>
+                                                    <h6 class="mb-1">Average Lessons/Course</h6>
+                                                    <p class="small text-muted mb-0">Trung bình mỗi khóa có <strong>${avgLessonsPerCourse}</strong> bài học. Dùng chỉ số này để chuẩn hóa khung nội dung giữa các khóa.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="admin-flow-item h-100">
+                                                <div class="admin-flow-dot"><i class="fas fa-eye"></i></div>
+                                                <div>
+                                                    <h6 class="mb-1">Preview Coverage</h6>
+                                                    <p class="small text-muted mb-0">Tỷ lệ bài học preview hiện tại là <strong>${previewRate}%</strong>. Tăng preview ở khóa mới giúp cải thiện chuyển đổi mua.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="admin-flow-item h-100">
+                                                <div class="admin-flow-dot"><i class="fas fa-chart-simple"></i></div>
+                                                <div>
+                                                    <h6 class="mb-1">Action Priority</h6>
+                                                    <p class="small text-muted mb-0">Ưu tiên tối ưu các category có lượt mua cao và các khóa có nội dung mỏng để tăng giữ chân người học.</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <a href="/admin/course" class="btn btn-primary btn-sm px-3">
-                                        <i class="fas fa-arrow-right me-1"></i> Đi tới My Listed Course
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -264,6 +210,79 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="/js/scripts.js"></script>
+    <script>
+        const learnerTrendLabels = [<c:forEach var="l" items="${learnerTrendLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+        const learnerTrendData = [<c:forEach var="d" items="${learnerTrendData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+        const statusLabels = [<c:forEach var="l" items="${statusLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+        const statusData = [<c:forEach var="d" items="${statusData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+        const categoryLabels = [<c:forEach var="l" items="${categoryLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+        const categoryData = [<c:forEach var="d" items="${categoryData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+        const depthLabels = [<c:forEach var="l" items="${depthLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+        const depthData = [<c:forEach var="d" items="${depthData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+
+        new Chart(document.getElementById('learnerTrendChart'), {
+            type: 'line',
+            data: {
+                labels: learnerTrendLabels,
+                datasets: [{
+                    label: 'Active learners',
+                    data: learnerTrendData,
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, .18)',
+                    fill: true,
+                    tension: 0.35
+                }]
+            },
+            options: { scales: { y: { beginAtZero: true } } }
+        });
+
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusData,
+                    backgroundColor: ['#f59e0b', '#10b981', '#ef4444', '#6b7280', '#8b5cf6']
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'bar',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    label: 'Lượt mua',
+                    data: categoryData,
+                    backgroundColor: 'rgba(14, 165, 233, .75)',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        new Chart(document.getElementById('depthChart'), {
+            type: 'bar',
+            data: {
+                labels: depthLabels,
+                datasets: [{
+                    label: 'Số bài học',
+                    data: depthData,
+                    backgroundColor: 'rgba(139, 92, 246, .78)',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true } }
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -3,6 +3,7 @@ package Hsdemy.vn.HsdemyWeb.service;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.time.LocalDateTime;
 
@@ -28,6 +29,10 @@ public class OrderService {
 
     public List<Order> getOrdersByUserId(Long userId) {
         return orderRepository.findByUserIdOrderByCreatedAtDesc(userId);
+    }
+
+    public List<Order> fetchAllOrdersForAdmin() {
+        return orderRepository.findAllByOrderByCreatedAtDesc();
     }
 
     public List<Course> getPaidCoursesByUserId(Long userId) {
@@ -97,6 +102,20 @@ public class OrderService {
         }
         order.setStatus("FAILED");
         orderRepository.save(order);
+    }
+
+    public boolean updateOrderStatus(Long orderId, String newStatus) {
+        if (orderId == null || newStatus == null || newStatus.isBlank()) {
+            return false;
+        }
+        Order order = getOrderById(orderId);
+        if (order == null) {
+            return false;
+        }
+        String normalizedStatus = newStatus.trim().toUpperCase(Locale.ROOT);
+        order.setStatus(normalizedStatus);
+        orderRepository.save(order);
+        return true;
     }
 
     public Long getFirstCourseIdInOrder(Long orderId) {
