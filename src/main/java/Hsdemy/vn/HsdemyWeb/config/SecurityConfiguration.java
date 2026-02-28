@@ -60,7 +60,7 @@ public class SecurityConfiguration {
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
                 .requestMatchers("/", "/login", "/register", "/forgot-password", "/error",
                         "/course/**", "/client/**", "/css/**", "/js/**", "/images/**", "/uploads/**",
-                        "/payment/vnpay-return")
+                        "/payment/vnpay-return", "/api/search/**")
                 .permitAll()
 
                 .requestMatchers("/learning/**").hasAnyRole("USER", "ADMIN")

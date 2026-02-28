@@ -8,6 +8,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import Hsdemy.vn.HsdemyWeb.domain.Course;
 import Hsdemy.vn.HsdemyWeb.domain.User;
@@ -29,10 +31,43 @@ public class HomePageController {
     }
 
     @GetMapping("/")
-    public String getHomePage(Model model) {
-        List<Course> courses = this.courseService.fetchCourses();
+    public String getHomePage(
+            @RequestParam(value = "q", required = false) String keyword,
+            Model model) {
+        List<Course> courses = this.courseService.searchCourses(keyword);
         model.addAttribute("courses", courses);
+        model.addAttribute("searchKeyword", keyword == null ? "" : keyword.trim());
+        model.addAttribute("searchMode", keyword != null && !keyword.isBlank());
         return "client/homepage/show";
+    }
+
+    @GetMapping("/api/search/suggestions")
+    @ResponseBody
+    public SearchSuggestionResponse getSearchSuggestions(
+            @RequestParam(value = "q", required = false) String keyword) {
+        String q = keyword == null ? "" : keyword.trim();
+        if (q.isBlank()) {
+            return new SearchSuggestionResponse(q, List.of(), List.of(), List.of());
+        }
+
+        List<String> keywords = List.of(
+                "khóa học " + q,
+                q + " cơ bản",
+                q + " nâng cao",
+                "học " + q + " online",
+                q + " cho người mới");
+
+        List<SearchCourseItem> courses = courseService.suggestCourses(q, 5).stream()
+                .map(course -> new SearchCourseItem(
+                        course.getId(),
+                        course.getName(),
+                        course.getAuthor() == null ? "Giảng viên" : course.getAuthor(),
+                        course.getThumbnail()))
+                .toList();
+
+        List<String> authors = courseService.suggestAuthors(q, 3);
+
+        return new SearchSuggestionResponse(q, keywords, courses, authors);
     }
 
     @GetMapping("/register")
@@ -89,5 +124,66 @@ public class HomePageController {
 
         this.userService.resetPasswordByEmail(resetPassword.getEmail(), resetPassword.getPassword());
         return "redirect:/login?resetSuccess";
+    }
+
+    public static class SearchSuggestionResponse {
+        private final String query;
+        private final List<String> keywords;
+        private final List<SearchCourseItem> courses;
+        private final List<String> authors;
+
+        public SearchSuggestionResponse(String query, List<String> keywords, List<SearchCourseItem> courses,
+                List<String> authors) {
+            this.query = query;
+            this.keywords = keywords;
+            this.courses = courses;
+            this.authors = authors;
+        }
+
+        public String getQuery() {
+            return query;
+        }
+
+        public List<String> getKeywords() {
+            return keywords;
+        }
+
+        public List<SearchCourseItem> getCourses() {
+            return courses;
+        }
+
+        public List<String> getAuthors() {
+            return authors;
+        }
+    }
+
+    public static class SearchCourseItem {
+        private final Long id;
+        private final String name;
+        private final String author;
+        private final String thumbnail;
+
+        public SearchCourseItem(Long id, String name, String author, String thumbnail) {
+            this.id = id;
+            this.name = name;
+            this.author = author;
+            this.thumbnail = thumbnail;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public String getThumbnail() {
+            return thumbnail;
+        }
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,11 +18,13 @@ import org.springframework.web.multipart.MultipartFile;
 import Hsdemy.vn.HsdemyWeb.domain.Course;
 import Hsdemy.vn.HsdemyWeb.domain.Order;
 import Hsdemy.vn.HsdemyWeb.domain.User;
+import Hsdemy.vn.HsdemyWeb.service.NotificationService;
 import Hsdemy.vn.HsdemyWeb.service.OrderService;
 import Hsdemy.vn.HsdemyWeb.service.UploadService;
 import Hsdemy.vn.HsdemyWeb.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ClientAccountController {
@@ -29,11 +32,14 @@ public class ClientAccountController {
     private final UserService userService;
     private final UploadService uploadService;
     private final OrderService orderService;
+    private final NotificationService notificationService;
 
-    public ClientAccountController(UserService userService, UploadService uploadService, OrderService orderService) {
+    public ClientAccountController(UserService userService, UploadService uploadService, OrderService orderService,
+            NotificationService notificationService) {
         this.userService = userService;
         this.uploadService = uploadService;
         this.orderService = orderService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/home/my-courses/learning")
@@ -107,8 +113,34 @@ public class ClientAccountController {
     }
 
     @GetMapping("/notifications")
-    public String getNotificationPage() {
+    public String getNotificationPage(Model model, Principal principal, HttpSession session) {
+        User currentUser = getCurrentUser(principal);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("notifications", notificationService.getNotificationsForUser(currentUser, session));
+        model.addAttribute("unreadCount", notificationService.getUnreadCount(currentUser, session));
         return "client/account/notifications";
+    }
+
+    @PostMapping("/notifications/read-all")
+    public String markAllNotificationsAsRead(Principal principal, HttpSession session) {
+        User currentUser = getCurrentUser(principal);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        notificationService.markAllAsRead(currentUser, session);
+        return "redirect:/notifications";
+    }
+
+    @PostMapping("/notifications/{notificationId}/read")
+    public String markNotificationAsRead(@PathVariable String notificationId, Principal principal, HttpSession session) {
+        User currentUser = getCurrentUser(principal);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        notificationService.markAsRead(currentUser, session, notificationId);
+        return "redirect:/notifications";
     }
 
     private User getCurrentUser(Principal principal) {

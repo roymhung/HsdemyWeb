@@ -29,11 +29,15 @@
                             </ul>
 
                             <div class="d-flex align-items-center gap-3">
-                                <form class="d-none d-md-block position-relative">
+                                <form action="/" method="get" class="d-none d-md-block position-relative" id="globalSearchForm" autocomplete="off">
                                     <input class="form-control form-control-sm ps-4" type="search"
+                                        id="globalSearchInput"
+                                        name="q"
+                                        value="${param.q}"
                                         placeholder="Tìm khóa học, kỹ năng, chứng chỉ..." style="width: 230px;">
                                     <i
                                         class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-2 text-muted"></i>
+                                    <div id="globalSearchSuggestions" class="search-suggest-dropdown d-none"></div>
                                 </form>
 
                                 <c:choose>
@@ -50,8 +54,9 @@
                                             title="Thông báo">
                                             <i class="bi bi-bell"></i>
                                             <span
+                                                data-notification-badge
                                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                                style="font-size: 10px;">0</span>
+                                                style="font-size: 10px; ${notificationUnreadCount > 0 ? '' : 'display:none;'}">${notificationUnreadCount}</span>
                                         </a>
 
                                         <div class="dropdown">
@@ -103,3 +108,66 @@
                         </div>
                     </div>
                 </nav>
+                <style>
+                    .search-suggest-dropdown {
+                        position: absolute;
+                        left: 0;
+                        top: calc(100% + 6px);
+                        width: 560px;
+                        max-height: 520px;
+                        overflow: auto;
+                        background: #fff;
+                        border: 1px solid #dee2e6;
+                        border-radius: .75rem;
+                        box-shadow: 0 15px 40px rgba(0, 0, 0, .14);
+                        z-index: 1200;
+                    }
+
+                    .search-suggest-item {
+                        display: flex;
+                        align-items: center;
+                        gap: .75rem;
+                        padding: .65rem .9rem;
+                        text-decoration: none;
+                        color: #212529;
+                        border-bottom: 1px solid #f1f3f5;
+                    }
+
+                    .search-suggest-item:hover {
+                        background: #f8f9ff;
+                    }
+
+                    .search-suggest-item:last-child {
+                        border-bottom: none;
+                    }
+
+                    .search-suggest-thumb {
+                        width: 32px;
+                        height: 32px;
+                        border-radius: .3rem;
+                        object-fit: cover;
+                        background: #e9ecef;
+                    }
+
+                    .search-suggest-title {
+                        font-weight: 600;
+                        line-height: 1.2;
+                    }
+
+                    .search-suggest-meta {
+                        color: #6c757d;
+                        font-size: .8rem;
+                    }
+
+                    .search-suggest-section {
+                        padding: .45rem .9rem;
+                        font-size: .75rem;
+                        color: #6c757d;
+                        text-transform: uppercase;
+                        letter-spacing: .02em;
+                        background: #f8f9fa;
+                        border-top: 1px solid #f1f3f5;
+                        border-bottom: 1px solid #f1f3f5;
+                    }
+                </style>
+                <script src="/client/js/search-autocomplete.js"></script>

@@ -55,6 +55,36 @@ public class CourseService {
         return courseRepository.existsById(id);
     }
 
+    public List<Course> searchCourses(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return fetchCourses();
+        }
+        return courseRepository.searchCourses(keyword.trim());
+    }
+
+    public List<Course> suggestCourses(String keyword, int limit) {
+        if (keyword == null || keyword.isBlank()) {
+            return List.of();
+        }
+        return courseRepository.searchCourses(keyword.trim()).stream()
+                .limit(Math.max(1, limit))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> suggestAuthors(String keyword, int limit) {
+        if (keyword == null || keyword.isBlank()) {
+            return List.of();
+        }
+        String q = keyword.trim().toLowerCase(Locale.ROOT);
+        return fetchCourses().stream()
+                .map(Course::getAuthor)
+                .filter(author -> author != null && !author.isBlank())
+                .filter(author -> author.toLowerCase(Locale.ROOT).contains(q))
+                .distinct()
+                .limit(Math.max(1, limit))
+                .collect(Collectors.toList());
+    }
+
     public int renameCategoryTitle(String oldTitle, String newTitle) {
         if (oldTitle == null || newTitle == null) {
             return 0;
