@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giỏ hàng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/client/css/style.css">
     <style>
         .cart-page-title {
@@ -65,7 +66,9 @@
                         <div class="cart-summary-box">
                             <div class="text-muted">Tổng:</div>
                             <div class="fw-bold fs-2 mb-2" data-cart-total>0 đ</div>
-                            <button class="btn btn-primary w-100 mb-2" type="button">Tiến hành thanh toán</button>
+                            <button class="btn btn-primary w-100 mb-2" type="button" data-action="checkout-cart">
+                                Tiến hành thanh toán
+                            </button>
                             <button class="btn btn-outline-secondary w-100" type="button" data-action="clear-cart">
                                 Hủy đơn hàng
                             </button>

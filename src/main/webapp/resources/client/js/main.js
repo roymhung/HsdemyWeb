@@ -217,6 +217,19 @@
             setCartItems([]);
             renderCartPage();
         });
+
+        document.addEventListener('click', function(e) {
+            const checkoutBtn = e.target.closest('[data-action="checkout-cart"]');
+            if (!checkoutBtn) return;
+            e.preventDefault();
+            const items = getCartItems();
+            if (!items.length) return;
+
+            const firstCourseId = items[0]?.id;
+            if (!firstCourseId) return;
+
+            window.location.href = `/payment/vnpay/quick/${firstCourseId}`;
+        });
     }
 
     function renderCartPage() {

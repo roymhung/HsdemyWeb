@@ -12,40 +12,6 @@
     <title>Admin Dashboard</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <style>
-        .hero-dashboard {
-            background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            color: #fff;
-        }
-
-        .quick-card,
-        .flow-card {
-            border: 1px solid #e9ecef;
-            border-radius: 0.9rem;
-            transition: all .2s ease;
-            height: 100%;
-        }
-
-        .quick-card:hover,
-        .flow-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0.75rem 1.5rem rgba(13, 110, 253, 0.12);
-        }
-
-        .flow-index {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #0d6efd;
-            background: #e7f1ff;
-            font-weight: 700;
-        }
-    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -57,10 +23,12 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Admin Course Dashboard</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Dashboard</li>
-                    </ol>
+                    <div class="admin-page-heading">
+                        <div>
+                            <h1 class="mt-4 mb-1">Admin Dashboard</h1>
+                            <p class="text-muted mb-4">Theo dõi hoạt động học tập, doanh thu và quản trị nội dung tại một nơi.</p>
+                        </div>
+                    </div>
 
                     <c:if test="${param.concurrentLogin != null}">
                         <div class="alert alert-warning">
@@ -68,20 +36,21 @@
                         </div>
                     </c:if>
 
-                    <div class="hero-dashboard mb-4">
+                    <div class="admin-hero-card mb-4">
                         <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-start align-items-lg-center">
                             <div>
-                                <h4 class="mb-2">Quản trị nội dung khóa học theo quy trình chuẩn</h4>
-                                <p class="mb-0 opacity-75">
-                                    Flow tập trung vào 4 bước chính: Add Course, Add Chapter, Add Topic (Video), Student Purchase.
+                                <span class="badge bg-light text-primary mb-2 px-3 py-2 rounded-pill">System Health: Stable</span>
+                                <h4 class="mb-2">Vận hành hệ thống e-learning theo flow rõ ràng</h4>
+                                <p class="mb-0 text-white-50">
+                                    Tập trung vào 4 bước cốt lõi: tạo khóa học, xây chương-bài, xuất bản nội dung và xử lý mua hàng.
                                 </p>
                             </div>
-                            <div class="d-flex gap-2">
-                                <a href="/admin/course/create" class="btn btn-light btn-sm fw-semibold">
-                                    <i class="fas fa-plus-circle me-1"></i> Add Course
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a href="/admin/course/create" class="btn btn-light btn-sm fw-semibold px-3">
+                                    <i class="fas fa-plus-circle me-1"></i> Tạo khóa học
                                 </a>
-                                <a href="/admin/course" class="btn btn-outline-light btn-sm fw-semibold">
-                                    <i class="fas fa-table me-1"></i> My Listed Course
+                                <a href="/admin/course" class="btn btn-outline-light btn-sm fw-semibold px-3">
+                                    <i class="fas fa-table me-1"></i> Danh sách khóa học
                                 </a>
                             </div>
                         </div>
@@ -89,85 +58,114 @@
 
                     <div class="row g-3 mb-4">
                         <div class="col-xl-3 col-md-6">
-                            <div class="quick-card p-3 bg-white">
-                                <p class="text-muted small mb-2">Quick Action</p>
-                                <h6 class="mb-2">Tạo khóa học mới</h6>
-                                <p class="small text-muted mb-3">Nhập title, mô tả, category, pricing và thumbnail.</p>
-                                <a href="/admin/course/create" class="btn btn-primary btn-sm">Start</a>
+                            <div class="admin-stat-card">
+                                <div class="admin-stat-icon bg-primary-subtle text-primary">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Tổng khóa học</div>
+                                    <h4 class="mb-0">128</h4>
+                                </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-6">
-                            <div class="quick-card p-3 bg-white">
-                                <p class="text-muted small mb-2">Quick Action</p>
-                                <h6 class="mb-2">Danh sách khóa học</h6>
-                                <p class="small text-muted mb-3">Theo dõi toàn bộ khóa học đã publish.</p>
-                                <a href="/admin/course" class="btn btn-outline-primary btn-sm">Open List</a>
+                            <div class="admin-stat-card">
+                                <div class="admin-stat-icon bg-success-subtle text-success">
+                                    <i class="fas fa-video"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Tổng bài học video</div>
+                                    <h4 class="mb-0">1,584</h4>
+                                </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-6">
-                            <div class="quick-card p-3 bg-white">
-                                <p class="text-muted small mb-2">Quick Action</p>
-                                <h6 class="mb-2">Chi tiết từng khóa học</h6>
-                                <p class="small text-muted mb-3">Đi vào từng course để quản trị chapter/topic.</p>
-                                <a href="/admin/course" class="btn btn-outline-primary btn-sm">Go to Detail</a>
+                            <div class="admin-stat-card">
+                                <div class="admin-stat-icon bg-warning-subtle text-warning">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Học viên hoạt động</div>
+                                    <h4 class="mb-0">3,926</h4>
+                                </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-6">
-                            <div class="quick-card p-3 bg-white">
-                                <p class="text-muted small mb-2">Quick Action</p>
-                                <h6 class="mb-2">Purchased Courses</h6>
-                                <p class="small text-muted mb-3">Kiểm tra các khóa học đã mua của user.</p>
-                                <a href="/account/purchase-history" class="btn btn-outline-primary btn-sm">View</a>
+                            <div class="admin-stat-card">
+                                <div class="admin-stat-icon bg-danger-subtle text-danger">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Doanh thu tháng</div>
+                                    <h4 class="mb-0">742M</h4>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card mb-4">
-                        <div class="card-header fw-semibold">
-                            <i class="fas fa-diagram-project me-2 text-primary"></i>
-                            Kịch bản hệ thống (System Flow)
+                    <div class="row g-4 mb-4">
+                        <div class="col-xl-8">
+                            <div class="card admin-card h-100">
+                                <div class="card-header bg-white border-0 pb-0">
+                                    <h5 class="fw-semibold mb-1">
+                                        <i class="fas fa-diagram-project me-2 text-primary"></i>Kịch bản hệ thống
+                                    </h5>
+                                    <p class="text-muted small mb-0">Quy trình quản trị từ tạo khóa học đến thanh toán của học viên.</p>
+                                </div>
+                                <div class="card-body">
+                                    <div class="admin-flow-timeline">
+                                        <div class="admin-flow-item">
+                                            <div class="admin-flow-dot">1</div>
+                                            <div>
+                                                <h6 class="mb-1">Admin thêm Course</h6>
+                                                <p class="text-muted mb-0 small">Nhập thông tin khóa học, kiểm tra validation, submit và lưu DB.</p>
+                                            </div>
+                                        </div>
+                                        <div class="admin-flow-item">
+                                            <div class="admin-flow-dot">2</div>
+                                            <div>
+                                                <h6 class="mb-1">Admin thêm Chapter</h6>
+                                                <p class="text-muted mb-0 small">Vào trang chi tiết khóa học, thêm chương theo thứ tự và mô tả.</p>
+                                            </div>
+                                        </div>
+                                        <div class="admin-flow-item">
+                                            <div class="admin-flow-dot">3</div>
+                                            <div>
+                                                <h6 class="mb-1">Admin thêm Topic (Video)</h6>
+                                                <p class="text-muted mb-0 small">Upload video, cập nhật metadata bài học, bật/tắt preview.</p>
+                                            </div>
+                                        </div>
+                                        <div class="admin-flow-item">
+                                            <div class="admin-flow-dot">4</div>
+                                            <div>
+                                                <h6 class="mb-1">Student mua Course</h6>
+                                                <p class="text-muted mb-0 small">Học viên thanh toán thành công qua VNPAY và được mở quyền học.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-lg-6">
-                                    <div class="flow-card p-3">
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <span class="flow-index">1</span>
-                                            <h6 class="mb-0">Admin thêm Course</h6>
-                                        </div>
-                                        <p class="mb-2 text-muted small">Đăng nhập → Add Course → Submit → Lưu DB → Hiển thị trong My Listed Course.</p>
-                                        <p class="mb-0"><strong>Data:</strong> Title, Description, Category, Type, Price, Discount, Author note, Special note, Prerequisite, Thumbnail.</p>
-                                    </div>
+                        <div class="col-xl-4">
+                            <div class="card admin-card h-100">
+                                <div class="card-header bg-white border-0 pb-0">
+                                    <h5 class="fw-semibold mb-1">
+                                        <i class="fas fa-bolt me-2 text-primary"></i>Quick Actions
+                                    </h5>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="flow-card p-3">
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <span class="flow-index">2</span>
-                                            <h6 class="mb-0">Admin thêm Chapter</h6>
-                                        </div>
-                                        <p class="mb-2 text-muted small">Vào chi tiết Course → Add Chapter → Lưu DB → Hiển thị trong danh sách chapter.</p>
-                                        <p class="mb-0"><strong>Data:</strong> Sr No, Section Name, Section Description.</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="flow-card p-3">
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <span class="flow-index">3</span>
-                                            <h6 class="mb-0">Admin thêm Topic (Video)</h6>
-                                        </div>
-                                        <p class="mb-2 text-muted small">Vào Chapter → Add Topic → Upload Video → Lưu DB + lưu file → tăng video count.</p>
-                                        <p class="mb-0"><strong>Data:</strong> Sr No (1.1, 1.2...), Topic Name, Description, Video.</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="flow-card p-3">
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <span class="flow-index">4</span>
-                                            <h6 class="mb-0">Student mua Course</h6>
-                                        </div>
-                                        <p class="mb-2 text-muted small">Student xem course giá discount → Purchase → Thanh toán → course nằm trong Purchased Courses.</p>
-                                        <p class="mb-0"><strong>Outcome:</strong> Student có quyền xem video khóa học đã mua.</p>
-                                    </div>
+                                <div class="card-body d-grid gap-2">
+                                    <a href="/admin/course/create" class="btn btn-primary">
+                                        <i class="fas fa-circle-plus me-1"></i> Tạo khóa học mới
+                                    </a>
+                                    <a href="/admin/course" class="btn btn-outline-primary">
+                                        <i class="fas fa-table-list me-1"></i> Quản lý khóa học
+                                    </a>
+                                    <a href="/admin/user" class="btn btn-outline-secondary">
+                                        <i class="fas fa-users me-1"></i> Quản lý người dùng
+                                    </a>
+                                    <a href="/admin/order" class="btn btn-outline-secondary">
+                                        <i class="fas fa-file-invoice-dollar me-1"></i> Theo dõi đơn hàng
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -175,14 +173,15 @@
 
                     <div class="row g-4 mb-4">
                         <div class="col-xl-7">
-                            <div class="card h-100">
-                                <div class="card-header fw-semibold">
-                                    <i class="fas fa-list-check me-2 text-primary"></i>
-                                    Phân tích chức năng
+                            <div class="card admin-card h-100">
+                                <div class="card-header bg-white">
+                                    <h5 class="fw-semibold mb-0">
+                                        <i class="fas fa-list-check me-2 text-primary"></i>Phân tích chức năng trọng tâm
+                                    </h5>
                                 </div>
                                 <div class="card-body table-responsive">
-                                    <table class="table table-bordered align-middle mb-0">
-                                        <thead class="table-light">
+                                    <table class="table table-hover align-middle mb-0 admin-table">
+                                        <thead>
                                             <tr>
                                                 <th>Function</th>
                                                 <th>Validation / Logic</th>
@@ -216,18 +215,19 @@
                         </div>
 
                         <div class="col-xl-5">
-                            <div class="card h-100">
-                                <div class="card-header fw-semibold">
-                                    <i class="fas fa-table me-2 text-primary"></i>
-                                    My Listed Course
+                            <div class="card admin-card h-100">
+                                <div class="card-header bg-white">
+                                    <h5 class="fw-semibold mb-0">
+                                        <i class="fas fa-table me-2 text-primary"></i>My Listed Course
+                                    </h5>
                                 </div>
                                 <div class="card-body">
                                     <p class="mb-3 text-muted">
                                         Danh sách quản trị khóa học nên hiển thị theo format rõ ràng để thao tác nhanh:
                                     </p>
                                     <div class="table-responsive">
-                                        <table class="table table-sm table-bordered align-middle">
-                                            <thead class="table-light">
+                                        <table class="table table-sm align-middle admin-table">
+                                            <thead>
                                                 <tr>
                                                     <th>Thumbnail</th>
                                                     <th>Name</th>
@@ -247,7 +247,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <a href="/admin/course" class="btn btn-primary btn-sm">
+                                    <a href="/admin/course" class="btn btn-primary btn-sm px-3">
                                         <i class="fas fa-arrow-right me-1"></i> Đi tới My Listed Course
                                     </a>
                                 </div>

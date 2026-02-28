@@ -86,17 +86,7 @@ public class CourseDetailController {
         if (purchased) {
             return "redirect:/learning/course/" + id;
         }
-        return "redirect:/course/" + id + "/checkout";
-    }
-
-    @GetMapping("/course/{id}/checkout")
-    public String checkoutCoursePage(@PathVariable long id, Model model) {
-        Course course = this.courseService.getCourseById(id);
-        if (course == null) {
-            return "redirect:/";
-        }
-        model.addAttribute("course", course);
-        return "client/course/checkout";
+        return "redirect:/payment/checkout/" + id;
     }
 
     @GetMapping("/learning/course/{id}")
@@ -111,7 +101,7 @@ public class CourseDetailController {
         boolean purchased = currentUser != null && orderService.hasPurchasedCourse(currentUser.getId(), course.getId());
 
         if (!freeCourse && !purchased) {
-            return "redirect:/course/" + id + "/checkout";
+            return "redirect:/payment/checkout/" + id;
         }
 
         java.util.List<Chapter> chapters = this.chapterService.fetchByCourseId(id);

@@ -75,6 +75,7 @@
                                                     <h6 class="dropdown-header">${currentUser.fullName}</h6>
                                                 </li>
                                                 <li><a class="dropdown-item" href="/account/profile">Hồ sơ</a></li>
+                                                <li><a class="dropdown-item" href="/home/my-courses/learning">Khóa học của tôi</a></li>
                                                 <li><a class="dropdown-item" href="/account/purchase-history">Lịch sử
                                                         mua hàng</a>
                                                 </li>
