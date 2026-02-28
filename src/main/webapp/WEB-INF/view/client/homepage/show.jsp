@@ -105,12 +105,18 @@
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between align-items-start mb-2"><span
                                                         class="badge bg-primary bg-opacity-10 text-primary">${course.level}</span>
-                                                    <form action="/add-course-to-cart/${course.id}" method="post">
-                                                        <button class="btn btn-sm btn-warning">
-                                                            <i class="bi bi-cart-plus"></i>
-                                                            Thêm vào giỏ
-                                                        </button>
-                                                    </form>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-warning"
+                                                        data-action="add-to-cart"
+                                                        data-course-id="${course.id}"
+                                                        data-course-title="${course.name}"
+                                                        data-course-price-number="${course.price}"
+                                                        data-course-author="${course.author}"
+                                                        data-course-level="${course.level}"
+                                                        data-course-image="/images/course/${course.thumbnail}">
+                                                        <i class="bi bi-cart-plus"></i>
+                                                        Thêm vào giỏ
+                                                    </button>
 
                                                 </div>
                                                 <h5 class="card-title fw-bold">${course.name}</h5>

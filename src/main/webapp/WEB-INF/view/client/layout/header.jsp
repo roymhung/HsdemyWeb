@@ -41,7 +41,8 @@
                                         <a href="/cart" class="position-relative text-dark fs-5" title="Giỏ hàng">
                                             <i class="bi bi-cart3"></i>
                                             <span
-                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                                data-cart-badge
+                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"
                                                 style="font-size: 10px;">0</span>
                                         </a>
 

@@ -169,6 +169,11 @@
         return getCartItems().reduce((sum, it) => sum + (Number(it?.qty) || 0), 0);
     }
 
+    function formatPriceVnd(value) {
+        const n = Number(value) || 0;
+        return `${Math.round(n).toLocaleString('vi-VN')} đ`;
+    }
+
     function updateCartBadges() {
         const count = getCartCount();
         document.querySelectorAll('[data-cart-badge]').forEach(badge => {
@@ -193,13 +198,24 @@
             e.preventDefault();
             const id = btn.getAttribute('data-course-id') || 'course';
             const title = btn.getAttribute('data-course-title') || 'Khóa học';
-            const price = btn.getAttribute('data-course-price') || '';
+            const priceNumber = Number(btn.getAttribute('data-course-price-number') || 0);
+            const author = btn.getAttribute('data-course-author') || '';
+            const level = btn.getAttribute('data-course-level') || '';
+            const image = btn.getAttribute('data-course-image') || '';
 
             const items = getCartItems();
             const existing = items.find(it => it.id === id);
             if (existing) existing.qty = (Number(existing.qty) || 1) + 1;
-            else items.push({ id, title, price, qty: 1 });
+            else items.push({ id, title, priceNumber, author, level, image, qty: 1 });
             setCartItems(items);
+        });
+
+        document.addEventListener('click', function(e) {
+            const clearBtn = e.target.closest('[data-action="clear-cart"]');
+            if (!clearBtn) return;
+            e.preventDefault();
+            setCartItems([]);
+            renderCartPage();
         });
     }
 
@@ -208,37 +224,55 @@
         const emptyEl = document.querySelector('[data-cart-empty]');
         const listSectionEl = document.querySelector('[data-cart-list]');
         const listItemsEl = document.querySelector('[data-cart-items]');
+        const countLabelEl = document.querySelector('[data-cart-count-label]');
+        const totalEl = document.querySelector('[data-cart-total]');
 
         if (!emptyEl || !listSectionEl || !listItemsEl) return;
 
         if (!items.length) {
             emptyEl.classList.remove('d-none');
             listSectionEl.classList.add('d-none');
+            if (countLabelEl) countLabelEl.textContent = '0';
+            if (totalEl) totalEl.textContent = formatPriceVnd(0);
             return;
         }
 
         emptyEl.classList.add('d-none');
         listSectionEl.classList.remove('d-none');
+        const total = items.reduce((sum, it) => {
+            const qty = Number(it.qty) || 1;
+            const price = Number(it.priceNumber) || 0;
+            return sum + price * qty;
+        }, 0);
+        if (countLabelEl) countLabelEl.textContent = String(items.length);
+        if (totalEl) totalEl.textContent = formatPriceVnd(total);
 
         listItemsEl.innerHTML = items.map(it => {
             const safeTitle = escapeHtml(it.title || 'Khóa học');
-            const safePrice = escapeHtml(it.price || '');
+            const safeAuthor = escapeHtml(it.author || 'Giảng viên');
+            const safeLevel = escapeHtml(it.level || 'Tất cả cấp độ');
+            const safeImage = escapeHtml(it.image || '/images/course/default.jpg');
             const qty = Number(it.qty) || 1;
+            const linePrice = (Number(it.priceNumber) || 0) * qty;
             return `
-                <div class="card border-0 shadow-sm mb-3">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold mb-1">${safeTitle}</h6>
-                            <div class="text-muted small">${safePrice ? safePrice : ''}</div>
+                <div class="cart-course-item">
+                    <div class="d-flex justify-content-between gap-3">
+                        <div class="d-flex gap-3 flex-grow-1">
+                            <img src="${safeImage}" alt="${safeTitle}" class="cart-thumb" />
+                            <div>
+                                <h6 class="fw-bold mb-1">${safeTitle}</h6>
+                                <div class="text-muted small mb-1">${safeAuthor}</div>
+                                <div class="text-muted small">${safeLevel} • SL: ${qty}</div>
+                            </div>
                         </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="badge bg-primary bg-opacity-10 text-primary">x${qty}</span>
-                            <button class="btn btn-outline-danger btn-sm" data-action="remove-cart-item" data-item-id="${escapeHtml(it.id)}">
-                                <i class="bi bi-trash"></i>
+                        <div class="text-end">
+                            <div class="fw-bold">${formatPriceVnd(linePrice)}</div>
+                            <button class="btn btn-link btn-sm text-danger p-0 mt-1" data-action="remove-cart-item" data-item-id="${escapeHtml(it.id)}">
+                                Xóa
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>    
             `;
         }).join('');
 
