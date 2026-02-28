@@ -68,4 +68,28 @@ public class UserService {
         return this.userRepository.findByEmail(email);
     }
 
+    public boolean resetPasswordByEmail(String email, String newRawPassword) {
+        User user = this.userRepository.findByEmail(email);
+        if (user == null) {
+            return false;
+        }
+        user.setPassword(this.passwordEncoder.encode(newRawPassword));
+        this.userRepository.save(user);
+        return true;
+    }
+
+    public User updateProfile(Long userId, User incomingUser) {
+        User currentUser = this.getUserById(userId);
+        if (currentUser == null) {
+            return null;
+        }
+        if (incomingUser.getEmail() != null && !incomingUser.getEmail().isBlank()) {
+            currentUser.setEmail(incomingUser.getEmail().trim());
+        }
+        currentUser.setFullName(incomingUser.getFullName());
+        currentUser.setPhone(incomingUser.getPhone());
+        currentUser.setAddress(incomingUser.getAddress());
+        return this.userRepository.save(currentUser);
+    }
+
 }

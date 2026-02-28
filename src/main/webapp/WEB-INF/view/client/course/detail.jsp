@@ -30,7 +30,8 @@
                     <!-- End Header -->
 
                     <!-- Course Header -->
-                    <section class="bg-dark text-white mt-5">
+                    <section class="text-white mt-5"
+                        style="background-image: linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)), url('/images/course/${course.thumbnail}'); background-size: cover; background-position: center;">
                         <div class="container py-5">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb mb-0">
@@ -46,7 +47,8 @@
                         </div>
                     </section>
 
-                    <section class="bg-dark text-white">
+                    <section class="text-white"
+                        style="background-image: linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)), url('/images/course/${course.thumbnail}'); background-size: cover; background-position: center;">
                         <div class="container py-5">
                             <div class="row">
                                 <div class="col-lg-8">

@@ -17,15 +17,34 @@
                 <!-- Navbar-->
                 <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" id="navbarDropdown" href="#"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <c:choose>
+                                <c:when test="${not empty currentUser.avatar}">
+                                    <img src="/images/avatar/${currentUser.avatar}" alt="avatar" class="rounded-circle"
+                                        style="width: 32px; height: 32px; object-fit: cover;">
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="fas fa-user fa-fw"></i>
+                                </c:otherwise>
+                            </c:choose>
+                            <span class="text-white">${currentUser.fullName}</span>
+                        </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#!">Settings</a></li>
-                            <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                            <li>
+                                <h6 class="dropdown-header">${currentUser.fullName}</h6>
+                            </li>
+                            <li><a class="dropdown-item" href="/account/profile">Hồ sơ</a></li>
+                            <li><a class="dropdown-item" href="/account/purchase-history">Lịch sử mua hàng</a></li>
                             <li>
                                 <hr class="dropdown-divider" />
                             </li>
-                            <li><a class="dropdown-item" href="#!">Logout</a></li>
+                            <li>
+                                <form action="/logout" method="post" class="px-3">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                    <button type="submit" class="btn btn-link p-0 text-decoration-none">Đăng xuất</button>
+                                </form>
+                            </li>
                         </ul>
                     </li>
                 </ul>

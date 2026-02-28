@@ -111,13 +111,20 @@
 
                                         <div class="d-flex justify-content-between align-items-center mb-4">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="remember">
-                                                <label class="form-check-label" for="remember">Ghi nhớ</label>
+                                                <input class="form-check-input" type="checkbox" id="remember-me"
+                                                    name="remember-me">
+                                                <label class="form-check-label" for="remember-me">Ghi nhớ</label>
                                             </div>
-                                            <a href="#" class="small text-decoration-none">Quên mật khẩu?</a>
+                                            <a href="/forgot-password" class="small text-decoration-none">Quên mật khẩu?</a>
                                         </div>
                                         <c:if test="${param.error != null}">
                                             <div class="my-2" style="color: red;">Thông tin không chính xác.</div>
+                                        </c:if>
+                                        <c:if test="${param.expired != null}">
+                                            <div class="my-2" style="color: red;">Tài khoản của bạn đã đăng nhập ở nơi khác, phiên hiện tại đã bị đăng xuất.</div>
+                                        </c:if>
+                                        <c:if test="${param.resetSuccess != null}">
+                                            <div class="my-2" style="color: green;">Đổi mật khẩu thành công. Vui lòng đăng nhập lại.</div>
                                         </c:if>
                                         <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
                                     </form>

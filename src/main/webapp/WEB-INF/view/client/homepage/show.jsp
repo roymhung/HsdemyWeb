@@ -30,6 +30,14 @@
                     <jsp:include page="../layout/header.jsp" />
                     <!-- End Header -->
 
+                    <c:if test="${param.concurrentLogin != null}">
+                        <div class="container mt-5 pt-4">
+                            <div class="alert alert-warning mb-0">
+                                Tài khoản của bạn đang được đăng nhập ở nơi khác. Phiên trước đó đã bị đăng xuất.
+                            </div>
+                        </div>
+                    </c:if>
+
                     <!-- Start banner -->
                     <jsp:include page="../layout/banner.jsp" />
                     <!-- End banner -->

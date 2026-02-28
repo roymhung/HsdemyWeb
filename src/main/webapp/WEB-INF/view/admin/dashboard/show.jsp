@@ -33,6 +33,11 @@
                         <main>
                             <div class="container-fluid px-4">
                                 <h1 class="mt-4">Dashboard</h1>
+                                <c:if test="${param.concurrentLogin != null}">
+                                    <div class="alert alert-warning">
+                                        Tài khoản của bạn đang được đăng nhập ở nơi khác. Phiên trước đó đã bị đăng xuất.
+                                    </div>
+                                </c:if>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item active">Dashboard</li>
                                 </ol>

@@ -2,7 +2,6 @@ package Hsdemy.vn.HsdemyWeb.controller.client;
 
 import java.util.List;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import Hsdemy.vn.HsdemyWeb.domain.Course;
 import Hsdemy.vn.HsdemyWeb.domain.User;
 import Hsdemy.vn.HsdemyWeb.domain.dto.RegisterDTO;
+import Hsdemy.vn.HsdemyWeb.domain.dto.ResetPasswordDTO;
 import Hsdemy.vn.HsdemyWeb.service.CourseService;
 import Hsdemy.vn.HsdemyWeb.service.UserService;
 import jakarta.validation.Valid;
@@ -22,13 +22,10 @@ public class HomePageController {
 
     private final CourseService courseService;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
-    public HomePageController(CourseService courseService, PasswordEncoder passwordEncoder,
-            UserService userService) {
+    public HomePageController(CourseService courseService, UserService userService) {
         this.courseService = courseService;
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/")
@@ -55,9 +52,6 @@ public class HomePageController {
         //
 
         User user = this.userService.registerDTOtoUser(registerDTO);
-
-        String hashPassword = this.passwordEncoder.encode(user.getPassword());
-        user.setPassword(hashPassword);
         user.setRole(this.userService.getRoleByName("USER"));
 
         // save
@@ -69,5 +63,31 @@ public class HomePageController {
     @GetMapping("/login")
     public String getLoginPage(Model model) {
         return "client/auth/login";
+    }
+
+    @GetMapping("/forgot-password")
+    public String getForgotPasswordPage(Model model) {
+        model.addAttribute("resetPassword", new ResetPasswordDTO());
+        return "client/auth/forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String handleForgotPassword(@ModelAttribute("resetPassword") @Valid ResetPasswordDTO resetPassword,
+            BindingResult bindingResult) {
+
+        if (!resetPassword.getPassword().equals(resetPassword.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "password.mismatch", "Mat khau nhap lai khong khop");
+        }
+
+        if (!this.userService.checkEmailExist(resetPassword.getEmail())) {
+            bindingResult.rejectValue("email", "email.notFound", "Email khong ton tai trong he thong");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "client/auth/forgot-password";
+        }
+
+        this.userService.resetPasswordByEmail(resetPassword.getEmail(), resetPassword.getPassword());
+        return "redirect:/login?resetSuccess";
     }
 }
