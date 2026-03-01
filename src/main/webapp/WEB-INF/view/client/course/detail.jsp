@@ -240,7 +240,7 @@
                                                 <h3 class="fw-bold mb-0">
                                                     <c:choose>
                                                         <c:when test="${course.price <= 0}">
-                                                            <span class="text-success">Miễn phí</span>
+                                                            <span class="text-primary">Miễn phí</span>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span class="text-primary">

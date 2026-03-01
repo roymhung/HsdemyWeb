@@ -24,8 +24,8 @@
                                         <a class="nav-link" href="/home/my-courses/learning">Học tập</a>
                                     </li>
                                 </c:if>
-                                <li class="nav-item"><a class="nav-link" href="#">Lộ trình học tập</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Về chúng tôi</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/learning-path">Lộ trình học tập</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/about-us">Về chúng tôi</a></li>
                             </ul>
 
                             <div class="d-flex align-items-center gap-3">

@@ -78,6 +78,16 @@ public class HomePageController {
         return "client/course/show";
     }
 
+    @GetMapping("/learning-path")
+    public String getLearningPathPage() {
+        return "client/homepage/learning-path";
+    }
+
+    @GetMapping("/about-us")
+    public String getAboutUsPage() {
+        return "client/homepage/about-us";
+    }
+
     @GetMapping("/api/search/suggestions")
     @ResponseBody
     public SearchSuggestionResponse getSearchSuggestions(

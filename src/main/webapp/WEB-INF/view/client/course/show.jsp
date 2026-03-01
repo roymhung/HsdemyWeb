@@ -16,10 +16,30 @@
     <link rel="stylesheet" href="/client/css/style.css">
 
     <style>
-        .courses-hero {
+        .page-hero {
             margin-top: 76px;
-            background: linear-gradient(120deg, #111827 0%, #1f2937 55%, #0f172a 100%);
+            background: linear-gradient(120deg, #0f172a 0%, #1e293b 45%, #334155 100%);
             color: #fff;
+        }
+
+        .page-hero-kicker {
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            font-size: .78rem;
+            font-weight: 600;
+            color: rgba(226, 232, 240, .92);
+            margin-bottom: .5rem;
+        }
+
+        .page-hero-title {
+            font-weight: 800;
+            margin-bottom: .6rem;
+        }
+
+        .page-hero-desc {
+            color: rgba(226, 232, 240, .82);
+            margin-bottom: 0;
+            max-width: 700px;
         }
 
         .filter-card {
@@ -47,11 +67,11 @@
 <body>
     <jsp:include page="../layout/header.jsp" />
 
-    <section class="courses-hero py-5">
+    <section class="page-hero py-5">
         <div class="container py-4">
-            <p class="text-uppercase mb-2 small text-info fw-semibold">Trang chủ / Khóa học</p>
-            <h1 class="fw-bold mb-2">Tất Cả Khóa Học</h1>
-            <p class="mb-0 text-white-50">
+            <p class="page-hero-kicker">Trang chủ / Khóa học</p>
+            <h1 class="page-hero-title">Tất Cả Khóa Học</h1>
+            <p class="page-hero-desc">
                 Khám phá danh sách khóa học phù hợp với nhu cầu của bạn.
             </p>
         </div>
@@ -146,7 +166,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <c:choose>
                                                 <c:when test="${course.price <= 0}">
-                                                    <span class="fw-bold text-success">Miễn phí</span>
+                                                    <span class="fw-bold text-primary">Miễn phí</span>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="fw-bold text-primary">

@@ -125,7 +125,7 @@
                                                     <div>
                                                         <c:choose>
                                                             <c:when test="${course.price <= 0}">
-                                                                <span class="fw-bold text-success fs-5">Miễn phí</span>
+                                                                <span class="fw-bold text-primary fs-5">Miễn phí</span>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <span class="fw-bold text-primary fs-5">

@@ -10,8 +10,16 @@
   --light-color: #f8f9fa;
 }
 
+html,
+body,
+button,
+input,
+select,
+textarea {
+  font-family: "Inter", sans-serif !important;
+}
+
 body {
-  font-family: "Inter", sans-serif;
   color: #333;
 }
 
