@@ -29,11 +29,10 @@
                             </ul>
 
                             <div class="d-flex align-items-center gap-3">
-                                <form action="/" method="get" class="d-none d-md-block position-relative" id="globalSearchForm" autocomplete="off">
+                                <form action="/" method="get" class="d-none d-md-block position-relative"
+                                    id="globalSearchForm" autocomplete="off">
                                     <input class="form-control form-control-sm ps-4" type="search"
-                                        id="globalSearchInput"
-                                        name="q"
-                                        value="${param.q}"
+                                        id="globalSearchInput" name="q" value="${param.q}"
                                         placeholder="Tìm khóa học, kỹ năng, chứng chỉ..." style="width: 230px;">
                                     <i
                                         class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-2 text-muted"></i>
@@ -44,8 +43,7 @@
                                     <c:when test="${loggedIn}">
                                         <a href="/cart" class="position-relative text-dark fs-5" title="Giỏ hàng">
                                             <i class="bi bi-cart3"></i>
-                                            <span
-                                                data-cart-badge
+                                            <span data-cart-badge
                                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"
                                                 style="font-size: 10px;">0</span>
                                         </a>
@@ -53,10 +51,10 @@
                                         <a href="/notifications" class="position-relative text-dark fs-5"
                                             title="Thông báo">
                                             <i class="bi bi-bell"></i>
-                                            <span
-                                                data-notification-badge
-                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                                style="font-size: 10px; ${notificationUnreadCount > 0 ? '' : 'display:none;'}">${notificationUnreadCount}</span>
+                                            <span data-notification-badge class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger 
+           ${notificationUnreadCount == 0 ? 'd-none' : ''}" style="font-size: 10px;">
+                                                ${notificationUnreadCount}
+                                            </span>
                                         </a>
 
                                         <div class="dropdown">
@@ -80,7 +78,8 @@
                                                     <h6 class="dropdown-header">${currentUser.fullName}</h6>
                                                 </li>
                                                 <li><a class="dropdown-item" href="/account/profile">Hồ sơ</a></li>
-                                                <li><a class="dropdown-item" href="/home/my-courses/learning">Khóa học của tôi</a></li>
+                                                <li><a class="dropdown-item" href="/home/my-courses/learning">Khóa học
+                                                        của tôi</a></li>
                                                 <li><a class="dropdown-item" href="/account/purchase-history">Lịch sử
                                                         mua hàng</a>
                                                 </li>

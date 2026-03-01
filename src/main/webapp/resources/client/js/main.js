@@ -196,6 +196,14 @@
         return `${Math.round(n).toLocaleString('vi-VN')} đ`;
     }
 
+    function formatLevelVi(levelRaw) {
+        const level = String(levelRaw || '').trim().toUpperCase();
+        if (level === 'BEGINNER' || level === 'BIGINNER') return 'CƠ BẢN';
+        if (level === 'INTERMEDIATE') return 'TRUNG CẤP';
+        if (level === 'ADVANCED') return 'NÂNG CAO';
+        return String(levelRaw || 'Tất cả cấp độ');
+    }
+
     function updateCartBadges() {
         const count = getCartCount();
         document.querySelectorAll('[data-cart-badge]').forEach(badge => {
@@ -219,7 +227,7 @@
         try {
             const params = new URLSearchParams();
             numericIds.forEach(id => params.append('ids', String(id)));
-            const res = await fetch(`/api/courses/active-ids?${params.toString()}`, {
+            const res = await fetch(`/api/courses/cart-details?${params.toString()}`, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' }
             });
@@ -227,12 +235,33 @@
                 return items;
             }
             const payload = await res.json();
-            const activeIds = new Set((payload?.activeIds || []).map(id => String(id)));
-            const filtered = items.filter(it => !it?.id || activeIds.has(String(it.id)));
-            if (filtered.length !== items.length) {
-                setCartItems(filtered);
+            const serverCourses = Array.isArray(payload?.courses) ? payload.courses : [];
+            const byId = new Map(serverCourses.map(course => [String(course?.id || ''), course]));
+
+            const synced = items
+                .filter(it => {
+                    const id = String(it?.id || '');
+                    return id && byId.has(id);
+                })
+                .map(it => {
+                    const id = String(it?.id || '');
+                    const serverCourse = byId.get(id);
+                    const thumbnail = serverCourse?.thumbnail || '';
+                    return {
+                        ...it,
+                        title: serverCourse?.name || it.title || 'Khóa học',
+                        author: serverCourse?.author || it.author || '',
+                        level: serverCourse?.level || it.level || '',
+                        priceNumber: Number(serverCourse?.price) || 0,
+                        image: thumbnail ? `/images/course/${thumbnail}` : (it.image || '')
+                    };
+                });
+
+            const changed = JSON.stringify(normalizeCartItems(items)) !== JSON.stringify(normalizeCartItems(synced));
+            if (changed) {
+                setCartItems(synced);
             }
-            return filtered;
+            return synced;
         } catch (e) {
             return items;
         }
@@ -320,7 +349,7 @@
         listItemsEl.innerHTML = items.map(it => {
             const safeTitle = escapeHtml(it.title || 'Khóa học');
             const safeAuthor = escapeHtml(it.author || 'Giảng viên');
-            const safeLevel = escapeHtml(it.level || 'Tất cả cấp độ');
+            const safeLevel = escapeHtml(formatLevelVi(it.level));
             const safeImage = escapeHtml(it.image || '/images/course/default.jpg');
             const qty = Number(it.qty) || 1;
             const linePrice = (Number(it.priceNumber) || 0) * qty;

@@ -136,7 +136,14 @@
                                                     <p class="mb-3 opacity-75">${course.shortDesc}</p>
                                                     <div class="mb-3">
                                                         <span class="meta-badge">Tác giả: ${course.author}</span>
-                                                        <span class="meta-badge">Cấp độ: ${course.level}</span>
+                                                        <span class="meta-badge">Cấp độ:
+                                                            <c:choose>
+                                                                <c:when test="${course.level == 'BEGINNER' || course.level == 'beginner' || course.level == 'BIGINNER' || course.level == 'biginner'}">CƠ BẢN</c:when>
+                                                                <c:when test="${course.level == 'INTERMEDIATE' || course.level == 'intermediate'}">TRUNG CẤP</c:when>
+                                                                <c:when test="${course.level == 'ADVANCED' || course.level == 'advanced'}">NÂNG CAO</c:when>
+                                                                <c:otherwise>${course.level}</c:otherwise>
+                                                            </c:choose>
+                                                        </span>
                                                         <span class="meta-badge">Danh mục: ${course.title}</span>
                                                     </div>
                                                     <h4 class="mb-0">

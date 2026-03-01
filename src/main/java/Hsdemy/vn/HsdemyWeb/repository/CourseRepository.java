@@ -2,6 +2,8 @@ package Hsdemy.vn.HsdemyWeb.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,8 @@ import Hsdemy.vn.HsdemyWeb.domain.Course;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findAllByDeletedFalse();
     List<Course> findAllByDeletedTrue();
+    Page<Course> findAllByDeletedFalse(Pageable pageable);
+    Page<Course> findAllByDeletedTrue(Pageable pageable);
 
     java.util.Optional<Course> findByIdAndDeletedFalse(Long id);
     java.util.Optional<Course> findByIdAndDeletedTrue(Long id);
@@ -21,6 +25,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("SELECT c.id FROM Course c WHERE c.deleted = false AND c.id IN :ids")
     List<Long> findActiveIdsByIds(@Param("ids") List<Long> ids);
+
+    List<Course> findByIdInAndDeletedFalse(List<Long> ids);
 
     @Query("""
             SELECT c FROM Course c

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Locale;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ import Hsdemy.vn.HsdemyWeb.domain.dto.RegisterDTO;
 import Hsdemy.vn.HsdemyWeb.domain.dto.ResetPasswordDTO;
 import Hsdemy.vn.HsdemyWeb.service.CourseService;
 import Hsdemy.vn.HsdemyWeb.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @Controller
@@ -37,7 +40,12 @@ public class HomePageController {
     @GetMapping("/")
     public String getHomePage(
             @RequestParam(value = "q", required = false) String keyword,
+            HttpServletResponse response,
             Model model) {
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
         List<Course> courses = this.courseService.searchCourses(keyword);
         model.addAttribute("courses", courses);
         model.addAttribute("searchKeyword", keyword == null ? "" : keyword.trim());
@@ -53,7 +61,11 @@ public class HomePageController {
             @RequestParam(value = "priceRange", required = false, defaultValue = "ALL") String priceRange,
             @RequestParam(value = "sort", defaultValue = "newest") String sort,
             @RequestParam(value = "page", defaultValue = "1") int page,
+            HttpServletResponse response,
             Model model) {
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
 
         List<Course> filteredCourses = new ArrayList<>(courseService.filterCourses(keyword, level, title, priceRange, sort));
 
@@ -70,7 +82,8 @@ public class HomePageController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("selectedKeyword", keyword == null ? "" : keyword.trim());
-        model.addAttribute("selectedLevel", level == null ? "" : level.trim());
+        model.addAttribute("selectedLevel",
+                level == null || level.isBlank() ? "" : level.trim().toUpperCase(Locale.ROOT));
         model.addAttribute("selectedTitle", title == null ? "" : title.trim());
         model.addAttribute("selectedPriceRange",
                 priceRange == null || priceRange.isBlank() ? "ALL" : priceRange.trim().toUpperCase());
@@ -125,6 +138,23 @@ public class HomePageController {
             @RequestParam(value = "ids", required = false) List<Long> ids) {
         List<Long> activeIds = courseService.getActiveCourseIds(ids == null ? List.of() : ids);
         return new ActiveCourseIdsResponse(new HashSet<>(activeIds));
+    }
+
+    @GetMapping("/api/courses/cart-details")
+    @ResponseBody
+    public CartCourseDetailsResponse getCartCourseDetails(
+            @RequestParam(value = "ids", required = false) List<Long> ids) {
+        Map<Long, Course> activeCourses = courseService.getActiveCourseMapByIds(ids == null ? List.of() : ids);
+        List<CartCourseItem> courses = activeCourses.values().stream()
+                .map(course -> new CartCourseItem(
+                        course.getId(),
+                        course.getName(),
+                        course.getAuthor() == null ? "" : course.getAuthor(),
+                        course.getLevel() == null ? "" : course.getLevel(),
+                        course.getPrice(),
+                        course.getThumbnail() == null ? "" : course.getThumbnail()))
+                .toList();
+        return new CartCourseDetailsResponse(courses);
     }
 
     @GetMapping("/register")
@@ -258,6 +288,60 @@ public class HomePageController {
 
         public Set<Long> getActiveIds() {
             return activeIds;
+        }
+    }
+
+    public static class CartCourseDetailsResponse {
+        private final List<CartCourseItem> courses;
+
+        public CartCourseDetailsResponse(List<CartCourseItem> courses) {
+            this.courses = courses;
+        }
+
+        public List<CartCourseItem> getCourses() {
+            return courses;
+        }
+    }
+
+    public static class CartCourseItem {
+        private final Long id;
+        private final String name;
+        private final String author;
+        private final String level;
+        private final double price;
+        private final String thumbnail;
+
+        public CartCourseItem(Long id, String name, String author, String level, double price, String thumbnail) {
+            this.id = id;
+            this.name = name;
+            this.author = author;
+            this.level = level;
+            this.price = price;
+            this.thumbnail = thumbnail;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public String getLevel() {
+            return level;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public String getThumbnail() {
+            return thumbnail;
         }
     }
 }

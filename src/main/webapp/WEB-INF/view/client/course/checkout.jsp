@@ -59,7 +59,14 @@
                                 <h5 class="mb-2">${course.name}</h5>
                                 <p class="text-muted mb-2">${course.shortDesc}</p>
                                 <div class="small text-muted mb-1">Giảng viên: ${course.author}</div>
-                                <div class="small text-muted mb-1">Cấp độ: ${course.level}</div>
+                                <div class="small text-muted mb-1">Cấp độ:
+                                    <c:choose>
+                                        <c:when test="${course.level == 'BEGINNER' || course.level == 'beginner' || course.level == 'BIGINNER' || course.level == 'biginner'}">CƠ BẢN</c:when>
+                                        <c:when test="${course.level == 'INTERMEDIATE' || course.level == 'intermediate'}">TRUNG CẤP</c:when>
+                                        <c:when test="${course.level == 'ADVANCED' || course.level == 'advanced'}">NÂNG CAO</c:when>
+                                        <c:otherwise>${course.level}</c:otherwise>
+                                    </c:choose>
+                                </div>
                             </div>
                         </div>
                         <hr class="my-4" />

@@ -89,7 +89,14 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-info text-dark">${course.level}</span>
+                                                    <span class="badge bg-info text-dark">
+                                                        <c:choose>
+                                                            <c:when test="${course.level == 'BEGINNER' || course.level == 'beginner' || course.level == 'BIGINNER' || course.level == 'biginner'}">CƠ BẢN</c:when>
+                                                            <c:when test="${course.level == 'INTERMEDIATE' || course.level == 'intermediate'}">TRUNG CẤP</c:when>
+                                                            <c:when test="${course.level == 'ADVANCED' || course.level == 'advanced'}">NÂNG CAO</c:when>
+                                                            <c:otherwise>${course.level}</c:otherwise>
+                                                        </c:choose>
+                                                    </span>
                                                 </td>
                                                 <td>
                                                     <c:if test="${not empty course.thumbnail}">
@@ -146,6 +153,40 @@
                                         </c:if>
                                     </tbody>
                                 </table>
+
+                                <c:if test="${totalPages > 1}">
+                                    <nav aria-label="Phân trang khóa học" class="mt-3">
+                                        <ul class="pagination justify-content-center mb-0">
+                                            <c:url var="prevUrl" value="/admin/course">
+                                                <c:param name="view" value="${selectedView}" />
+                                                <c:param name="page" value="${currentPage - 1}" />
+                                            </c:url>
+                                            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                                <a class="page-link" href="${currentPage == 1 ? '#' : prevUrl}">
+                                                    Trang trước
+                                                </a>
+                                            </li>
+
+                                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                                    <a class="page-link" href="/admin/course?view=${selectedView}&page=${i}">
+                                                        ${i}
+                                                    </a>
+                                                </li>
+                                            </c:forEach>
+
+                                            <c:url var="nextUrl" value="/admin/course">
+                                                <c:param name="view" value="${selectedView}" />
+                                                <c:param name="page" value="${currentPage + 1}" />
+                                            </c:url>
+                                            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                                <a class="page-link" href="${currentPage == totalPages ? '#' : nextUrl}">
+                                                    Trang sau
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </c:if>
                             </div>
                         </div>
                     </div>

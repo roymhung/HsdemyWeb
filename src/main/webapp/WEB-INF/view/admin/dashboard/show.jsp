@@ -1,5 +1,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
         <!DOCTYPE html>
         <html lang="en">
 
@@ -102,7 +103,10 @@
                                         </div>
                                         <div>
                                             <div class="text-muted small">Doanh thu đã thanh toán (VND)</div>
-                                            <h4 class="mb-0">${paidRevenue}</h4>
+                                            <h4 class="mb-0">
+                                                <fmt:formatNumber value="${paidRevenue}" type="number" groupingUsed="true"
+                                                    maxFractionDigits="0" />
+                                            </h4>
                                         </div>
                                     </div>
                                 </div>

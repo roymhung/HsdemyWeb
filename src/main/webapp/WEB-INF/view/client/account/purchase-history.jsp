@@ -7,7 +7,7 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Lich su mua hang</title>
+                <title>Lịch sử mua hàng</title>
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
                 <link rel="stylesheet"
                     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -19,17 +19,17 @@
 
                 <section class="py-5 mt-5">
                     <div class="container">
-                        <h2 class="fw-bold mb-4">Lich su mua hang</h2>
+                        <h2 class="fw-bold mb-4">Lịch sử mua hàng</h2>
 
                         <div class="table-responsive">
                             <table class="table table-bordered align-middle">
                                 <thead class="table-dark">
                                     <tr>
                                         <th>Order ID</th>
-                                        <th>Ngay tao</th>
-                                        <th>Trang thai</th>
-                                        <th>Tong tien</th>
-                                        <th>Khoa hoc</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Trạng thái</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Khóa học</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,7 +54,7 @@
                                     </c:forEach>
                                     <c:if test="${empty orders}">
                                         <tr>
-                                            <td colspan="5" class="text-center">Chua co don hang nao.</td>
+                                            <td colspan="5" class="text-center">Chưa có đơn hàng nào.</td>
                                         </tr>
                                     </c:if>
                                 </tbody>

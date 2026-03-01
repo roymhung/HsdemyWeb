@@ -104,7 +104,14 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between align-items-start mb-2"><span
-                                                        class="badge bg-primary bg-opacity-10 text-primary">${course.level}</span>
+                                                        class="badge bg-primary bg-opacity-10 text-primary">
+                                                        <c:choose>
+                                                            <c:when test="${course.level == 'BEGINNER' || course.level == 'beginner' || course.level == 'BIGINNER' || course.level == 'biginner'}">CƠ BẢN</c:when>
+                                                            <c:when test="${course.level == 'INTERMEDIATE' || course.level == 'intermediate'}">TRUNG CẤP</c:when>
+                                                            <c:when test="${course.level == 'ADVANCED' || course.level == 'advanced'}">NÂNG CAO</c:when>
+                                                            <c:otherwise>${course.level}</c:otherwise>
+                                                        </c:choose>
+                                                    </span>
                                                     <button type="button"
                                                         class="btn btn-sm btn-warning"
                                                         data-action="add-to-cart"

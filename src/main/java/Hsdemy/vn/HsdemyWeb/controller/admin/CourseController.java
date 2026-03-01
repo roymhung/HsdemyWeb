@@ -2,6 +2,10 @@ package Hsdemy.vn.HsdemyWeb.controller.admin;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +27,7 @@ import Hsdemy.vn.HsdemyWeb.service.UploadService;
 
 @Controller
 public class CourseController {
+    private static final int COURSES_PER_PAGE = 9;
 
     private final CourseService courseService;
     private final ChapterService chapterService;
@@ -38,13 +43,25 @@ public class CourseController {
     @GetMapping("/admin/course")
     public String getcoursePage(
             @RequestParam(value = "view", defaultValue = "active") String view,
+            @RequestParam(value = "page", defaultValue = "1") int page,
             Model model) {
         boolean trashView = "trash".equalsIgnoreCase(view);
-        List<Course> courses = trashView ? this.courseService.fetchDeletedCourses() : this.courseService.fetchCourses();
-        model.addAttribute("courses", courses);
+        int currentPage = Math.max(1, page);
+        Pageable pageable = PageRequest.of(currentPage - 1, COURSES_PER_PAGE, Sort.by("id").ascending());
+        Page<Course> coursePage = this.courseService.fetchCoursesByView(trashView, pageable);
+
+        if (currentPage > coursePage.getTotalPages() && coursePage.getTotalPages() > 0) {
+            currentPage = coursePage.getTotalPages();
+            pageable = PageRequest.of(currentPage - 1, COURSES_PER_PAGE, Sort.by("id").ascending());
+            coursePage = this.courseService.fetchCoursesByView(trashView, pageable);
+        }
+
+        model.addAttribute("courses", coursePage.getContent());
         model.addAttribute("selectedView", trashView ? "trash" : "active");
         model.addAttribute("activeCount", this.courseService.fetchCourses().size());
         model.addAttribute("trashCount", this.courseService.fetchDeletedCourses().size());
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", Math.max(1, coursePage.getTotalPages()));
         return "admin/course/show";
     }
 

@@ -110,8 +110,15 @@
                                     </p>
                                     <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
                                         <div class="d-flex align-items-center">
-                                            LEVEL:
-                                            <span class="ms-2">${course.level}</span>
+                                            CẤP ĐỘ:
+                                            <span class="ms-2">
+                                                <c:choose>
+                                                    <c:when test="${course.level == 'BEGINNER' || course.level == 'beginner' || course.level == 'BIGINNER' || course.level == 'biginner'}">CƠ BẢN</c:when>
+                                                    <c:when test="${course.level == 'INTERMEDIATE' || course.level == 'intermediate'}">TRUNG CẤP</c:when>
+                                                    <c:when test="${course.level == 'ADVANCED' || course.level == 'advanced'}">NÂNG CAO</c:when>
+                                                    <c:otherwise>${course.level}</c:otherwise>
+                                                </c:choose>
+                                            </span>
                                             <span class="text-muted ms-1">(275 đánh giá)</span>
                                         </div>
                                         <span>Ngày tạo:

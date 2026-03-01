@@ -45,10 +45,7 @@
                                                 class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
 
                                         </div>
-                                        <div class="carousel-item rounded">
-                                            <img src="/client/img/Cplus_lv2.png" class="img-fluid w-100 h-100 rounded"
-                                                alt="Second slide">
-                                        </div>
+
                                         <div class="carousel-item rounded">
                                             <img src="/client/img/English_basic.png"
                                                 class="img-fluid w-100 h-100 rounded" alt="Second slide">

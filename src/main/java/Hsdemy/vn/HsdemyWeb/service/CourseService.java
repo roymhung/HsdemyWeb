@@ -3,6 +3,7 @@ package Hsdemy.vn.HsdemyWeb.service;
 import java.util.List;
 import java.util.Locale;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -48,6 +49,11 @@ public class CourseService {
         return courseRepository.findAll(pageable);
     }
 
+    public Page<Course> fetchCoursesByView(boolean trashView, Pageable pageable) {
+        return trashView ? courseRepository.findAllByDeletedTrue(pageable)
+                : courseRepository.findAllByDeletedFalse(pageable);
+    }
+
     // DETAIL
     public Course getCourseById(long id) {
         return courseRepository.findById(id).orElse(null);
@@ -62,6 +68,14 @@ public class CourseService {
             return List.of();
         }
         return courseRepository.findActiveIdsByIds(ids);
+    }
+
+    public Map<Long, Course> getActiveCourseMapByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Map.of();
+        }
+        return courseRepository.findByIdInAndDeletedFalse(ids).stream()
+                .collect(Collectors.toMap(Course::getId, course -> course));
     }
 
     // DELETE
@@ -131,7 +145,7 @@ public class CourseService {
 
     public List<Course> filterCourses(String keyword, String level, String title, String priceRange, String sort) {
         String normalizedKeyword = keyword == null ? "" : keyword.trim().toLowerCase(Locale.ROOT);
-        String normalizedLevel = level == null ? "" : level.trim().toLowerCase(Locale.ROOT);
+        String normalizedLevel = normalizeLevelCode(level);
         String normalizedTitle = title == null ? "" : title.trim().toLowerCase(Locale.ROOT);
         String normalizedPriceRange = priceRange == null ? "ALL" : priceRange.trim().toUpperCase(Locale.ROOT);
 
@@ -150,7 +164,8 @@ public class CourseService {
                         || containsIgnoreCase(course.getName(), normalizedKeyword)
                         || containsIgnoreCase(course.getAuthor(), normalizedKeyword)
                         || containsIgnoreCase(course.getShortDesc(), normalizedKeyword))
-                .filter(course -> normalizedLevel.isBlank() || containsIgnoreCase(course.getLevel(), normalizedLevel))
+                .filter(course -> normalizedLevel.isBlank()
+                        || normalizedLevel.equals(normalizeLevelCode(course.getLevel())))
                 .filter(course -> normalizedTitle.isBlank() || containsIgnoreCase(course.getTitle(), normalizedTitle))
                 .filter(course -> matchesPriceRange(course.getPrice(), normalizedPriceRange))
                 .sorted(comparator)
@@ -161,7 +176,8 @@ public class CourseService {
         return fetchCourses().stream()
                 .map(Course::getLevel)
                 .filter(level -> level != null && !level.isBlank())
-                .map(String::trim)
+                .map(this::normalizeLevelCode)
+                .filter(level -> !level.isBlank())
                 .distinct()
                 .sorted(String.CASE_INSENSITIVE_ORDER)
                 .collect(Collectors.toList());
@@ -206,12 +222,25 @@ public class CourseService {
 
     private boolean matchesPriceRange(double price, String range) {
         return switch (range) {
+            case "FREE" -> price <= 0;
+            case "PAID" -> price > 0;
             case "UNDER_10" -> price < 10_000_000;
             case "BETWEEN_10_15" -> price >= 10_000_000 && price <= 15_000_000;
             case "BETWEEN_15_25" -> price > 15_000_000 && price <= 25_000_000;
             case "ABOVE_25" -> price > 25_000_000;
             default -> true;
         };
+    }
+
+    private String normalizeLevelCode(String level) {
+        if (level == null || level.isBlank()) {
+            return "";
+        }
+        String normalized = level.trim().toUpperCase(Locale.ROOT);
+        if ("BIGINNER".equals(normalized)) {
+            return "BEGINNER";
+        }
+        return normalized;
     }
 
     public int renameCategoryTitle(String oldTitle, String newTitle) {

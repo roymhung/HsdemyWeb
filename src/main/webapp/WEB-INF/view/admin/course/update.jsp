@@ -202,9 +202,9 @@
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label">Cấp độ</label>
                                                     <form:select path="level" class="form-select">
-                                                        <form:option value="BEGINNER">Cơ bản</form:option>
-                                                        <form:option value="INTERMEDIATE">Trung cấp</form:option>
-                                                        <form:option value="ADVANCED">Nâng cao</form:option>
+                                                        <form:option value="BEGINNER">CƠ BẢN</form:option>
+                                                        <form:option value="INTERMEDIATE">TRUNG CẤP</form:option>
+                                                        <form:option value="ADVANCED">NÂNG CAO</form:option>
                                                     </form:select>
                                                 </div>
 

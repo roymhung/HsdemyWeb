@@ -6,10 +6,9 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Khoa hoc cua toi</title>
+            <title>Khoá học của tôi</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-            <link rel="stylesheet"
-                href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
             <link rel="stylesheet" href="/client/css/style.css">
         </head>
 
@@ -19,7 +18,7 @@
             <section class="py-5 mt-5">
                 <div class="container">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="fw-bold mb-0">Khoa hoc cua toi</h2>
+                        <h2 class="fw-bold mb-0">Khoá học của tôi</h2>
                     </div>
 
                     <div class="row g-4">
@@ -29,11 +28,18 @@
                                     <img src="/images/course/${course.thumbnail}" class="card-img-top"
                                         style="height: 190px; object-fit: cover;" alt="course">
                                     <div class="card-body">
-                                        <span class="badge bg-primary mb-2">${course.level}</span>
+                                        <span class="badge bg-primary mb-2">
+                                            <c:choose>
+                                                <c:when test="${course.level == 'BEGINNER' || course.level == 'beginner' || course.level == 'BIGINNER' || course.level == 'biginner'}">Cơ bản</c:when>
+                                                <c:when test="${course.level == 'INTERMEDIATE' || course.level == 'intermediate'}">Trung cấp</c:when>
+                                                <c:when test="${course.level == 'ADVANCED' || course.level == 'advanced'}">Nâng cao</c:when>
+                                                <c:otherwise>${course.level}</c:otherwise>
+                                            </c:choose>
+                                        </span>
                                         <h5 class="fw-bold">${course.name}</h5>
                                         <p class="text-muted mb-3">${course.author}</p>
                                         <a href="/learning/course/${course.id}" class="btn btn-primary w-100">
-                                            Hoc ngay
+                                            Vào học ngay
                                         </a>
                                     </div>
                                 </div>
@@ -47,7 +53,7 @@
                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                                     <a class="page-link"
                                         href="${currentPage == 1 ? '#' : '/home/my-courses/learning?page='}${currentPage == 1 ? '' : currentPage - 1}">
-                                        Previous
+                                        Trang trước
                                     </a>
                                 </li>
 
@@ -60,7 +66,7 @@
                                 <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
                                     <a class="page-link"
                                         href="${currentPage == totalPages ? '#' : '/home/my-courses/learning?page='}${currentPage == totalPages ? '' : currentPage + 1}">
-                                        Next
+                                        Trang sau
                                     </a>
                                 </li>
                             </ul>
@@ -69,7 +75,7 @@
 
                     <c:if test="${empty courses}">
                         <div class="alert alert-info mt-4">
-                            Ban chua co khoa hoc nao da thanh toan thanh cong.
+                            Bạn chưa có khóa học nào đã thanh toán thành công!
                         </div>
                     </c:if>
                 </div>
