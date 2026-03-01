@@ -36,7 +36,7 @@ public class PaymentController {
 
     @GetMapping("/payment/checkout/{courseId}")
     public String checkoutPage(@PathVariable Long courseId, Model model, Principal principal) {
-        Course course = courseService.getCourseById(courseId);
+        Course course = courseService.getActiveCourseById(courseId);
         if (course == null) {
             return "redirect:/";
         }
@@ -73,7 +73,7 @@ public class PaymentController {
         if (principal == null) {
             return "redirect:/login";
         }
-        Course course = courseService.getCourseById(courseId);
+        Course course = courseService.getActiveCourseById(courseId);
         if (course == null) {
             return "redirect:/";
         }
@@ -101,7 +101,7 @@ public class PaymentController {
         if (principal == null) {
             return "redirect:/login";
         }
-        Course course = courseService.getCourseById(courseId);
+        Course course = courseService.getActiveCourseById(courseId);
         if (course == null) {
             return "redirect:/";
         }

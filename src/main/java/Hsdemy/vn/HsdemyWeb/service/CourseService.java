@@ -11,14 +11,17 @@ import org.springframework.stereotype.Service;
 
 import Hsdemy.vn.HsdemyWeb.domain.Course;
 import Hsdemy.vn.HsdemyWeb.repository.CourseRepository;
+import Hsdemy.vn.HsdemyWeb.repository.OrderDetailRepository;
 
 @Service
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, OrderDetailRepository orderDetailRepository) {
         this.courseRepository = courseRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     // CREATE + UPDATE
@@ -32,7 +35,11 @@ public class CourseService {
 
     // LIST ALL (simple)
     public List<Course> fetchCourses() {
-        return courseRepository.findAll();
+        return courseRepository.findAllByDeletedFalse();
+    }
+
+    public List<Course> fetchDeletedCourses() {
+        return courseRepository.findAllByDeletedTrue();
     }
 
 
@@ -46,9 +53,61 @@ public class CourseService {
         return courseRepository.findById(id).orElse(null);
     }
 
+    public Course getActiveCourseById(long id) {
+        return courseRepository.findByIdAndDeletedFalse(id).orElse(null);
+    }
+
     // DELETE
     public void deleteCourse(long id) {
         courseRepository.deleteById(id);
+    }
+
+    public DeleteCourseResult deleteCourseSmart(long id) {
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null) {
+            return DeleteCourseResult.NOT_FOUND;
+        }
+        if (course.isDeleted()) {
+            return DeleteCourseResult.ALREADY_DELETED;
+        }
+
+        boolean hasOrderDetails = orderDetailRepository.existsByCourseId(id);
+        if (hasOrderDetails) {
+            course.setDeleted(true);
+            courseRepository.save(course);
+            return DeleteCourseResult.SOFT_DELETED;
+        }
+
+        courseRepository.deleteById(id);
+        return DeleteCourseResult.HARD_DELETED;
+    }
+
+    public RestoreCourseResult restoreCourse(long id) {
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null) {
+            return RestoreCourseResult.NOT_FOUND;
+        }
+        if (!course.isDeleted()) {
+            return RestoreCourseResult.ALREADY_ACTIVE;
+        }
+        course.setDeleted(false);
+        courseRepository.save(course);
+        return RestoreCourseResult.RESTORED;
+    }
+
+    public PurgeCourseResult purgeDeletedCourse(long id) {
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null) {
+            return PurgeCourseResult.NOT_FOUND;
+        }
+        if (!course.isDeleted()) {
+            return PurgeCourseResult.NOT_IN_TRASH;
+        }
+        if (orderDetailRepository.existsByCourseId(id)) {
+            return PurgeCourseResult.HAS_ORDER_DETAILS;
+        }
+        courseRepository.deleteById(id);
+        return PurgeCourseResult.PURGED;
     }
 
     // CHECK EXIST
@@ -159,7 +218,7 @@ public class CourseService {
             return 0;
         }
 
-        List<Course> courses = courseRepository.findByTitleIgnoreCase(oldNormalized);
+        List<Course> courses = courseRepository.findByTitleIgnoreCaseAndDeletedFalse(oldNormalized);
         if (courses.isEmpty()) {
             return 0;
         }
@@ -167,5 +226,25 @@ public class CourseService {
         List<Course> updated = courses.stream().peek(course -> course.setTitle(finalNewTitle)).collect(Collectors.toList());
         courseRepository.saveAll(updated);
         return updated.size();
+    }
+
+    public enum DeleteCourseResult {
+        HARD_DELETED,
+        SOFT_DELETED,
+        ALREADY_DELETED,
+        NOT_FOUND
+    }
+
+    public enum RestoreCourseResult {
+        RESTORED,
+        ALREADY_ACTIVE,
+        NOT_FOUND
+    }
+
+    public enum PurgeCourseResult {
+        PURGED,
+        HAS_ORDER_DETAILS,
+        NOT_IN_TRASH,
+        NOT_FOUND
     }
 }

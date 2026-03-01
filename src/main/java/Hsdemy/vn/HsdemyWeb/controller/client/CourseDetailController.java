@@ -35,7 +35,10 @@ public class CourseDetailController {
 
     @GetMapping("/course/{id}")
     public String getCourseDetailPage(Model model, @PathVariable long id) {
-        Course course = this.courseService.getCourseById(id);
+        Course course = this.courseService.getActiveCourseById(id);
+        if (course == null) {
+            return "redirect:/courses";
+        }
         java.util.List<Chapter> chapters = this.chapterService.fetchByCourseId(id);
 
         int totalVideos = 0;
@@ -68,7 +71,7 @@ public class CourseDetailController {
 
     @GetMapping("/course/{id}/start")
     public String startCourse(@PathVariable long id, Principal principal) {
-        Course course = this.courseService.getCourseById(id);
+        Course course = this.courseService.getActiveCourseById(id);
         if (course == null) {
             return "redirect:/";
         }
@@ -96,7 +99,7 @@ public class CourseDetailController {
 
     @GetMapping("/learning/course/{id}")
     public String learningCoursePage(@PathVariable long id, Principal principal, Model model) {
-        Course course = this.courseService.getCourseById(id);
+        Course course = this.courseService.getActiveCourseById(id);
         if (course == null) {
             return "redirect:/";
         }

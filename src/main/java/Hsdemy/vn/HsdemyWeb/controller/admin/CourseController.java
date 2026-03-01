@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Hsdemy.vn.HsdemyWeb.domain.Chapter;
 import Hsdemy.vn.HsdemyWeb.domain.Course;
@@ -35,9 +36,15 @@ public class CourseController {
 
     // ================= LIST =================
     @GetMapping("/admin/course")
-    public String getcoursePage(Model model) {
-        List<Course> courses = this.courseService.fetchCourses();
+    public String getcoursePage(
+            @RequestParam(value = "view", defaultValue = "active") String view,
+            Model model) {
+        boolean trashView = "trash".equalsIgnoreCase(view);
+        List<Course> courses = trashView ? this.courseService.fetchDeletedCourses() : this.courseService.fetchCourses();
         model.addAttribute("courses", courses);
+        model.addAttribute("selectedView", trashView ? "trash" : "active");
+        model.addAttribute("activeCount", this.courseService.fetchCourses().size());
+        model.addAttribute("trashCount", this.courseService.fetchDeletedCourses().size());
         return "admin/course/show";
     }
 
@@ -145,19 +152,88 @@ public class CourseController {
     }
 
     @PostMapping("/admin/course/delete")
-    public String postDeleteCourse(Model model, @ModelAttribute("newCourse") Course course) {
+    public String postDeleteCourse(Model model, @ModelAttribute("newCourse") Course course,
+            RedirectAttributes redirectAttributes) {
 
         Course currentCourse = this.courseService.getCourseById(course.getId());
 
-        if (currentCourse != null) {
-
-            // xoá ảnh
-            this.uploadService.handleDeleteUploadFile(currentCourse.getThumbnail(), "course");
-
-            // xoá Course
-            this.courseService.deleteCourse(course.getId());
+        if (currentCourse == null) {
+            redirectAttributes.addFlashAttribute("messageType", "warning");
+            redirectAttributes.addFlashAttribute("message", "Khóa học không tồn tại hoặc đã bị xóa.");
+            return "redirect:/admin/course?view=active";
         }
 
-        return "redirect:/admin/course";
+        CourseService.DeleteCourseResult result = this.courseService.deleteCourseSmart(course.getId());
+        switch (result) {
+            case HARD_DELETED -> {
+                this.uploadService.handleDeleteUploadFile(currentCourse.getThumbnail(), "course");
+                redirectAttributes.addFlashAttribute("messageType", "success");
+                redirectAttributes.addFlashAttribute("message", "Đã xóa vĩnh viễn khóa học khỏi hệ thống.");
+            }
+            case SOFT_DELETED -> {
+                redirectAttributes.addFlashAttribute("messageType", "warning");
+                redirectAttributes.addFlashAttribute("message",
+                        "Khóa học đã được ẩn (xóa mềm) vì có dữ liệu đơn hàng liên quan.");
+            }
+            case ALREADY_DELETED -> {
+                redirectAttributes.addFlashAttribute("messageType", "info");
+                redirectAttributes.addFlashAttribute("message", "Khóa học này đã được ẩn trước đó.");
+            }
+            case NOT_FOUND -> {
+                redirectAttributes.addFlashAttribute("messageType", "warning");
+                redirectAttributes.addFlashAttribute("message", "Khóa học không tồn tại.");
+            }
+        }
+
+        return "redirect:/admin/course?view=active";
+    }
+
+    @PostMapping("/admin/course/restore/{id}")
+    public String restoreCourse(@PathVariable long id, RedirectAttributes redirectAttributes) {
+        CourseService.RestoreCourseResult result = this.courseService.restoreCourse(id);
+        switch (result) {
+            case RESTORED -> {
+                redirectAttributes.addFlashAttribute("messageType", "success");
+                redirectAttributes.addFlashAttribute("message", "Đã khôi phục khóa học.");
+            }
+            case ALREADY_ACTIVE -> {
+                redirectAttributes.addFlashAttribute("messageType", "info");
+                redirectAttributes.addFlashAttribute("message", "Khóa học này đang ở trạng thái hiển thị.");
+            }
+            case NOT_FOUND -> {
+                redirectAttributes.addFlashAttribute("messageType", "warning");
+                redirectAttributes.addFlashAttribute("message", "Không tìm thấy khóa học để khôi phục.");
+            }
+        }
+        return "redirect:/admin/course?view=trash";
+    }
+
+    @PostMapping("/admin/course/purge/{id}")
+    public String purgeCourse(@PathVariable long id, RedirectAttributes redirectAttributes) {
+        Course currentCourse = this.courseService.getCourseById(id);
+        CourseService.PurgeCourseResult result = this.courseService.purgeDeletedCourse(id);
+        switch (result) {
+            case PURGED -> {
+                if (currentCourse != null) {
+                    this.uploadService.handleDeleteUploadFile(currentCourse.getThumbnail(), "course");
+                }
+                redirectAttributes.addFlashAttribute("messageType", "success");
+                redirectAttributes.addFlashAttribute("message", "Đã xóa vĩnh viễn khóa học trong thùng rác.");
+            }
+            case HAS_ORDER_DETAILS -> {
+                redirectAttributes.addFlashAttribute("messageType", "warning");
+                redirectAttributes.addFlashAttribute("message",
+                        "Không thể xóa vĩnh viễn vì khóa học còn dữ liệu đơn hàng liên quan.");
+            }
+            case NOT_IN_TRASH -> {
+                redirectAttributes.addFlashAttribute("messageType", "info");
+                redirectAttributes.addFlashAttribute("message", "Khóa học chưa nằm trong thùng rác.");
+            }
+            case NOT_FOUND -> {
+                redirectAttributes.addFlashAttribute("messageType", "warning");
+                redirectAttributes.addFlashAttribute("message", "Không tìm thấy khóa học.");
+            }
+        }
+        return "redirect:/admin/course?view=trash";
     }
 }

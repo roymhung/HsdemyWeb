@@ -11,14 +11,23 @@ import Hsdemy.vn.HsdemyWeb.domain.Course;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
-    List<Course> findByTitleIgnoreCase(String title);
+    List<Course> findAllByDeletedFalse();
+    List<Course> findAllByDeletedTrue();
+
+    java.util.Optional<Course> findByIdAndDeletedFalse(Long id);
+    java.util.Optional<Course> findByIdAndDeletedTrue(Long id);
+
+    List<Course> findByTitleIgnoreCaseAndDeletedFalse(String title);
 
     @Query("""
             SELECT c FROM Course c
-            WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            WHERE c.deleted = false
+              AND (
+                   LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
                OR LOWER(c.author) LIKE LOWER(CONCAT('%', :keyword, '%'))
                OR LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
                OR LOWER(c.shortDesc) LIKE LOWER(CONCAT('%', :keyword, '%'))
+              )
             """)
     List<Course> searchCourses(@Param("keyword") String keyword);
 }

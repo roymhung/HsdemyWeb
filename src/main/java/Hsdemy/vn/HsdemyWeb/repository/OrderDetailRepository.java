@@ -10,4 +10,6 @@ import Hsdemy.vn.HsdemyWeb.domain.OrderDetail;
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
     Optional<OrderDetail> findFirstByOrderIdOrderByIdAsc(Long orderId);
+
+    boolean existsByCourseId(Long courseId);
 }

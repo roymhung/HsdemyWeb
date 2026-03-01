@@ -49,7 +49,10 @@ public class OrderService {
             }
             for (OrderDetail detail : details) {
                 Course course = detail.getCourse();
-                if (course != null && course.getId() != null && !purchasedCourses.containsKey(course.getId())) {
+                if (course != null
+                        && !course.isDeleted()
+                        && course.getId() != null
+                        && !purchasedCourses.containsKey(course.getId())) {
                     purchasedCourses.put(course.getId(), course);
                 }
             }
