@@ -73,11 +73,16 @@ public class CourseDetailController {
             return "redirect:/";
         }
 
+        User currentUser = getCurrentUser(principal);
+
         if (isFreeCourse(course)) {
+            if (currentUser == null) {
+                return "redirect:/login";
+            }
+            orderService.createFreeEnrollmentForCourse(currentUser, course);
             return "redirect:/learning/course/" + id;
         }
 
-        User currentUser = getCurrentUser(principal);
         if (currentUser == null) {
             return "redirect:/login";
         }
@@ -99,6 +104,10 @@ public class CourseDetailController {
         boolean freeCourse = isFreeCourse(course);
         User currentUser = getCurrentUser(principal);
         boolean purchased = currentUser != null && orderService.hasPurchasedCourse(currentUser.getId(), course.getId());
+
+        if (freeCourse && currentUser != null && !purchased) {
+            orderService.createFreeEnrollmentForCourse(currentUser, course);
+        }
 
         if (!freeCourse && !purchased) {
             return "redirect:/payment/checkout/" + id;

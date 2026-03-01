@@ -69,8 +69,15 @@
                                                                 <td>${course.name}</td>
                                                                 <td>${course.author}</td>
                                                                 <td>
-                                                                    <fmt:formatNumber value="${course.price}"
-                                                                        type="number" groupingUsed="true" /> vnd
+                                                                    <c:choose>
+                                                                        <c:when test="${course.price <= 0}">
+                                                                            <span class="badge bg-success">FREE</span>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatNumber value="${course.price}"
+                                                                                type="number" groupingUsed="true" /> vnd
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 </td>
 
                                                                 <td>

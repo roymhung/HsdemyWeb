@@ -59,7 +59,7 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(authorize -> authorize
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
                 .requestMatchers("/", "/login", "/register", "/forgot-password", "/error", "/access-denied",
-                        "/course/**", "/client/**", "/css/**", "/js/**", "/images/**", "/uploads/**",
+                        "/course/**", "/courses", "/client/**", "/css/**", "/js/**", "/images/**", "/uploads/**",
                         "/payment/vnpay-return", "/api/search/**")
                 .permitAll()
 

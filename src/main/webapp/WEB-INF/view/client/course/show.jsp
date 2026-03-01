@@ -94,9 +94,14 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label fw-semibold">Giá tối đa (VND)</label>
-                                    <input type="number" min="0" step="1000" class="form-control" name="maxPrice"
-                                        value="${selectedMaxPrice}">
+                                    <label class="form-label fw-semibold">Khoảng giá</label>
+                                    <select class="form-select" name="priceRange">
+                                        <option value="ALL" ${selectedPriceRange == 'ALL' ? 'selected' : ''}>Tất cả mức giá</option>
+                                        <option value="UNDER_10" ${selectedPriceRange == 'UNDER_10' ? 'selected' : ''}>Dưới 10 triệu</option>
+                                        <option value="BETWEEN_10_15" ${selectedPriceRange == 'BETWEEN_10_15' ? 'selected' : ''}>10 - 15 triệu</option>
+                                        <option value="BETWEEN_15_25" ${selectedPriceRange == 'BETWEEN_15_25' ? 'selected' : ''}>15 - 25 triệu</option>
+                                        <option value="ABOVE_25" ${selectedPriceRange == 'ABOVE_25' ? 'selected' : ''}>Trên 25 triệu</option>
+                                    </select>
                                 </div>
 
                                 <div class="mb-3">
@@ -139,10 +144,17 @@
                                         <p class="text-muted small mb-2">${course.author}</p>
                                         <p class="text-muted small mb-3 flex-grow-1">${course.shortDesc}</p>
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <span class="fw-bold text-primary">
-                                                <fmt:formatNumber value="${course.price}" type="number" groupingUsed="true"
-                                                    maxFractionDigits="0" /> ₫
-                                            </span>
+                                            <c:choose>
+                                                <c:when test="${course.price <= 0}">
+                                                    <span class="fw-bold text-success">Miễn phí</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="fw-bold text-primary">
+                                                        <fmt:formatNumber value="${course.price}" type="number" groupingUsed="true"
+                                                            maxFractionDigits="0" /> ₫
+                                                    </span>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <a href="/course/${course.id}" class="btn btn-sm btn-primary">Chi tiết</a>
                                         </div>
                                     </div>
@@ -166,9 +178,7 @@
                                     <c:param name="q" value="${selectedKeyword}" />
                                     <c:param name="level" value="${selectedLevel}" />
                                     <c:param name="title" value="${selectedTitle}" />
-                                    <c:if test="${not empty selectedMaxPrice}">
-                                        <c:param name="maxPrice" value="${selectedMaxPrice}" />
-                                    </c:if>
+                                    <c:param name="priceRange" value="${selectedPriceRange}" />
                                     <c:param name="sort" value="${selectedSort}" />
                                     <c:param name="page" value="${currentPage - 1}" />
                                 </c:url>
@@ -181,9 +191,7 @@
                                         <c:param name="q" value="${selectedKeyword}" />
                                         <c:param name="level" value="${selectedLevel}" />
                                         <c:param name="title" value="${selectedTitle}" />
-                                        <c:if test="${not empty selectedMaxPrice}">
-                                            <c:param name="maxPrice" value="${selectedMaxPrice}" />
-                                        </c:if>
+                                        <c:param name="priceRange" value="${selectedPriceRange}" />
                                         <c:param name="sort" value="${selectedSort}" />
                                         <c:param name="page" value="${i}" />
                                     </c:url>
@@ -196,9 +204,7 @@
                                     <c:param name="q" value="${selectedKeyword}" />
                                     <c:param name="level" value="${selectedLevel}" />
                                     <c:param name="title" value="${selectedTitle}" />
-                                    <c:if test="${not empty selectedMaxPrice}">
-                                        <c:param name="maxPrice" value="${selectedMaxPrice}" />
-                                    </c:if>
+                                    <c:param name="priceRange" value="${selectedPriceRange}" />
                                     <c:param name="sort" value="${selectedSort}" />
                                     <c:param name="page" value="${currentPage + 1}" />
                                 </c:url>

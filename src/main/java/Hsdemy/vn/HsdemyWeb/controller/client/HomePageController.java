@@ -48,12 +48,12 @@ public class HomePageController {
             @RequestParam(value = "q", required = false) String keyword,
             @RequestParam(value = "level", required = false) String level,
             @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(value = "priceRange", required = false, defaultValue = "ALL") String priceRange,
             @RequestParam(value = "sort", defaultValue = "newest") String sort,
             @RequestParam(value = "page", defaultValue = "1") int page,
             Model model) {
 
-        List<Course> filteredCourses = new ArrayList<>(courseService.filterCourses(keyword, level, title, maxPrice, sort));
+        List<Course> filteredCourses = new ArrayList<>(courseService.filterCourses(keyword, level, title, priceRange, sort));
 
         int totalItems = filteredCourses.size();
         int totalPages = Math.max(1, (int) Math.ceil((double) totalItems / COURSES_PER_PAGE));
@@ -70,7 +70,8 @@ public class HomePageController {
         model.addAttribute("selectedKeyword", keyword == null ? "" : keyword.trim());
         model.addAttribute("selectedLevel", level == null ? "" : level.trim());
         model.addAttribute("selectedTitle", title == null ? "" : title.trim());
-        model.addAttribute("selectedMaxPrice", maxPrice);
+        model.addAttribute("selectedPriceRange",
+                priceRange == null || priceRange.isBlank() ? "ALL" : priceRange.trim().toUpperCase());
         model.addAttribute("selectedSort", sort);
         model.addAttribute("levels", courseService.getDistinctLevels());
         model.addAttribute("titles", courseService.getDistinctTitles());

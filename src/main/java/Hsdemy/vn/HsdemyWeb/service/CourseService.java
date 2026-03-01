@@ -63,10 +63,11 @@ public class CourseService {
         return courseRepository.searchCourses(keyword.trim());
     }
 
-    public List<Course> filterCourses(String keyword, String level, String title, Double maxPrice, String sort) {
+    public List<Course> filterCourses(String keyword, String level, String title, String priceRange, String sort) {
         String normalizedKeyword = keyword == null ? "" : keyword.trim().toLowerCase(Locale.ROOT);
         String normalizedLevel = level == null ? "" : level.trim().toLowerCase(Locale.ROOT);
         String normalizedTitle = title == null ? "" : title.trim().toLowerCase(Locale.ROOT);
+        String normalizedPriceRange = priceRange == null ? "ALL" : priceRange.trim().toUpperCase(Locale.ROOT);
 
         Comparator<Course> comparator = Comparator
                 .comparing(Course::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder()))
@@ -85,7 +86,7 @@ public class CourseService {
                         || containsIgnoreCase(course.getShortDesc(), normalizedKeyword))
                 .filter(course -> normalizedLevel.isBlank() || containsIgnoreCase(course.getLevel(), normalizedLevel))
                 .filter(course -> normalizedTitle.isBlank() || containsIgnoreCase(course.getTitle(), normalizedTitle))
-                .filter(course -> maxPrice == null || course.getPrice() <= maxPrice)
+                .filter(course -> matchesPriceRange(course.getPrice(), normalizedPriceRange))
                 .sorted(comparator)
                 .collect(Collectors.toList());
     }
@@ -135,6 +136,16 @@ public class CourseService {
 
     private boolean containsIgnoreCase(String value, String keyword) {
         return value != null && value.toLowerCase(Locale.ROOT).contains(keyword);
+    }
+
+    private boolean matchesPriceRange(double price, String range) {
+        return switch (range) {
+            case "UNDER_10" -> price < 10_000_000;
+            case "BETWEEN_10_15" -> price >= 10_000_000 && price <= 15_000_000;
+            case "BETWEEN_15_25" -> price > 15_000_000 && price <= 25_000_000;
+            case "ABOVE_25" -> price > 25_000_000;
+            default -> true;
+        };
     }
 
     public int renameCategoryTitle(String oldTitle, String newTitle) {

@@ -32,7 +32,7 @@ public class Course {
     @Size(min = 3, max = 255, message = "Tên sản phẩm không được để trống phải từ 3 đến 255 ký tự")
     private String author;
 
-    @DecimalMin(value = "0", inclusive = false, message = "Giá phải lớn hơn 0")
+    @DecimalMin(value = "0", inclusive = true, message = "Giá không hợp lệ")
     private double price;
     private String thumbnail;
 

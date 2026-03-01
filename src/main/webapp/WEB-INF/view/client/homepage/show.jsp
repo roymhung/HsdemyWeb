@@ -123,11 +123,18 @@
                                                 <p class="text-muted small mb-2">${course.author}</p>
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div>
-                                                        <span class="fw-bold text-primary fs-5">
-                                                            <fmt:formatNumber value="${course.price}" type="number"
-                                                                groupingUsed="true" maxFractionDigits="0" />
-                                                            ₫
-                                                        </span>
+                                                        <c:choose>
+                                                            <c:when test="${course.price <= 0}">
+                                                                <span class="fw-bold text-success fs-5">Miễn phí</span>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="fw-bold text-primary fs-5">
+                                                                    <fmt:formatNumber value="${course.price}" type="number"
+                                                                        groupingUsed="true" maxFractionDigits="0" />
+                                                                    ₫
+                                                                </span>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                                     <a href="/course/${course.id}" class="btn btn-sm btn-primary">Xem
                                                         chi

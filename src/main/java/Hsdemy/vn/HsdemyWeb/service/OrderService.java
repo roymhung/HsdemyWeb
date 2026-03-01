@@ -82,6 +82,30 @@ public class OrderService {
         return savedOrder;
     }
 
+    public Order createFreeEnrollmentForCourse(User user, Course course) {
+        if (user == null || course == null || course.getId() == null) {
+            return null;
+        }
+        if (hasPurchasedCourse(user.getId(), course.getId())) {
+            return null;
+        }
+
+        Order order = new Order();
+        order.setUser(user);
+        order.setStatus("FREE_ENROLLED");
+        order.setTotalPrice(0);
+        order.setCreatedAt(LocalDateTime.now());
+        Order savedOrder = orderRepository.save(order);
+
+        OrderDetail detail = new OrderDetail();
+        detail.setOrder(savedOrder);
+        detail.setCourse(course);
+        detail.setPrice(0);
+        orderDetailRepository.save(detail);
+
+        return savedOrder;
+    }
+
     public Order getOrderById(Long id) {
         return orderRepository.findById(id).orElse(null);
     }
@@ -136,6 +160,7 @@ public class OrderService {
         return normalizedStatus.contains("SUCCESS")
                 || normalizedStatus.contains("PAID")
                 || normalizedStatus.contains("COMPLETE")
+                || normalizedStatus.contains("FREE_ENROLLED")
                 || normalizedStatus.contains("THANH_CONG")
                 || normalizedStatus.contains("THANHCONG");
     }

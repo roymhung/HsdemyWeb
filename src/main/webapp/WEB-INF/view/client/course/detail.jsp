@@ -237,16 +237,34 @@
                                         </div>
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h3 class="fw-bold mb-0 text-primary"> <span>
-                                                        <fmt:formatNumber value="${course.price}" type="number"
-                                                            groupingUsed="true" maxFractionDigits="0" />
-                                                        ₫
-                                                    </span></h3>
+                                                <h3 class="fw-bold mb-0">
+                                                    <c:choose>
+                                                        <c:when test="${course.price <= 0}">
+                                                            <span class="text-success">Miễn phí</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="text-primary">
+                                                                <fmt:formatNumber value="${course.price}" type="number"
+                                                                    groupingUsed="true" maxFractionDigits="0" />
+                                                                ₫
+                                                            </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </h3>
                                             </div>
                                             <a href="/course/${course.id}/start" class="btn btn-primary w-100 btn-lg mb-3">
-                                                Vào học ngay
+                                                <c:choose>
+                                                    <c:when test="${course.price <= 0}">Học miễn phí ngay</c:when>
+                                                    <c:otherwise>Vào học ngay</c:otherwise>
+                                                </c:choose>
                                             </a>
-                                            <p class="text-center text-muted small mb-4">Đảm bảo hoàn tiền trong 30 ngày
+                                            <p class="text-center text-muted small mb-4">
+                                                <c:choose>
+                                                    <c:when test="${course.price <= 0}">
+                                                        Không cần thanh toán - truy cập học ngay lập tức.
+                                                    </c:when>
+                                                    <c:otherwise>Đảm bảo hoàn tiền trong 30 ngày</c:otherwise>
+                                                </c:choose>
                                             </p>
                                             <div>
                                                 <h6 class="fw-bold mb-3">Khóa học này bao gồm:</h6>

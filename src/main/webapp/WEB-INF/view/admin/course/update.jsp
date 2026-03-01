@@ -44,23 +44,59 @@
                         });
                     });
                 </script>
-                <!-- Đoạn script cho Nhập giá tiền -->
+                <!-- Price + free course logic -->
                 <script>
                     function formatCurrency(input) {
-                        // Lấy số, bỏ hết ký tự không phải số
+                        const hiddenPrice = document.getElementById('price');
                         let value = input.value.replace(/\D/g, '');
                         if (value === '') {
-                            document.getElementById('price').value = '';
+                            hiddenPrice.value = '0';
                             input.value = '';
                             return;
                         }
-
-                        // Gán giá trị thật cho hidden input
-                        document.getElementById('price').value = value;
-
-                        // Format hiển thị: 1.200.000
+                        hiddenPrice.value = value;
                         input.value = new Intl.NumberFormat('vi-VN').format(value);
                     }
+
+                    function toggleFreeCourse() {
+                        const freeCheckbox = document.getElementById('freeCourse');
+                        const priceDisplay = document.getElementById('priceDisplay');
+                        const hiddenPrice = document.getElementById('price');
+                        const paidHint = document.getElementById('paidHint');
+                        const freeHint = document.getElementById('freeHint');
+
+                        if (freeCheckbox.checked) {
+                            hiddenPrice.value = '0';
+                            priceDisplay.value = 'Miễn phí';
+                            priceDisplay.setAttribute('disabled', 'disabled');
+                            if (paidHint) paidHint.classList.add('d-none');
+                            if (freeHint) freeHint.classList.remove('d-none');
+                            return;
+                        }
+
+                        priceDisplay.removeAttribute('disabled');
+                        if (hiddenPrice.value === '0' || hiddenPrice.value === '') {
+                            priceDisplay.value = '';
+                        } else {
+                            priceDisplay.value = new Intl.NumberFormat('vi-VN').format(hiddenPrice.value);
+                        }
+                        if (paidHint) paidHint.classList.remove('d-none');
+                        if (freeHint) freeHint.classList.add('d-none');
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const hiddenPrice = document.getElementById('price');
+                        const priceDisplay = document.getElementById('priceDisplay');
+                        const freeCheckbox = document.getElementById('freeCourse');
+                        const initialPrice = Number(hiddenPrice.value || 0);
+
+                        if (initialPrice > 0) {
+                            priceDisplay.value = new Intl.NumberFormat('vi-VN').format(initialPrice);
+                        } else {
+                            freeCheckbox.checked = true;
+                        }
+                        toggleFreeCourse();
+                    });
                 </script>
 
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -147,6 +183,15 @@
 
                                                     <!-- input ẩn để submit lên server -->
                                                     <form:hidden path="price" id="price" />
+                                                    <div class="form-check mt-2">
+                                                        <input class="form-check-input" type="checkbox" id="freeCourse"
+                                                            onchange="toggleFreeCourse()">
+                                                        <label class="form-check-label fw-semibold" for="freeCourse">
+                                                            Khóa học miễn phí
+                                                        </label>
+                                                    </div>
+                                                    <small id="paidHint" class="text-muted">Nhập giá tiền nếu là khóa học trả phí.</small>
+                                                    <small id="freeHint" class="text-success d-none">Người học có thể vào học ngay mà không cần thanh toán.</small>
                                                 </div>
 
 
@@ -200,7 +245,7 @@
                                                     <label class="form-label">Current Thumbnail</label><br />
                                                     <c:if test="${not empty newCourse.thumbnail}">
                                                         <img id="avatarPreview"
-                                                            src="/uploads/course/${course.thumbnail}"
+                                                            src="/images/course/${newCourse.thumbnail}"
                                                             style="max-height: 250px;" />
                                                     </c:if>
                                                 </div>

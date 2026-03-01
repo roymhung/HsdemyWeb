@@ -150,23 +150,45 @@
      */
     const CART_KEY = 'devacademy_cart';
 
+    function normalizeCartItems(items) {
+        if (!Array.isArray(items)) return [];
+        const byId = new Map();
+        items.forEach(rawItem => {
+            const id = String(rawItem?.id || '').trim();
+            if (!id) return;
+
+            // One course = one cart slot, always quantity = 1
+            const normalized = {
+                id,
+                title: rawItem?.title || 'Khóa học',
+                priceNumber: Number(rawItem?.priceNumber) || 0,
+                author: rawItem?.author || '',
+                level: rawItem?.level || '',
+                image: rawItem?.image || '',
+                qty: 1
+            };
+            byId.set(id, normalized);
+        });
+        return Array.from(byId.values());
+    }
+
     function getCartItems() {
         try {
             const raw = localStorage.getItem(CART_KEY);
             const items = raw ? JSON.parse(raw) : [];
-            return Array.isArray(items) ? items : [];
+            return normalizeCartItems(items);
         } catch (e) {
             return [];
         }
     }
 
     function setCartItems(items) {
-        localStorage.setItem(CART_KEY, JSON.stringify(items || []));
+        localStorage.setItem(CART_KEY, JSON.stringify(normalizeCartItems(items)));
         updateCartBadges();
     }
 
     function getCartCount() {
-        return getCartItems().reduce((sum, it) => sum + (Number(it?.qty) || 0), 0);
+        return getCartItems().length;
     }
 
     function formatPriceVnd(value) {
@@ -205,8 +227,9 @@
 
             const items = getCartItems();
             const existing = items.find(it => it.id === id);
-            if (existing) existing.qty = (Number(existing.qty) || 1) + 1;
-            else items.push({ id, title, priceNumber, author, level, image, qty: 1 });
+            if (!existing) {
+                items.push({ id, title, priceNumber, author, level, image, qty: 1 });
+            }
             setCartItems(items);
         });
 

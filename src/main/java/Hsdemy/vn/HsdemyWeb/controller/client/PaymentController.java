@@ -40,6 +40,9 @@ public class PaymentController {
         if (course == null) {
             return "redirect:/";
         }
+        if (isFreeCourse(course)) {
+            return "redirect:/learning/course/" + courseId;
+        }
         if (principal == null) {
             return "redirect:/login";
         }
@@ -74,6 +77,9 @@ public class PaymentController {
         if (course == null) {
             return "redirect:/";
         }
+        if (isFreeCourse(course)) {
+            return "redirect:/learning/course/" + courseId;
+        }
         if (!vnpayService.isConfigured()) {
             return "redirect:/payment/checkout/" + courseId + "?configError=true";
         }
@@ -98,6 +104,9 @@ public class PaymentController {
         Course course = courseService.getCourseById(courseId);
         if (course == null) {
             return "redirect:/";
+        }
+        if (isFreeCourse(course)) {
+            return "redirect:/learning/course/" + courseId;
         }
         if (!vnpayService.isConfigured()) {
             return "redirect:/payment/checkout/" + courseId + "?configError=true";
@@ -158,5 +167,9 @@ public class PaymentController {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private boolean isFreeCourse(Course course) {
+        return course != null && course.getPrice() <= 0;
     }
 }
