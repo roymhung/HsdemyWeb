@@ -204,6 +204,40 @@
         });
     }
 
+    async function syncCartWithServer(items) {
+        if (!Array.isArray(items) || !items.length) {
+            return items || [];
+        }
+
+        const numericIds = items
+            .map(it => Number(it?.id))
+            .filter(id => Number.isFinite(id) && id > 0);
+        if (!numericIds.length) {
+            return items;
+        }
+
+        try {
+            const params = new URLSearchParams();
+            numericIds.forEach(id => params.append('ids', String(id)));
+            const res = await fetch(`/api/courses/active-ids?${params.toString()}`, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!res.ok) {
+                return items;
+            }
+            const payload = await res.json();
+            const activeIds = new Set((payload?.activeIds || []).map(id => String(id)));
+            const filtered = items.filter(it => !it?.id || activeIds.has(String(it.id)));
+            if (filtered.length !== items.length) {
+                setCartItems(filtered);
+            }
+            return filtered;
+        } catch (e) {
+            return items;
+        }
+    }
+
     function initCart() {
         updateCartBadges();
 
@@ -241,11 +275,11 @@
             renderCartPage();
         });
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', async function(e) {
             const checkoutBtn = e.target.closest('[data-action="checkout-cart"]');
             if (!checkoutBtn) return;
             e.preventDefault();
-            const items = getCartItems();
+            const items = await syncCartWithServer(getCartItems());
             if (!items.length) return;
 
             const firstCourseId = items[0]?.id;
@@ -255,8 +289,8 @@
         });
     }
 
-    function renderCartPage() {
-        const items = getCartItems();
+    async function renderCartPage() {
+        const items = await syncCartWithServer(getCartItems());
         const emptyEl = document.querySelector('[data-cart-empty]');
         const listSectionEl = document.querySelector('[data-cart-list]');
         const listItemsEl = document.querySelector('[data-cart-items]');

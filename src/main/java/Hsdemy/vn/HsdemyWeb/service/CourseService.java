@@ -57,6 +57,13 @@ public class CourseService {
         return courseRepository.findByIdAndDeletedFalse(id).orElse(null);
     }
 
+    public List<Long> getActiveCourseIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return courseRepository.findActiveIdsByIds(ids);
+    }
+
     // DELETE
     public void deleteCourse(long id) {
         courseRepository.deleteById(id);

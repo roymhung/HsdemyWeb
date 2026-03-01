@@ -19,6 +19,9 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findByTitleIgnoreCaseAndDeletedFalse(String title);
 
+    @Query("SELECT c.id FROM Course c WHERE c.deleted = false AND c.id IN :ids")
+    List<Long> findActiveIdsByIds(@Param("ids") List<Long> ids);
+
     @Query("""
             SELECT c FROM Course c
             WHERE c.deleted = false

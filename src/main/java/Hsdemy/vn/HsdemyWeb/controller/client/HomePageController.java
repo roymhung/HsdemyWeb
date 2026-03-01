@@ -2,6 +2,8 @@ package Hsdemy.vn.HsdemyWeb.controller.client;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -115,6 +117,14 @@ public class HomePageController {
         List<String> authors = courseService.suggestAuthors(q, 3);
 
         return new SearchSuggestionResponse(q, keywords, courses, authors);
+    }
+
+    @GetMapping("/api/courses/active-ids")
+    @ResponseBody
+    public ActiveCourseIdsResponse getActiveCourseIds(
+            @RequestParam(value = "ids", required = false) List<Long> ids) {
+        List<Long> activeIds = courseService.getActiveCourseIds(ids == null ? List.of() : ids);
+        return new ActiveCourseIdsResponse(new HashSet<>(activeIds));
     }
 
     @GetMapping("/register")
@@ -236,6 +246,18 @@ public class HomePageController {
 
         public String getThumbnail() {
             return thumbnail;
+        }
+    }
+
+    public static class ActiveCourseIdsResponse {
+        private final Set<Long> activeIds;
+
+        public ActiveCourseIdsResponse(Set<Long> activeIds) {
+            this.activeIds = activeIds;
+        }
+
+        public Set<Long> getActiveIds() {
+            return activeIds;
         }
     }
 }
