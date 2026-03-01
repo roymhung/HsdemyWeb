@@ -45,7 +45,7 @@
                             <div class="col-lg-2 col-md-6 col-sm-6">
                                 <h6 class="fw-bold mb-3 text-primary">Khóa học</h6>
                                 <ul class="list-unstyled">
-                                    <li class="mb-2"><a href="courses.html"
+                                    <li class="mb-2"><a href="/courses"
                                             class="text-white-50 text-decoration-none hover-primary">Tất cả khóa
                                             học</a></li>
                                     <li class="mb-2"><a href="#"

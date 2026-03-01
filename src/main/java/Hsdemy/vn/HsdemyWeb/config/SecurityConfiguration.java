@@ -58,7 +58,7 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(authorize -> authorize
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
-                .requestMatchers("/", "/login", "/register", "/forgot-password", "/error",
+                .requestMatchers("/", "/login", "/register", "/forgot-password", "/error", "/access-denied",
                         "/course/**", "/client/**", "/css/**", "/js/**", "/images/**", "/uploads/**",
                         "/payment/vnpay-return", "/api/search/**")
                 .permitAll()
@@ -82,6 +82,8 @@ public class SecurityConfiguration {
                         .rememberMeCookieName("remember-me-cookie")
                         .tokenValiditySeconds(30 * 24 * 60 * 60)
                         .alwaysRemember(true))
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/access-denied"))
 
                 .sessionManagement(
                         session -> session.maximumSessions(1).maxSessionsPreventsLogin(false)

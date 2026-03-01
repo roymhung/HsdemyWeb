@@ -2,6 +2,7 @@ package Hsdemy.vn.HsdemyWeb.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -62,6 +63,53 @@ public class CourseService {
         return courseRepository.searchCourses(keyword.trim());
     }
 
+    public List<Course> filterCourses(String keyword, String level, String title, Double maxPrice, String sort) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim().toLowerCase(Locale.ROOT);
+        String normalizedLevel = level == null ? "" : level.trim().toLowerCase(Locale.ROOT);
+        String normalizedTitle = title == null ? "" : title.trim().toLowerCase(Locale.ROOT);
+
+        Comparator<Course> comparator = Comparator
+                .comparing(Course::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder()))
+                .reversed();
+
+        if ("price-asc".equalsIgnoreCase(sort)) {
+            comparator = Comparator.comparingDouble(Course::getPrice);
+        } else if ("price-desc".equalsIgnoreCase(sort)) {
+            comparator = Comparator.comparingDouble(Course::getPrice).reversed();
+        }
+
+        return fetchCourses().stream()
+                .filter(course -> normalizedKeyword.isBlank()
+                        || containsIgnoreCase(course.getName(), normalizedKeyword)
+                        || containsIgnoreCase(course.getAuthor(), normalizedKeyword)
+                        || containsIgnoreCase(course.getShortDesc(), normalizedKeyword))
+                .filter(course -> normalizedLevel.isBlank() || containsIgnoreCase(course.getLevel(), normalizedLevel))
+                .filter(course -> normalizedTitle.isBlank() || containsIgnoreCase(course.getTitle(), normalizedTitle))
+                .filter(course -> maxPrice == null || course.getPrice() <= maxPrice)
+                .sorted(comparator)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getDistinctLevels() {
+        return fetchCourses().stream()
+                .map(Course::getLevel)
+                .filter(level -> level != null && !level.isBlank())
+                .map(String::trim)
+                .distinct()
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getDistinctTitles() {
+        return fetchCourses().stream()
+                .map(Course::getTitle)
+                .filter(title -> title != null && !title.isBlank())
+                .map(String::trim)
+                .distinct()
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
+    }
+
     public List<Course> suggestCourses(String keyword, int limit) {
         if (keyword == null || keyword.isBlank()) {
             return List.of();
@@ -83,6 +131,10 @@ public class CourseService {
                 .distinct()
                 .limit(Math.max(1, limit))
                 .collect(Collectors.toList());
+    }
+
+    private boolean containsIgnoreCase(String value, String keyword) {
+        return value != null && value.toLowerCase(Locale.ROOT).contains(keyword);
     }
 
     public int renameCategoryTitle(String oldTitle, String newTitle) {

@@ -91,7 +91,7 @@
                                     <li class="breadcrumb-item"><a href="/"
                                             class="text-white text-decoration-none">Trang
                                             chủ</a></li>
-                                    <li class="breadcrumb-item"><a href="courses.html"
+                                    <li class="breadcrumb-item"><a href="/courses"
                                             class="text-white text-decoration-none">Khóa
                                             học</a></li>
                                     <li class="breadcrumb-item active text-white">${course.name}</li>

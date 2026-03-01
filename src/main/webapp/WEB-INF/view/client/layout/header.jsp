@@ -18,7 +18,7 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav me-auto">
                                 <li class="nav-item"><a class="nav-link active" href="/">Trang chủ</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Khóa học</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/courses">Khóa học</a></li>
                                 <c:if test="${loggedIn}">
                                     <li class="nav-item">
                                         <a class="nav-link" href="/home/my-courses/learning">Học tập</a>

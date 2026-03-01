@@ -42,20 +42,6 @@
                     <jsp:include page="../layout/banner.jsp" />
                     <!-- End banner -->
 
-                    <c:if test="${searchMode}">
-                        <section class="pt-4">
-                            <div class="container">
-                                <div class="alert alert-light border d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-                                    <div>
-                                        <strong>Kết quả tìm kiếm:</strong> "${searchKeyword}"
-                                        <span class="text-muted">(${courses.size()} khóa học)</span>
-                                    </div>
-                                    <a href="/" class="btn btn-sm btn-outline-secondary">Xóa tìm kiếm</a>
-                                </div>
-                            </div>
-                        </section>
-                    </c:if>
-
                     <!-- Categories -->
                     <section class="py-5">
                         <div class="container">
@@ -100,7 +86,7 @@
                         <div class="container">
                             <div class="d-flex justify-content-between align-items-center mb-5">
                                 <h2 class="fw-bold mb-0">Khóa Học Nổi Bật</h2>
-                                <a href="courses.html" class="btn btn-outline-primary">Xem tất cả <i
+                                <a href="/courses" class="btn btn-outline-primary">Xem tất cả <i
                                         class="bi bi-arrow-right"></i></a>
                             </div>
                             <div class="row g-4">

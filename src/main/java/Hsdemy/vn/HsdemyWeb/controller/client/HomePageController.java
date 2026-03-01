@@ -1,6 +1,7 @@
 package Hsdemy.vn.HsdemyWeb.controller.client;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +40,49 @@ public class HomePageController {
         model.addAttribute("searchKeyword", keyword == null ? "" : keyword.trim());
         model.addAttribute("searchMode", keyword != null && !keyword.isBlank());
         return "client/homepage/show";
+    }
+
+    @GetMapping("/courses")
+    public String getCoursesPage(
+            @RequestParam(value = "q", required = false) String keyword,
+            @RequestParam(value = "level", required = false) String level,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(value = "sort", defaultValue = "newest") String sort,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "9") int size,
+            Model model) {
+
+        int safeSize = size <= 0 ? 9 : Math.min(size, 24);
+        List<Course> filteredCourses = new ArrayList<>(courseService.filterCourses(keyword, level, title, maxPrice, sort));
+
+        int totalItems = filteredCourses.size();
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalItems / safeSize));
+        int currentPage = Math.max(1, Math.min(page, totalPages));
+
+        int fromIndex = (currentPage - 1) * safeSize;
+        int toIndex = Math.min(fromIndex + safeSize, totalItems);
+        List<Course> pageCourses = fromIndex >= toIndex ? List.of() : filteredCourses.subList(fromIndex, toIndex);
+
+        int startPage = Math.max(1, currentPage - 2);
+        int endPage = Math.min(totalPages, startPage + 4);
+        startPage = Math.max(1, endPage - 4);
+
+        model.addAttribute("courses", pageCourses);
+        model.addAttribute("totalItems", totalItems);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("selectedKeyword", keyword == null ? "" : keyword.trim());
+        model.addAttribute("selectedLevel", level == null ? "" : level.trim());
+        model.addAttribute("selectedTitle", title == null ? "" : title.trim());
+        model.addAttribute("selectedMaxPrice", maxPrice);
+        model.addAttribute("selectedSort", sort);
+        model.addAttribute("pageSize", safeSize);
+        model.addAttribute("levels", courseService.getDistinctLevels());
+        model.addAttribute("titles", courseService.getDistinctTitles());
+        return "client/course/show";
     }
 
     @GetMapping("/api/search/suggestions")
@@ -104,6 +148,11 @@ public class HomePageController {
     public String getForgotPasswordPage(Model model) {
         model.addAttribute("resetPassword", new ResetPasswordDTO());
         return "client/auth/forgot-password";
+    }
+
+    @GetMapping("/access-denied")
+    public String getAccessDeniedPage() {
+        return "client/error/access-denied";
     }
 
     @PostMapping("/forgot-password")

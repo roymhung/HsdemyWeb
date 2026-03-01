@@ -6,7 +6,7 @@
                     <div class="container">
                         <div class="d-flex justify-content-between align-items-center mb-5">
                             <h2 class="fw-bold mb-0">Khóa Học Nổi Bật</h2>
-                            <a href="courses.html" class="btn btn-outline-primary">Xem tất cả <i
+                            <a href="/courses" class="btn btn-outline-primary">Xem tất cả <i
                                     class="bi bi-arrow-right"></i></a>
                         </div>
                         <div class="row g-4">
