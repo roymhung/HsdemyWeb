@@ -59,19 +59,19 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage Order</h1>
+                                <h1 class="mt-4">Quản lý đơn hàng</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">
-                                            Dashboard
+                                            Bảng điều khiển
                                         </a></li>
-                                    <li class="breadcrumb-item active">User</li>
+                                    <li class="breadcrumb-item active">Người dùng</li>
                                 </ol>
 
                                 <!-- update user -->
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-md-6 col-12 mx-auto">
-                                            <h3>Update a user</h3>
+                                            <h3>Cập nhật người dùng</h3>
                                             <hr />
 
                                             <form:form method="POST" action="/admin/user/update"
@@ -90,17 +90,17 @@
 
 
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Phone number:</label>
+                                                    <label class="form-label">Số điện thoại:</label>
                                                     <form:input path="phone" cssClass="form-control" />
                                                 </div>
 
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Full Name:</label>
+                                                    <label class="form-label">Họ và tên:</label>
                                                     <form:input path="fullName" cssClass="form-control" />
                                                 </div>
 
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Address:</label>
+                                                    <label class="form-label">Địa chỉ:</label>
                                                     <form:input path="address" cssClass="form-control" />
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
@@ -112,7 +112,7 @@
                                                 </div>
 
                                                 <div class="mb-3 col-12 ">
-                                                    <label for="avatarFile" class="form-label">Avatar: </label>
+                                                    <label for="avatarFile" class="form-label">Ảnh đại diện: </label>
                                                     <input class="form-control" type="file" id="avatarFile"
                                                         accept=".png, .jpg, .jpeg" name="hungFile" />
                                                 </div>
@@ -122,7 +122,7 @@
                                                         id="avatarPreview" />
                                                 </div>
 
-                                                <button class="btn btn-warning">Update</button>
+                                                <button class="btn btn-warning">Cập nhật</button>
                                             </form:form>
 
                                         </div>

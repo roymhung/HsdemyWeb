@@ -129,17 +129,17 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Create Course</h1>
+                                <h1 class="mt-4">Tạo khóa học</h1>
                                 <ol class="breadcrumb mb-4">
-                                    <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item"><a href="/admin/course">Courses</a></li>
+                                    <li class="breadcrumb-item"><a href="/admin">Bảng điều khiển</a></li>
+                                    <li class="breadcrumb-item"><a href="/admin/course">Danh sách khóa học</a></li>
                                     <li class="breadcrumb-item active">Create</li>
                                 </ol>
 
                                 <div class="card mb-4">
                                     <div class="card-header fw-semibold">
                                         <i class="fas fa-diagram-project me-2 text-primary"></i>
-                                        System Flow cho My Course
+                                        Luồng hệ thống cho Khoá học của tôi
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-3">
@@ -147,33 +147,37 @@
                                                 <div class="flow-card p-3">
                                                     <div class="d-flex align-items-center gap-2 mb-2">
                                                         <span class="flow-index">1</span>
-                                                        <h6 class="mb-0">Add Course</h6>
+                                                        <h6 class="mb-0">Thêm khóa học</h6>
                                                     </div>
                                                     <p class="mb-2 text-muted small">
-                                                        Nhập thông tin course, submit và lưu DB. Sau đó course hiển thị trong My Listed Course.
+                                                        Nhập thông tin khóa học, gửi (submit) và lưu vào cơ sở dữ liệu
+                                                        (DB). Sau đó khóa học sẽ hiển thị trong mục My Listed Course.
                                                     </p>
-                                                    <p class="mb-0"><strong>Formula:</strong> finalPrice = price - (price * discount / 100)</p>
+                                                    <p class="mb-0"><strong>Formula:</strong> finalPrice = price -
+                                                        (price * discount / 100)</p>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="flow-card p-3">
                                                     <div class="d-flex align-items-center gap-2 mb-2">
                                                         <span class="flow-index">2</span>
-                                                        <h6 class="mb-0">Add Chapter</h6>
+                                                        <h6 class="mb-0">Thêm chương</h6>
                                                     </div>
                                                     <p class="mb-0 text-muted small">
-                                                        Từ course detail, thêm chapter theo Sr No, section name, section description.
-                                                    </p>
+                                                        Từ trang chi tiết khóa học (course detail), thêm chương
+                                                        (chapter) theo số thứ tự (Sr No), tên phần (section name) và mô
+                                                        tả phần (section description). </p>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="flow-card p-3">
                                                     <div class="d-flex align-items-center gap-2 mb-2">
                                                         <span class="flow-index">3</span>
-                                                        <h6 class="mb-0">Add Topic (Video)</h6>
+                                                        <h6 class="mb-0">Thêm bài học (Video)</h6>
                                                     </div>
                                                     <p class="mb-0 text-muted small">
-                                                        Vào chapter để thêm topic, upload video, lưu đường dẫn file và tăng số lượng video.
+                                                        Vào từng chương (chapter) để thêm chủ đề (topic), tải video lên
+                                                        (upload), lưu đường dẫn file và cập nhật (tăng) số lượng video.
                                                     </p>
                                                 </div>
                                             </div>
@@ -181,11 +185,11 @@
                                                 <div class="flow-card p-3">
                                                     <div class="d-flex align-items-center gap-2 mb-2">
                                                         <span class="flow-index">4</span>
-                                                        <h6 class="mb-0">Student Purchase</h6>
+                                                        <h6 class="mb-0">Học viên mua khóa học</h6>
                                                     </div>
                                                     <p class="mb-0 text-muted small">
-                                                        Course trả phí cần thanh toán. Course miễn phí có thể học ngay không cần checkout.
-                                                    </p>
+                                                        Khóa học trả phí cần thực hiện thanh toán. Khóa học miễn phí có
+                                                        thể học ngay mà không cần checkout. </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -196,7 +200,7 @@
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-md-6 col-12 mx-auto">
-                                            <h3>Create a Course</h3>
+                                            <h3>Tạo khóa học</h3>
                                             <hr />
 
                                             <form:form method="POST" action="/admin/course/create"
@@ -226,7 +230,7 @@
 
                                                 <!-- Name course -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Course Name:</label>
+                                                    <label class="form-label">Tên khóa học:</label>
                                                     <form:input path="name"
                                                         cssClass="form-control ${not empty errorName ? 'is-invalid' : ''}" />
                                                     ${errorName}
@@ -234,7 +238,7 @@
 
                                                 <!-- Name course -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Course Author:</label>
+                                                    <label class="form-label">Tác giả khóa học:</label>
                                                     <form:input path="author"
                                                         cssClass="form-control ${not empty errorAuthor ? 'is-invalid' : ''}" />
                                                     ${errorAuthor}
@@ -249,7 +253,7 @@
                                                     ${errorPrice}
                                                 </div> -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Price</label>
+                                                    <label class="form-label">Giá</label>
 
                                                     <div class="input-group">
                                                         <input type="text" id="priceDisplay"
@@ -268,17 +272,19 @@
                                                             Khóa học miễn phí
                                                         </label>
                                                     </div>
-                                                    <small id="paidHint" class="text-muted">Nhập giá tiền nếu là khóa học trả phí.</small>
-                                                    <small id="freeHint" class="text-success d-none">Người học có thể vào học ngay mà không cần thanh toán.</small>
+                                                    <small id="paidHint" class="text-muted">Nhập giá tiền nếu là khóa
+                                                        học trả phí.</small>
+                                                    <small id="freeHint" class="text-success d-none">Người học có thể
+                                                        vào học ngay mà không cần thanh toán.</small>
                                                 </div>
 
                                                 <!-- LEVEL -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Level:</label>
+                                                    <label class="form-label">Cấp độ:</label>
                                                     <form:select path="level" class="form-select">
-                                                        <form:option value="BEGINNER">Beginner</form:option>
-                                                        <form:option value="INTERMEDIATE">Intermediate</form:option>
-                                                        <form:option value="ADVANCED">Advanced</form:option>
+                                                        <form:option value="BEGINNER">Cơ bản</form:option>
+                                                        <form:option value="INTERMEDIATE">Trung cấp</form:option>
+                                                        <form:option value="ADVANCED">Nâng cao</form:option>
                                                     </form:select>
                                                 </div>
 
@@ -297,7 +303,7 @@
 
                                                 <!-- SHORT DESC -->
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label">Short Description:</label>
+                                                    <label class="form-label">Mô tả ngắn:</label>
                                                     <form:textarea path="shortDesc" rows="2"
                                                         cssClass="form-control ${not empty errorShortDesc ? 'is-invalid' : ''}" />
                                                     ${errorShortDesc}
@@ -305,7 +311,7 @@
 
                                                 <!-- DETAIL DESC -->
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label">Detail Description:</label>
+                                                    <label class="form-label">Mô tả chi tiết:</label>
                                                     <form:textarea path="detailDesc" rows="4"
                                                         cssClass="form-control ${not empty errorDetailDesc ? 'is-invalid' : ''}" />
                                                     ${errorDetailDesc}
@@ -313,7 +319,8 @@
 
                                                 <!-- THUMBNAIL UPLOAD -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label for="avatarFile" class="form-label">Course Thumbnail:</label>
+                                                    <label for="avatarFile" class="form-label">Ảnh đại diện khóa
+                                                        học:</label>
                                                     <input class="form-control" type="file" id="avatarFile"
                                                         accept=".png, .jpg, .jpeg" name="thumbnailFile" />
                                                 </div>
@@ -327,7 +334,7 @@
                                                 <!-- SUBMIT -->
                                                 <div class="col-12 mb-5">
                                                     <button type="submit" class="btn btn-primary">
-                                                        Create Course
+                                                        Tạo khóa học
                                                     </button>
                                                 </div>
 

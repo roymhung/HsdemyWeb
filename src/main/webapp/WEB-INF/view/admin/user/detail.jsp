@@ -39,12 +39,12 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage Order</h1>
+                                <h1 class="mt-4">Quản lý đơn hàng</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">
-                                            Dashboard
+                                            Bảng điều khiển
                                         </a></li>
-                                    <li class="breadcrumb-item active">User</li>
+                                    <li class="breadcrumb-item active">Người dùng</li>
                                 </ol>
 
                                 <!-- detail user -->
@@ -52,28 +52,30 @@
                                     <div class="row">
                                         <div class="col-12 mx-auto">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3>User Detail with id= ${id}</h3>
-                                                <a href="/admin/user/create" class="btn btn-primary">Create a user</a>
+                                                <h3>Chi tiết người dùng với ID = ${id}</h3>
+                                                <a href="/admin/user/create" class="btn btn-primary">Tạo người dùng</a>
                                             </div>
 
                                             <hr />
 
                                             <div class="card" style="width: 30rem;">
                                                 <div class="card-header">
-                                                    User Information
+                                                    Thông tin người dùng
                                                 </div>
                                                 <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item"><strong>ID:</strong> ${user.id}</li>
+                                                    <li class="list-group-item"><strong>Mã / ID:</strong> ${user.id}
+                                                    </li>
                                                     <li class="list-group-item"><strong>Email:</strong> ${user.email}
                                                     </li>
-                                                    <li class="list-group-item"><strong>Full Name:</strong>
+                                                    <li class="list-group-item"><strong>Họ và tên:</strong>
                                                         ${user.fullName}</li>
-                                                    <li class="list-group-item"><strong>Address:</strong>
+                                                    <li class="list-group-item"><strong>Địa chỉ:</strong>
                                                         ${user.address}</li>
-                                                    <li class="list-group-item"><strong>Role:</strong> ${user.role.name}
+                                                    <li class="list-group-item"><strong>Vai trò:</strong>
+                                                        ${user.role.name}
                                                     </li>
 
-                                                    <li class="list-group-item"><strong>Avatar:</strong>
+                                                    <li class="list-group-item"><strong>Ảnh đại diện:</strong>
                                                         <c:if test="${not empty user.avatar}">
                                                             <img src="${pageContext.request.contextPath}/images/avatar/${user.avatar}"
                                                                 width="60" height="60"
@@ -83,7 +85,7 @@
 
                                                 </ul>
                                             </div>
-                                            <a href="/admin/user" class="btn btn-success mt-3">Back</a>
+                                            <a href="/admin/user" class="btn btn-success mt-3">Quay lại</a>
 
                                         </div>
                                     </div>
