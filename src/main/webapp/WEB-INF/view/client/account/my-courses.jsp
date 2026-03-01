@@ -41,6 +41,32 @@
                         </c:forEach>
                     </div>
 
+                    <c:if test="${totalPages > 1}">
+                        <nav class="mt-4" aria-label="My courses pagination">
+                            <ul class="pagination justify-content-center mb-0">
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                        href="${currentPage == 1 ? '#' : '/home/my-courses/learning?page='}${currentPage == 1 ? '' : currentPage - 1}">
+                                        Previous
+                                    </a>
+                                </li>
+
+                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                        <a class="page-link" href="/home/my-courses/learning?page=${i}">${i}</a>
+                                    </li>
+                                </c:forEach>
+
+                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                        href="${currentPage == totalPages ? '#' : '/home/my-courses/learning?page='}${currentPage == totalPages ? '' : currentPage + 1}">
+                                        Next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </c:if>
+
                     <c:if test="${empty courses}">
                         <div class="alert alert-info mt-4">
                             Ban chua co khoa hoc nao da thanh toan thanh cong.

@@ -13,6 +13,33 @@
     <title>Category Management</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        .latest-date-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border-radius: .6rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: .35rem .55rem;
+            font-size: .82rem;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .latest-time-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border-radius: .6rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: .35rem .55rem;
+            font-size: .8rem;
+            color: #64748b;
+            margin-top: .35rem;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -89,6 +116,7 @@
                                         <div class="col-md-3">
                                             <label class="form-label">Sắp xếp</label>
                                             <select class="form-select" name="sort">
+                                                <option value="latest_desc" ${selectedSort == 'latest_desc' ? 'selected' : ''}>Mốc mới nhất</option>
                                                 <option value="courses_desc" ${selectedSort == 'courses_desc' ? 'selected' : ''}>Nhiều khóa học nhất</option>
                                                 <option value="revenue_desc" ${selectedSort == 'revenue_desc' ? 'selected' : ''}>Doanh thu cao nhất</option>
                                                 <option value="name_asc" ${selectedSort == 'name_asc' ? 'selected' : ''}>Tên category A-Z</option>
@@ -114,7 +142,7 @@
                                         <div>
                                             <label class="form-label">Category hiện tại</label>
                                             <select class="form-select" name="oldTitle" required>
-                                                <c:forEach var="item" items="${categories}">
+                                                <c:forEach var="item" items="${allCategories}">
                                                     <option value="${item.key}">${item.displayName} (${item.courseCount})</option>
                                                 </c:forEach>
                                             </select>
@@ -169,7 +197,14 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${not empty item.lastCreatedAt}">
-                                                        ${item.lastCreatedAt}
+                                                        <div class="latest-date-chip">
+                                                            <i class="far fa-calendar"></i>
+                                                            <span>${item.latestDateDisplay}</span>
+                                                        </div>
+                                                        <div class="latest-time-chip">
+                                                            <i class="far fa-clock"></i>
+                                                            <span>${item.latestTimeDisplay}</span>
+                                                        </div>
                                                     </c:when>
                                                     <c:otherwise>-</c:otherwise>
                                                 </c:choose>
@@ -185,6 +220,41 @@
                             </table>
                         </div>
                     </div>
+
+                    <c:if test="${totalPages > 1}">
+                        <div class="d-flex justify-content-center mb-4">
+                            <ul class="pagination mb-0">
+                                <c:url var="prevUrl" value="/admin/category">
+                                    <c:param name="q" value="${keyword}" />
+                                    <c:param name="sort" value="${selectedSort}" />
+                                    <c:param name="page" value="${currentPage - 1}" />
+                                </c:url>
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link" href="${currentPage == 1 ? '#' : prevUrl}">Previous</a>
+                                </li>
+
+                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                    <c:url var="pageUrl" value="/admin/category">
+                                        <c:param name="q" value="${keyword}" />
+                                        <c:param name="sort" value="${selectedSort}" />
+                                        <c:param name="page" value="${i}" />
+                                    </c:url>
+                                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                        <a class="page-link" href="${pageUrl}">${i}</a>
+                                    </li>
+                                </c:forEach>
+
+                                <c:url var="nextUrl" value="/admin/category">
+                                    <c:param name="q" value="${keyword}" />
+                                    <c:param name="sort" value="${selectedSort}" />
+                                    <c:param name="page" value="${currentPage + 1}" />
+                                </c:url>
+                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                    <a class="page-link" href="${currentPage == totalPages ? '#' : nextUrl}">Next</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </c:if>
                 </div>
             </main>
 

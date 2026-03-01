@@ -28,6 +28,7 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ClientAccountController {
+    private static final int MY_COURSES_PER_PAGE = 9;
 
     private final UserService userService;
     private final UploadService uploadService;
@@ -43,13 +44,27 @@ public class ClientAccountController {
     }
 
     @GetMapping("/home/my-courses/learning")
-    public String getMyCoursesPage(Model model, Principal principal) {
+    public String getMyCoursesPage(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            Model model,
+            Principal principal) {
         User currentUser = getCurrentUser(principal);
         if (currentUser == null) {
             return "redirect:/login";
         }
         List<Course> paidCourses = orderService.getPaidCoursesByUserId(currentUser.getId());
-        model.addAttribute("courses", paidCourses);
+
+        int totalItems = paidCourses.size();
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalItems / MY_COURSES_PER_PAGE));
+        int currentPage = Math.max(1, Math.min(page, totalPages));
+
+        int fromIndex = (currentPage - 1) * MY_COURSES_PER_PAGE;
+        int toIndex = Math.min(fromIndex + MY_COURSES_PER_PAGE, totalItems);
+        List<Course> pageCourses = fromIndex >= toIndex ? List.of() : paidCourses.subList(fromIndex, toIndex);
+
+        model.addAttribute("courses", pageCourses);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
         return "client/account/my-courses";
     }
 

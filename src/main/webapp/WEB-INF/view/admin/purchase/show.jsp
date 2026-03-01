@@ -11,6 +11,46 @@
     <title>Purchase Management</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        .purchase-id-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            height: 32px;
+            border-radius: 999px;
+            background: #e8f0ff;
+            color: #1d4ed8;
+            font-weight: 700;
+            font-size: .9rem;
+        }
+
+        .purchase-date-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border-radius: .6rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: .35rem .55rem;
+            font-size: .82rem;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .purchase-time-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border-radius: .6rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: .35rem .55rem;
+            font-size: .8rem;
+            color: #64748b;
+            margin-top: .35rem;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -124,7 +164,9 @@
                                 <tbody>
                                     <c:forEach var="row" items="${rows}">
                                         <tr>
-                                            <td class="fw-semibold">#${row.purchaseId}</td>
+                                            <td>
+                                                <span class="purchase-id-badge">#${row.purchaseId}</span>
+                                            </td>
                                             <td>
                                                 <a href="/admin/order?q=${row.orderId}" class="text-decoration-none">#${row.orderId}</a>
                                             </td>
@@ -151,7 +193,16 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
-                                            <td class="small">${row.purchasedAt}</td>
+                                            <td>
+                                                <div class="purchase-date-chip">
+                                                    <i class="far fa-calendar"></i>
+                                                    <span>${row.purchasedDateDisplay}</span>
+                                                </div>
+                                                <div class="purchase-time-chip">
+                                                    <i class="far fa-clock"></i>
+                                                    <span>${row.purchasedTimeDisplay}</span>
+                                                </div>
+                                            </td>
                                         </tr>
                                     </c:forEach>
                                     <c:if test="${empty rows}">
@@ -163,6 +214,44 @@
                             </table>
                         </div>
                     </div>
+
+                    <c:if test="${totalPages > 1}">
+                        <div class="d-flex justify-content-center mb-4">
+                            <ul class="pagination mb-0">
+                                <c:url var="prevUrl" value="/admin/purchase">
+                                    <c:param name="q" value="${keyword}" />
+                                    <c:param name="status" value="${selectedStatus}" />
+                                    <c:param name="category" value="${selectedCategory}" />
+                                    <c:param name="page" value="${currentPage - 1}" />
+                                </c:url>
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link" href="${currentPage == 1 ? '#' : prevUrl}">Previous</a>
+                                </li>
+
+                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                    <c:url var="pageUrl" value="/admin/purchase">
+                                        <c:param name="q" value="${keyword}" />
+                                        <c:param name="status" value="${selectedStatus}" />
+                                        <c:param name="category" value="${selectedCategory}" />
+                                        <c:param name="page" value="${i}" />
+                                    </c:url>
+                                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                        <a class="page-link" href="${pageUrl}">${i}</a>
+                                    </li>
+                                </c:forEach>
+
+                                <c:url var="nextUrl" value="/admin/purchase">
+                                    <c:param name="q" value="${keyword}" />
+                                    <c:param name="status" value="${selectedStatus}" />
+                                    <c:param name="category" value="${selectedCategory}" />
+                                    <c:param name="page" value="${currentPage + 1}" />
+                                </c:url>
+                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                    <a class="page-link" href="${currentPage == totalPages ? '#' : nextUrl}">Next</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </c:if>
                 </div>
             </main>
             <jsp:include page="../layout/footer.jsp" />

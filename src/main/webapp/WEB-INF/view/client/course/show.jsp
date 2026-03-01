@@ -111,8 +111,6 @@
                                     </select>
                                 </div>
 
-                                <input type="hidden" name="size" value="${pageSize}" />
-
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-primary">Áp dụng</button>
                                     <a href="/courses" class="btn btn-outline-secondary">Xóa bộ lọc</a>
@@ -172,14 +170,13 @@
                                         <c:param name="maxPrice" value="${selectedMaxPrice}" />
                                     </c:if>
                                     <c:param name="sort" value="${selectedSort}" />
-                                    <c:param name="size" value="${pageSize}" />
                                     <c:param name="page" value="${currentPage - 1}" />
                                 </c:url>
                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link" href="${currentPage == 1 ? '#' : prevUrl}">Trước</a>
+                                    <a class="page-link" href="${currentPage == 1 ? '#' : prevUrl}">Previous</a>
                                 </li>
 
-                                <c:forEach var="i" begin="${startPage}" end="${endPage}">
+                                <c:forEach var="i" begin="1" end="${totalPages}">
                                     <c:url var="pageUrl" value="/courses">
                                         <c:param name="q" value="${selectedKeyword}" />
                                         <c:param name="level" value="${selectedLevel}" />
@@ -188,7 +185,6 @@
                                             <c:param name="maxPrice" value="${selectedMaxPrice}" />
                                         </c:if>
                                         <c:param name="sort" value="${selectedSort}" />
-                                        <c:param name="size" value="${pageSize}" />
                                         <c:param name="page" value="${i}" />
                                     </c:url>
                                     <li class="page-item ${i == currentPage ? 'active' : ''}">
@@ -204,11 +200,10 @@
                                         <c:param name="maxPrice" value="${selectedMaxPrice}" />
                                     </c:if>
                                     <c:param name="sort" value="${selectedSort}" />
-                                    <c:param name="size" value="${pageSize}" />
                                     <c:param name="page" value="${currentPage + 1}" />
                                 </c:url>
                                 <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                    <a class="page-link" href="${currentPage == totalPages ? '#' : nextUrl}">Sau</a>
+                                    <a class="page-link" href="${currentPage == totalPages ? '#' : nextUrl}">Next</a>
                                 </li>
                             </ul>
                         </nav>

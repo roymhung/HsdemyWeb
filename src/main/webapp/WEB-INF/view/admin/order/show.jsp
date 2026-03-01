@@ -13,6 +13,46 @@
     <title>Order Management</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        .order-id-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 56px;
+            height: 32px;
+            border-radius: 999px;
+            background: #e8f0ff;
+            color: #1d4ed8;
+            font-weight: 700;
+            font-size: .9rem;
+        }
+
+        .order-date-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border-radius: .6rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: .35rem .55rem;
+            font-size: .82rem;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .order-time-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border-radius: .6rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: .35rem .55rem;
+            font-size: .8rem;
+            color: #64748b;
+            margin-top: .35rem;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -123,7 +163,7 @@
                                 <tbody>
                                     <c:forEach var="order" items="${orders}">
                                         <tr>
-                                            <td class="fw-semibold">#${order.id}</td>
+                                            <td><span class="order-id-badge">#${order.id}</span></td>
                                             <td>
                                                 <div class="fw-semibold">${order.userName}</div>
                                                 <div class="small text-muted">${order.userEmail}</div>
@@ -148,18 +188,28 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
-                                            <td class="small">${order.createdAt}</td>
+                                            <td>
+                                                <div class="order-date-chip">
+                                                    <i class="far fa-calendar"></i>
+                                                    <span>${order.createdDateDisplay}</span>
+                                                </div>
+                                                <div class="order-time-chip">
+                                                    <i class="far fa-clock"></i>
+                                                    <span>${order.createdTimeDisplay}</span>
+                                                </div>
+                                            </td>
                                             <td>
                                                 <form method="post" action="/admin/order/${order.id}/status" class="d-flex gap-2">
                                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                                     <input type="hidden" name="q" value="${keyword}" />
                                                     <input type="hidden" name="statusFilter" value="${selectedStatus}" />
+                                                    <input type="hidden" name="page" value="${currentPage}" />
                                                     <select class="form-select form-select-sm" name="status">
                                                         <c:forEach var="st" items="${statusOptions}">
                                                             <option value="${st}" ${order.status == st ? 'selected' : ''}>${st}</option>
                                                         </c:forEach>
                                                     </select>
-                                                    <button type="submit" class="btn btn-sm btn-outline-primary">Lưu</button>
+                                                    <button type="submit" formmethod="post" class="btn btn-sm btn-primary">Lưu</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -173,6 +223,41 @@
                             </table>
                         </div>
                     </div>
+
+                    <c:if test="${totalPages > 1}">
+                        <div class="d-flex justify-content-center mb-4">
+                            <ul class="pagination mb-0">
+                                <c:url var="prevUrl" value="/admin/order">
+                                    <c:param name="q" value="${keyword}" />
+                                    <c:param name="status" value="${selectedStatus}" />
+                                    <c:param name="page" value="${currentPage - 1}" />
+                                </c:url>
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link" href="${currentPage == 1 ? '#' : prevUrl}">Previous</a>
+                                </li>
+
+                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                    <c:url var="pageUrl" value="/admin/order">
+                                        <c:param name="q" value="${keyword}" />
+                                        <c:param name="status" value="${selectedStatus}" />
+                                        <c:param name="page" value="${i}" />
+                                    </c:url>
+                                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                        <a class="page-link" href="${pageUrl}">${i}</a>
+                                    </li>
+                                </c:forEach>
+
+                                <c:url var="nextUrl" value="/admin/order">
+                                    <c:param name="q" value="${keyword}" />
+                                    <c:param name="status" value="${selectedStatus}" />
+                                    <c:param name="page" value="${currentPage + 1}" />
+                                </c:url>
+                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                    <a class="page-link" href="${currentPage == totalPages ? '#' : nextUrl}">Next</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </c:if>
                 </div>
             </main>
 

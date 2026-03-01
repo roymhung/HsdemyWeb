@@ -1,6 +1,7 @@
 package Hsdemy.vn.HsdemyWeb.controller.admin;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -20,6 +21,10 @@ import Hsdemy.vn.HsdemyWeb.service.OrderService;
 
 @Controller
 public class PurchaseController {
+    private static final int PURCHASES_PER_PAGE = 9;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
     private final OrderService orderService;
 
     public PurchaseController(OrderService orderService) {
@@ -31,6 +36,7 @@ public class PurchaseController {
             @RequestParam(value = "q", required = false) String keyword,
             @RequestParam(value = "status", required = false, defaultValue = "ALL") String statusFilter,
             @RequestParam(value = "category", required = false, defaultValue = "ALL") String categoryFilter,
+            @RequestParam(value = "page", defaultValue = "1") int page,
             Model model) {
         List<Order> orders = orderService.fetchAllOrdersForAdmin();
         List<PurchaseRow> rows = new ArrayList<>();
@@ -72,21 +78,29 @@ public class PurchaseController {
         }
 
         rows = applyFilters(rows, keyword, statusFilter, categoryFilter);
-        rows.sort(Comparator.comparing(PurchaseRow::getPurchasedAt, Comparator.nullsLast(Comparator.reverseOrder())));
+        rows.sort(Comparator.comparing(PurchaseRow::getPurchaseId, Comparator.nullsLast(Comparator.naturalOrder())));
+        int totalPurchaseCount = rows.size();
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalPurchaseCount / PURCHASES_PER_PAGE));
+        int currentPage = Math.max(1, Math.min(page, totalPages));
+        int fromIndex = (currentPage - 1) * PURCHASES_PER_PAGE;
+        int toIndex = Math.min(fromIndex + PURCHASES_PER_PAGE, totalPurchaseCount);
+        List<PurchaseRow> pageRows = fromIndex >= toIndex ? List.of() : rows.subList(fromIndex, toIndex);
 
         List<String> sortedCategories = new ArrayList<>(categories);
         sortedCategories.sort(String::compareTo);
 
-        model.addAttribute("rows", rows);
+        model.addAttribute("rows", pageRows);
         model.addAttribute("keyword", keyword == null ? "" : keyword);
         model.addAttribute("selectedStatus", statusFilter == null ? "ALL" : statusFilter.toUpperCase(Locale.ROOT));
         model.addAttribute("selectedCategory", categoryFilter == null ? "ALL" : categoryFilter.toUpperCase(Locale.ROOT));
         model.addAttribute("statusOptions", List.of("PENDING_PAYMENT", "PAID", "FAILED", "CANCELLED", "REFUNDED"));
         model.addAttribute("categoryOptions", sortedCategories);
-        model.addAttribute("totalPurchaseCount", rows.size());
+        model.addAttribute("totalPurchaseCount", totalPurchaseCount);
         model.addAttribute("paidPurchaseCount", paidPurchaseCount);
         model.addAttribute("totalRevenue", totalRevenue);
         model.addAttribute("uniqueStudents", uniqueStudentIds.size());
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
         return "admin/purchase/show";
     }
 
@@ -199,6 +213,20 @@ public class PurchaseController {
 
         public LocalDateTime getPurchasedAt() {
             return purchasedAt;
+        }
+
+        public String getPurchasedDateDisplay() {
+            if (purchasedAt == null) {
+                return "-";
+            }
+            return purchasedAt.format(DATE_FORMATTER);
+        }
+
+        public String getPurchasedTimeDisplay() {
+            if (purchasedAt == null) {
+                return "-";
+            }
+            return purchasedAt.format(TIME_FORMATTER);
         }
     }
 }

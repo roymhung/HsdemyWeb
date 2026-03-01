@@ -1,6 +1,7 @@
 package Hsdemy.vn.HsdemyWeb.controller.admin;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import Hsdemy.vn.HsdemyWeb.domain.Order;
@@ -20,6 +22,10 @@ import Hsdemy.vn.HsdemyWeb.service.OrderService;
 
 @Controller
 public class OrderController {
+    private static final int ORDERS_PER_PAGE = 9;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
     private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
@@ -30,7 +36,7 @@ public class OrderController {
     public String getDashboard(
             @RequestParam(value = "q", required = false) String keyword,
             @RequestParam(value = "status", required = false, defaultValue = "ALL") String statusFilter,
-            @RequestParam(value = "msg", required = false) String message,
+            @RequestParam(value = "page", defaultValue = "1") int page,
             Model model) {
         List<Order> orders = orderService.fetchAllOrdersForAdmin();
         List<AdminOrderRow> rows = new ArrayList<>();
@@ -54,37 +60,69 @@ public class OrderController {
         }
 
         rows = applyFilters(rows, keyword, statusFilter);
-        rows.sort(Comparator.comparing(AdminOrderRow::getCreatedAt,
-                Comparator.nullsLast(Comparator.reverseOrder())));
+        rows.sort(Comparator.comparing(AdminOrderRow::getId, Comparator.nullsLast(Comparator.naturalOrder())));
 
-        model.addAttribute("orders", rows);
+        int totalFilteredOrders = rows.size();
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalFilteredOrders / ORDERS_PER_PAGE));
+        int currentPage = Math.max(1, Math.min(page, totalPages));
+        int fromIndex = (currentPage - 1) * ORDERS_PER_PAGE;
+        int toIndex = Math.min(fromIndex + ORDERS_PER_PAGE, totalFilteredOrders);
+        List<AdminOrderRow> pageRows = fromIndex >= toIndex ? List.of() : rows.subList(fromIndex, toIndex);
+
+        model.addAttribute("orders", pageRows);
         model.addAttribute("keyword", keyword == null ? "" : keyword);
         model.addAttribute("selectedStatus", statusFilter == null ? "ALL" : statusFilter.toUpperCase(Locale.ROOT));
-        model.addAttribute("message", message);
         model.addAttribute("totalOrders", orders.size());
         model.addAttribute("pendingOrders", pendingCount);
         model.addAttribute("paidOrders", paidCount);
         model.addAttribute("failedOrders", failedCount);
         model.addAttribute("totalRevenue", Math.round(totalRevenue));
         model.addAttribute("statusOptions", List.of("PENDING_PAYMENT", "PAID", "FAILED", "CANCELLED", "REFUNDED"));
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
         return "admin/order/show";
     }
 
     @PostMapping("/admin/order/{orderId}/status")
     public String updateOrderStatus(@PathVariable("orderId") Long orderId,
-            @RequestParam("status") String status,
+            @RequestParam(value = "newStatus", required = false) String newStatus,
+            @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "q", required = false) String keyword,
-            @RequestParam(value = "statusFilter", required = false, defaultValue = "ALL") String statusFilter) {
-        boolean updated = orderService.updateOrderStatus(orderId, status);
+            @RequestParam(value = "statusFilter", required = false, defaultValue = "ALL") String statusFilter,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            RedirectAttributes redirectAttributes) {
+        String statusToUpdate = (newStatus != null && !newStatus.isBlank()) ? newStatus : status;
+        boolean updated = orderService.updateOrderStatus(orderId, statusToUpdate);
         String msg = updated
-                ? "Đã cập nhật trạng thái đơn #" + orderId + " thành " + status + "."
+                ? "Đã cập nhật trạng thái đơn #" + orderId + " thành " + statusToUpdate + "."
                 : "Không thể cập nhật đơn #" + orderId + ".";
+        redirectAttributes.addFlashAttribute("message", msg);
         String qValue = keyword == null ? "" : keyword.trim();
         String sfValue = statusFilter == null ? "ALL" : statusFilter;
         String redirectUrl = UriComponentsBuilder.fromPath("/admin/order")
-                .queryParam("msg", msg)
                 .queryParam("q", qValue)
                 .queryParam("status", sfValue)
+                .queryParam("page", page)
+                .build()
+                .toUriString();
+        return "redirect:" + redirectUrl;
+    }
+
+    @GetMapping("/admin/order/{orderId}/status")
+    public String fallbackOrderStatusPath(
+            @PathVariable("orderId") Long orderId,
+            @RequestParam(value = "q", required = false) String keyword,
+            @RequestParam(value = "status", required = false, defaultValue = "ALL") String statusFilter,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message",
+                "Đường dẫn cập nhật đơn #" + orderId + " không hợp lệ, vui lòng thử lại.");
+        String qValue = keyword == null ? "" : keyword.trim();
+        String sfValue = statusFilter == null ? "ALL" : statusFilter;
+        String redirectUrl = UriComponentsBuilder.fromPath("/admin/order")
+                .queryParam("q", qValue)
+                .queryParam("status", sfValue)
+                .queryParam("page", page)
                 .build()
                 .toUriString();
         return "redirect:" + redirectUrl;
@@ -195,6 +233,20 @@ public class OrderController {
 
         public LocalDateTime getCreatedAt() {
             return createdAt;
+        }
+
+        public String getCreatedDateDisplay() {
+            if (createdAt == null) {
+                return "-";
+            }
+            return createdAt.format(DATE_FORMATTER);
+        }
+
+        public String getCreatedTimeDisplay() {
+            if (createdAt == null) {
+                return "-";
+            }
+            return createdAt.format(TIME_FORMATTER);
         }
     }
 }
