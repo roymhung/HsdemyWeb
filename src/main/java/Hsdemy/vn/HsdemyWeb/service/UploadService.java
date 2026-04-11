@@ -4,6 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,6 +60,32 @@ public class UploadService {
 
         if (file.exists()) {
             file.delete();
+        }
+    }
+
+    public String handleSaveVideoUpload(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return "";
+        }
+        try {
+            String rootPath = this.servletContext.getRealPath("/uploads/videos");
+            if (rootPath == null || rootPath.isEmpty()) {
+                return "";
+            }
+            Path uploadPath = Paths.get(rootPath);
+            Files.createDirectories(uploadPath);
+
+            String originalName = file.getOriginalFilename() == null ? "video.mp4" : file.getOriginalFilename();
+            String finalName = System.currentTimeMillis() + "-" + originalName;
+            finalName = finalName.replaceAll("[^a-zA-Z0-9.\\-]", "_");
+
+            Path targetFile = uploadPath.resolve(finalName);
+            file.transferTo(targetFile.toFile());
+
+            return "/uploads/videos/" + finalName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 

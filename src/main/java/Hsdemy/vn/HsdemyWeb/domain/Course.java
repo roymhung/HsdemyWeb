@@ -4,12 +4,14 @@ package Hsdemy.vn.HsdemyWeb.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
@@ -30,7 +32,7 @@ public class Course {
     @Size(min = 3, max = 255, message = "Tên sản phẩm không được để trống phải từ 3 đến 255 ký tự")
     private String author;
 
-    @DecimalMin(value = "0", inclusive = false, message = "Giá phải lớn hơn 0")
+    @DecimalMin(value = "0", inclusive = true, message = "Giá không hợp lệ")
     private double price;
     private String thumbnail;
 
@@ -45,15 +47,19 @@ public class Course {
 
     private String level;
     private String title;
+    @Column(nullable = false)
+    private boolean deleted = false;
 
     private LocalDateTime createdAt;
 
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
+        this.deleted = false;
     }
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<Chapter> chapters;
 
     @OneToMany(mappedBy = "course")
@@ -154,6 +160,14 @@ public class Course {
 
     public void setOrderDetails(List<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
 

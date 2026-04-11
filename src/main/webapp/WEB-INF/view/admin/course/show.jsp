@@ -1,134 +1,204 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-        <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-            <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-                <!DOCTYPE html>
-                <html lang="en">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="vi">
 
-                <head>
-                    <meta charset="utf-8" />
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-                    <title>Manage Courses</title>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Quản lý khóa học</title>
 
-                    <link href="/css/styles.css" rel="stylesheet" />
-                    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
-                        crossorigin="anonymous"></script>
-                </head>
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
 
-                <body class="sb-nav-fixed">
+<body class="sb-nav-fixed">
 
-                    <!-- Header -->
-                    <jsp:include page="../layout/header.jsp" />
+    <jsp:include page="../layout/header.jsp" />
 
-                    <div id="layoutSidenav">
+    <div id="layoutSidenav">
+        <jsp:include page="../layout/sidebar.jsp" />
 
-                        <!-- Sidebar -->
-                        <jsp:include page="../layout/sidebar.jsp" />
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Quản lý khóa học</h1>
 
-                        <div id="layoutSidenav_content">
-                            <main>
-                                <div class="container-fluid px-4">
-                                    <h1 class="mt-4">Manage Courses</h1>
-                                    <ol class="breadcrumb mb-4">
-                                        <li class="breadcrumb-item">
-                                            <a href="/admin">Dashboard</a>
-                                        </li>
-                                        <li class="breadcrumb-item active">Courses</li>
-                                    </ol>
+                    <c:if test="${not empty message}">
+                        <div class="alert alert-${empty messageType ? 'info' : messageType} border-0 shadow-sm mt-3 mb-3">
+                            ${message}
+                        </div>
+                    </c:if>
 
-                                    <!-- Course table -->
-                                    <div class="mt-5">
-                                        <div class="row">
-                                            <div class="col-12 mx-auto">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <h3>Course Table</h3>
-                                                    <a href="/admin/course/create" class="btn btn-primary">
-                                                        Create Course
-                                                    </a>
-                                                </div>
-                                                <hr />
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a href="/admin">Bảng điều khiển</a></li>
+                        <li class="breadcrumb-item active">Khóa học</li>
+                    </ol>
 
-                                                <table class="table table-bordered table-hover align-middle">
-                                                    <thead class="table-dark">
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Name Course</th>
-                                                            <th>Name Author</th>
-                                                            <th>Price</th>
-                                                            <th>Level</th>
-                                                            <th>Thumbnail</th>
-                                                            <th width="260">Action</th>
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                        <c:forEach var="course" items="${courses}">
-                                                            <tr>
-                                                                <td>${course.id}</td>
-                                                                <td>${course.name}</td>
-                                                                <td>${course.author}</td>
-                                                                <td>
-                                                                    <fmt:formatNumber value="${course.price}"
-                                                                        type="number" groupingUsed="true" /> vnd
-                                                                </td>
-
-                                                                <td>
-                                                                    <span class="badge bg-info text-dark">
-                                                                        ${course.level}
-                                                                    </span>
-                                                                </td>
-
-                                                                <td>
-                                                                    <c:if test="${not empty course.thumbnail}">
-                                                                        <img src="${pageContext.request.contextPath}/images/course/${course.thumbnail}"
-                                                                            width="70" style="object-fit: cover;" />
-                                                                    </c:if>
-                                                                </td>
-
-                                                                <td>
-                                                                    <a href="/admin/course/${course.id}"
-                                                                        class="btn btn-success btn-sm">
-                                                                        View
-                                                                    </a>
-
-                                                                    <a href="/admin/course/update/${course.id}"
-                                                                        class="btn btn-warning btn-sm mx-1">
-                                                                        Update
-                                                                    </a>
-
-                                                                    <a href="/admin/course/delete/${course.id}"
-                                                                        class="btn btn-danger btn-sm">
-                                                                        Delete
-                                                                    </a>
-                                                                </td>
-                                                            </tr>
-                                                        </c:forEach>
-
-                                                        <c:if test="${empty courses}">
-                                                            <tr>
-                                                                <td colspan="9" class="text-center">
-                                                                    No courses found
-                                                                </td>
-                                                            </tr>
-                                                        </c:if>
-                                                    </tbody>
-                                                </table>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
+                    <div class="mt-3">
+                        <div class="row">
+                            <div class="col-12 mx-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h3 class="mb-0">Danh sách khóa học</h3>
+                                    <c:if test="${selectedView != 'trash'}">
+                                        <a href="/admin/course/create" class="btn btn-primary">Tạo khóa học</a>
+                                    </c:if>
                                 </div>
-                            </main>
 
-                            <!-- Footer -->
-                            <jsp:include page="../layout/footer.jsp" />
+                                <div class="d-flex gap-2 mb-3">
+                                    <a href="/admin/course?view=active"
+                                        class="btn ${selectedView == 'active' ? 'btn-primary' : 'btn-outline-primary'}">
+                                        Đang hiển thị (${activeCount})
+                                    </a>
+                                    <a href="/admin/course?view=trash"
+                                        class="btn ${selectedView == 'trash' ? 'btn-warning' : 'btn-outline-warning'}">
+                                        Đã ẩn / Thùng rác (${trashCount})
+                                    </a>
+                                </div>
 
+                                <table class="table table-bordered table-hover align-middle">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th width="50">ID</th>
+                                            <th>Tên khóa học</th>
+                                            <th width="140">Tác giả</th>
+                                            <th>Giá</th>
+                                            <th width="110">Cấp độ</th>
+                                            <th>Ảnh đại diện</th>
+                                            <th width="390">Hành động</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <c:forEach var="course" items="${courses}">
+                                            <tr>
+                                                <td>${course.id}</td>
+                                                <td>${course.name}</td>
+                                                <td>${course.author}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${course.price <= 0}">
+                                                            <span class="badge bg-success">MIỄN PHÍ</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <fmt:formatNumber value="${course.price}" type="number" groupingUsed="true" /> VND
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info text-dark">
+                                                        <c:choose>
+                                                            <c:when test="${course.level == 'BEGINNER' || course.level == 'beginner' || course.level == 'BIGINNER' || course.level == 'biginner'}">CƠ BẢN</c:when>
+                                                            <c:when test="${course.level == 'INTERMEDIATE' || course.level == 'intermediate'}">TRUNG CẤP</c:when>
+                                                            <c:when test="${course.level == 'ADVANCED' || course.level == 'advanced'}">NÂNG CAO</c:when>
+                                                            <c:otherwise>${course.level}</c:otherwise>
+                                                        </c:choose>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <c:if test="${not empty course.thumbnail}">
+                                                        <img src="${pageContext.request.contextPath}/images/course/${course.thumbnail}"
+                                                            width="70" style="object-fit: cover;" />
+                                                    </c:if>
+                                                </td>
+
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${selectedView == 'trash'}">
+                                                            <form action="/admin/course/restore/${course.id}" method="post" class="d-inline">
+                                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                                                <button type="submit" class="btn btn-sm btn-success">Khôi phục</button>
+                                                            </form>
+
+                                                            <form action="/admin/course/purge/${course.id}" method="post" class="d-inline ms-1"
+                                                                onsubmit="return confirm('Xóa vĩnh viễn khóa học này khỏi hệ thống?');">
+                                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                                                <button type="submit" class="btn btn-sm btn-danger">Xóa vĩnh viễn</button>
+                                                            </form>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <a href="/admin/course/${course.id}" class="btn btn-success btn-sm">
+                                                                Thiết kế khóa học
+                                                            </a>
+
+                                                            <a href="/admin/course/update/${course.id}" class="btn btn-warning btn-sm mx-1">
+                                                                Cập nhật
+                                                            </a>
+
+                                                            <a href="/admin/course/delete/${course.id}" class="btn btn-danger btn-sm">
+                                                                Xóa
+                                                            </a>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+
+                                        <c:if test="${empty courses}">
+                                            <tr>
+                                                <td colspan="9" class="text-center text-muted">
+                                                    <c:choose>
+                                                        <c:when test="${selectedView == 'trash'}">
+                                                            Thùng rác đang trống.
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            Không tìm thấy khóa học.
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </tr>
+                                        </c:if>
+                                    </tbody>
+                                </table>
+
+                                <c:if test="${totalPages > 1}">
+                                    <nav aria-label="Phân trang khóa học" class="mt-3">
+                                        <ul class="pagination justify-content-center mb-0">
+                                            <c:url var="prevUrl" value="/admin/course">
+                                                <c:param name="view" value="${selectedView}" />
+                                                <c:param name="page" value="${currentPage - 1}" />
+                                            </c:url>
+                                            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                                <a class="page-link" href="${currentPage == 1 ? '#' : prevUrl}">
+                                                    Trang trước
+                                                </a>
+                                            </li>
+
+                                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                                    <a class="page-link" href="/admin/course?view=${selectedView}&page=${i}">
+                                                        ${i}
+                                                    </a>
+                                                </li>
+                                            </c:forEach>
+
+                                            <c:url var="nextUrl" value="/admin/course">
+                                                <c:param name="view" value="${selectedView}" />
+                                                <c:param name="page" value="${currentPage + 1}" />
+                                            </c:url>
+                                            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                                <a class="page-link" href="${currentPage == totalPages ? '#' : nextUrl}">
+                                                    Trang sau
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </c:if>
+                            </div>
                         </div>
                     </div>
 
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-                </body>
+                </div>
+            </main>
 
-                </html>
+            <jsp:include page="../layout/footer.jsp" />
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

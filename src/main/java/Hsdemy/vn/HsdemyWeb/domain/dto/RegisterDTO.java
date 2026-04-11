@@ -2,15 +2,18 @@ package Hsdemy.vn.HsdemyWeb.domain.dto;
 
 import Hsdemy.vn.HsdemyWeb.service.validator.RegisterChecked;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @RegisterChecked
 public class RegisterDTO {
 
-    @Size(min = 3, message = "FirstName phải có tối thiểu 3 ký tự")
+    @NotBlank(message = "Tên không được để trống")
+    @Size(min = 1, message = "Tên phải có tối thiểu 1 ký tự")
     private String firstName;
 
-    @Size(min = 3, message = "LastName phải có tối thiểu 3 ký tự")
+    @NotBlank(message = "Họ không được để trống")
+    @Size(min = 1, message = "Họ phải có tối thiểu 1 ký tự")
     private String lastName;
 
     @Email(message = "Email không hợp lệ",

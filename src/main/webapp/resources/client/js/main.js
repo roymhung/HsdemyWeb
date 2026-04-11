@@ -16,6 +16,7 @@
         initVideoPlayer();
         initAccordions();
         initFilters();
+        initCourseAdvisorChatbot();
     });
 
     /**
@@ -148,25 +149,130 @@
      * Cart (localStorage demo)
      * =========================
      */
-    const CART_KEY = 'devacademy_cart';
+    const LEGACY_CART_KEY = 'devacademy_cart';
+    const CART_KEY_PREFIX = 'devacademy_cart_v2';
+    let cachedCartStorageKey = null;
+
+    function showClientToast(message, type = 'info') {
+        const bgClass = type === 'success'
+            ? 'text-bg-success'
+            : type === 'danger' || type === 'error'
+                ? 'text-bg-danger'
+                : type === 'warning'
+                    ? 'text-bg-warning'
+                    : 'text-bg-primary';
+
+        let wrap = document.getElementById('globalToastStack');
+        if (!wrap) {
+            wrap = document.createElement('div');
+            wrap.id = 'globalToastStack';
+            wrap.className = 'toast-container position-fixed top-0 end-0 p-3';
+            wrap.style.zIndex = '2000';
+            document.body.appendChild(wrap);
+        }
+
+        const toastEl = document.createElement('div');
+        toastEl.className = `toast align-items-center border-0 ${bgClass}`;
+        toastEl.setAttribute('role', 'alert');
+        toastEl.setAttribute('aria-live', 'assertive');
+        toastEl.setAttribute('aria-atomic', 'true');
+        toastEl.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">${escapeHtml(message)}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+        wrap.appendChild(toastEl);
+        if (typeof bootstrap === 'undefined' || !bootstrap.Toast) {
+            toastEl.classList.add('show');
+            setTimeout(() => toastEl.remove(), 2200);
+            return;
+        }
+        const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2200 });
+        toast.show();
+        toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+    }
+
+    function getCartStorageKey() {
+        if (cachedCartStorageKey) {
+            return cachedCartStorageKey;
+        }
+        const userKey = String(
+            document.querySelector('[data-cart-user-key]')?.getAttribute('data-cart-user-key') || ''
+        ).trim();
+        cachedCartStorageKey = userKey
+            ? `${CART_KEY_PREFIX}_user_${userKey}`
+            : `${CART_KEY_PREFIX}_guest`;
+        return cachedCartStorageKey;
+    }
+
+    function ensureCartStorageInitialized() {
+        const storageKey = getCartStorageKey();
+        if (localStorage.getItem(storageKey) !== null) {
+            return storageKey;
+        }
+        // Backward compatibility: migrate legacy cart only for guest.
+        if (storageKey === `${CART_KEY_PREFIX}_guest`) {
+            const legacyRaw = localStorage.getItem(LEGACY_CART_KEY);
+            if (legacyRaw !== null) {
+                localStorage.setItem(storageKey, legacyRaw);
+            }
+        }
+        return storageKey;
+    }
+
+    function normalizeCartItems(items) {
+        if (!Array.isArray(items)) return [];
+        const byId = new Map();
+        items.forEach(rawItem => {
+            const id = String(rawItem?.id || '').trim();
+            if (!id) return;
+
+            // One course = one cart slot, always quantity = 1
+            const normalized = {
+                id,
+                title: rawItem?.title || 'Khóa học',
+                priceNumber: Number(rawItem?.priceNumber) || 0,
+                author: rawItem?.author || '',
+                level: rawItem?.level || '',
+                image: rawItem?.image || '',
+                qty: 1
+            };
+            byId.set(id, normalized);
+        });
+        return Array.from(byId.values());
+    }
 
     function getCartItems() {
         try {
-            const raw = localStorage.getItem(CART_KEY);
+            const raw = localStorage.getItem(ensureCartStorageInitialized());
             const items = raw ? JSON.parse(raw) : [];
-            return Array.isArray(items) ? items : [];
+            return normalizeCartItems(items);
         } catch (e) {
             return [];
         }
     }
 
     function setCartItems(items) {
-        localStorage.setItem(CART_KEY, JSON.stringify(items || []));
+        localStorage.setItem(ensureCartStorageInitialized(), JSON.stringify(normalizeCartItems(items)));
         updateCartBadges();
     }
 
     function getCartCount() {
-        return getCartItems().reduce((sum, it) => sum + (Number(it?.qty) || 0), 0);
+        return getCartItems().length;
+    }
+
+    function formatPriceVnd(value) {
+        const n = Number(value) || 0;
+        return `${Math.round(n).toLocaleString('vi-VN')} đ`;
+    }
+
+    function formatLevelVi(levelRaw) {
+        const level = String(levelRaw || '').trim().toUpperCase();
+        if (level === 'BEGINNER' || level === 'BIGINNER') return 'CƠ BẢN';
+        if (level === 'INTERMEDIATE') return 'TRUNG CẤP';
+        if (level === 'ADVANCED') return 'NÂNG CAO';
+        return String(levelRaw || 'Tất cả cấp độ');
     }
 
     function updateCartBadges() {
@@ -177,7 +283,64 @@
         });
     }
 
+    async function syncCartWithServer(items) {
+        if (!Array.isArray(items) || !items.length) {
+            return items || [];
+        }
+
+        const numericIds = items
+            .map(it => Number(it?.id))
+            .filter(id => Number.isFinite(id) && id > 0);
+        if (!numericIds.length) {
+            return items;
+        }
+
+        try {
+            const params = new URLSearchParams();
+            numericIds.forEach(id => params.append('ids', String(id)));
+            const res = await fetch(`/api/courses/cart-details?${params.toString()}`, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!res.ok) {
+                return items;
+            }
+            const payload = await res.json();
+            const serverCourses = Array.isArray(payload?.courses) ? payload.courses : [];
+            const purchasedIds = new Set((payload?.purchasedIds || []).map(id => String(id)));
+            const byId = new Map(serverCourses.map(course => [String(course?.id || ''), course]));
+
+            const synced = items
+                .filter(it => {
+                    const id = String(it?.id || '');
+                    return id && byId.has(id) && !purchasedIds.has(id);
+                })
+                .map(it => {
+                    const id = String(it?.id || '');
+                    const serverCourse = byId.get(id);
+                    const thumbnail = serverCourse?.thumbnail || '';
+                    return {
+                        ...it,
+                        title: serverCourse?.name || it.title || 'Khóa học',
+                        author: serverCourse?.author || it.author || '',
+                        level: serverCourse?.level || it.level || '',
+                        priceNumber: Number(serverCourse?.price) || 0,
+                        image: thumbnail ? `/images/course/${thumbnail}` : (it.image || '')
+                    };
+                });
+
+            const changed = JSON.stringify(normalizeCartItems(items)) !== JSON.stringify(normalizeCartItems(synced));
+            if (changed) {
+                setCartItems(synced);
+            }
+            return synced;
+        } catch (e) {
+            return items;
+        }
+    }
+
     function initCart() {
+        applyPaymentResultCartSync();
         updateCartBadges();
 
         // If cart page exists, render empty state / list
@@ -193,52 +356,141 @@
             e.preventDefault();
             const id = btn.getAttribute('data-course-id') || 'course';
             const title = btn.getAttribute('data-course-title') || 'Khóa học';
-            const price = btn.getAttribute('data-course-price') || '';
+            const priceNumber = Number(btn.getAttribute('data-course-price-number') || 0);
+            const author = btn.getAttribute('data-course-author') || '';
+            const level = btn.getAttribute('data-course-level') || '';
+            const image = btn.getAttribute('data-course-image') || '';
 
             const items = getCartItems();
             const existing = items.find(it => it.id === id);
-            if (existing) existing.qty = (Number(existing.qty) || 1) + 1;
-            else items.push({ id, title, price, qty: 1 });
+            if (!existing) {
+                items.push({ id, title, priceNumber, author, level, image, qty: 1 });
+                showClientToast('Đã thêm khóa học vào giỏ hàng.', 'success');
+            } else {
+                showClientToast('Khóa học này đã có trong giỏ hàng.', 'warning');
+            }
             setCartItems(items);
+        });
+
+        document.addEventListener('click', function(e) {
+            const clearBtn = e.target.closest('[data-action="clear-cart"]');
+            if (!clearBtn) return;
+            e.preventDefault();
+            setCartItems([]);
+            renderCartPage();
+        });
+
+        document.addEventListener('click', async function(e) {
+            const checkoutBtn = e.target.closest('[data-action="checkout-cart"]');
+            if (!checkoutBtn) return;
+            e.preventDefault();
+            const items = await syncCartWithServer(getCartItems());
+            if (!items.length) {
+                showClientToast('Giỏ hàng đang trống.', 'warning');
+                return;
+            }
+
+            const params = new URLSearchParams();
+            items.forEach(item => {
+                if (item?.id) {
+                    params.append('ids', String(item.id));
+                }
+            });
+            if (!params.toString()) {
+                showClientToast('Không tìm thấy khóa học hợp lệ để thanh toán.', 'warning');
+                return;
+            }
+
+            window.location.href = `/payment/vnpay/quick/cart?${params.toString()}`;
         });
     }
 
-    function renderCartPage() {
-        const items = getCartItems();
+    function applyPaymentResultCartSync() {
+        const params = new URLSearchParams(window.location.search);
+        const paymentStatus = (params.get('payment') || '').trim().toLowerCase();
+        if (paymentStatus !== 'success') {
+            return;
+        }
+
+        const paidCourseIds = new Set();
+        params.getAll('paidCourseId').forEach(raw => {
+            String(raw || '')
+                .split(',')
+                .map(id => id.trim())
+                .filter(Boolean)
+                .forEach(id => paidCourseIds.add(id));
+        });
+
+        if (paidCourseIds.size > 0) {
+            const currentItems = getCartItems();
+            const nextItems = currentItems.filter(item => !paidCourseIds.has(String(item?.id || '').trim()));
+            if (nextItems.length !== currentItems.length) {
+                setCartItems(nextItems);
+                showClientToast('Đã cập nhật giỏ hàng sau khi thanh toán.', 'success');
+            }
+        }
+
+        params.delete('payment');
+        params.delete('paidCourseId');
+        const query = params.toString();
+        const cleanUrl = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash || ''}`;
+        window.history.replaceState({}, document.title, cleanUrl);
+    }
+
+    async function renderCartPage() {
+        const items = await syncCartWithServer(getCartItems());
         const emptyEl = document.querySelector('[data-cart-empty]');
         const listSectionEl = document.querySelector('[data-cart-list]');
         const listItemsEl = document.querySelector('[data-cart-items]');
+        const countLabelEl = document.querySelector('[data-cart-count-label]');
+        const totalEl = document.querySelector('[data-cart-total]');
 
         if (!emptyEl || !listSectionEl || !listItemsEl) return;
 
         if (!items.length) {
             emptyEl.classList.remove('d-none');
             listSectionEl.classList.add('d-none');
+            if (countLabelEl) countLabelEl.textContent = '0';
+            if (totalEl) totalEl.textContent = formatPriceVnd(0);
             return;
         }
 
         emptyEl.classList.add('d-none');
         listSectionEl.classList.remove('d-none');
+        const total = items.reduce((sum, it) => {
+            const qty = Number(it.qty) || 1;
+            const price = Number(it.priceNumber) || 0;
+            return sum + price * qty;
+        }, 0);
+        if (countLabelEl) countLabelEl.textContent = String(items.length);
+        if (totalEl) totalEl.textContent = formatPriceVnd(total);
 
         listItemsEl.innerHTML = items.map(it => {
             const safeTitle = escapeHtml(it.title || 'Khóa học');
-            const safePrice = escapeHtml(it.price || '');
+            const safeAuthor = escapeHtml(it.author || 'Giảng viên');
+            const safeLevel = escapeHtml(formatLevelVi(it.level));
+            const safeImage = escapeHtml(it.image || '/images/course/default.jpg');
             const qty = Number(it.qty) || 1;
+            const linePrice = (Number(it.priceNumber) || 0) * qty;
             return `
-                <div class="card border-0 shadow-sm mb-3">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold mb-1">${safeTitle}</h6>
-                            <div class="text-muted small">${safePrice ? safePrice : ''}</div>
+                <div class="cart-course-item">
+                    <div class="d-flex justify-content-between gap-3">
+                        <div class="d-flex gap-3 flex-grow-1">
+                            <img src="${safeImage}" alt="${safeTitle}" class="cart-thumb" />
+                            <div>
+                                <h6 class="fw-bold mb-1">${safeTitle}</h6>
+                                <div class="text-muted small mb-1">${safeAuthor}</div>
+                                <div class="text-muted small">${safeLevel} • SL: ${qty}</div>
+                            </div>
                         </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="badge bg-primary bg-opacity-10 text-primary">x${qty}</span>
-                            <button class="btn btn-outline-danger btn-sm" data-action="remove-cart-item" data-item-id="${escapeHtml(it.id)}">
-                                <i class="bi bi-trash"></i>
+                        <div class="text-end">
+                            <div class="fw-bold">${formatPriceVnd(linePrice)}</div>
+                            <button class="btn btn-link btn-sm text-danger p-0 mt-1" data-action="remove-cart-item" data-item-id="${escapeHtml(it.id)}">
+                                Xóa
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>    
             `;
         }).join('');
 
@@ -260,6 +512,143 @@
             .replaceAll('>', '&gt;')
             .replaceAll('"', '&quot;')
             .replaceAll("'", '&#039;');
+    }
+
+    /**
+     * =========================
+     * Course advisor chatbot
+     * =========================
+     */
+    function initCourseAdvisorChatbot() {
+        const widget = document.getElementById('courseAdvisorWidget');
+        const toggleBtn = document.getElementById('courseAdvisorToggle');
+        const closeBtn = document.getElementById('courseAdvisorClose');
+        const panel = document.getElementById('courseAdvisorPanel');
+        const form = document.getElementById('courseAdvisorForm');
+        const input = document.getElementById('courseAdvisorInput');
+        const messages = document.getElementById('courseAdvisorMessages');
+
+        if (!widget || !toggleBtn || !panel || !form || !input || !messages) {
+            return;
+        }
+
+        let isBootstrapped = false;
+
+        function setPanelVisible(visible) {
+            panel.classList.toggle('d-none', !visible);
+            if (visible) {
+                input.focus();
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        function renderBotMessage(text, suggestions = []) {
+            const msg = document.createElement('div');
+            msg.className = 'course-advisor-msg bot';
+            msg.textContent = text || 'Mình chưa hiểu rõ. Bạn thử mô tả chi tiết hơn nhé.';
+            messages.appendChild(msg);
+
+            if (Array.isArray(suggestions) && suggestions.length) {
+                suggestions.forEach(item => {
+                    const suggestion = document.createElement('div');
+                    suggestion.className = 'course-advisor-suggest';
+                    const safeThumb = escapeHtml(item?.thumbnail ? `/images/course/${item.thumbnail}` : '/images/course/default.jpg');
+                    const safeName = escapeHtml(item?.name || 'Khóa học');
+                    const safeAuthor = escapeHtml(item?.author || 'Giảng viên');
+                    const safeLevel = escapeHtml(item?.level || 'Tất cả cấp độ');
+                    const safeUrl = escapeHtml(item?.url || '#');
+                    const price = Number(item?.price || 0);
+                    const priceText = price <= 0 ? 'Miễn phí' : `${Math.round(price).toLocaleString('vi-VN')} đ`;
+                    suggestion.innerHTML = `
+                        <img src="${safeThumb}" class="course-advisor-thumb" alt="${safeName}" />
+                        <div>
+                            <div class="course-advisor-title">${safeName}</div>
+                            <div class="course-advisor-meta">${safeAuthor} • ${safeLevel} • ${priceText}</div>
+                        </div>
+                        <a class="course-advisor-link" href="${safeUrl}">Xem</a>
+                    `;
+                    messages.appendChild(suggestion);
+                });
+            }
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function renderUserMessage(text) {
+            const msg = document.createElement('div');
+            msg.className = 'course-advisor-msg user';
+            msg.textContent = text;
+            messages.appendChild(msg);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        async function askAdvisor(rawMessage) {
+            const message = String(rawMessage || '').trim();
+            if (!message) return;
+
+            renderUserMessage(message);
+            input.value = '';
+
+            const thinkingEl = document.createElement('div');
+            thinkingEl.className = 'course-advisor-msg bot';
+            thinkingEl.textContent = 'Mình đang phân tích nhu cầu của bạn...';
+            messages.appendChild(thinkingEl);
+            messages.scrollTop = messages.scrollHeight;
+
+            try {
+                const params = new URLSearchParams({ message });
+                const res = await fetch(`/api/chat/course-advisor?${params.toString()}`, {
+                    method: 'GET',
+                    headers: { Accept: 'application/json' }
+                });
+                thinkingEl.remove();
+                if (!res.ok) {
+                    renderBotMessage('Hiện chatbot đang bận. Bạn thử lại trong giây lát nhé.');
+                    return;
+                }
+                const data = await res.json();
+                renderBotMessage(data?.reply, data?.suggestions || []);
+            } catch (e) {
+                thinkingEl.remove();
+                renderBotMessage('Mình chưa kết nối được máy chủ. Bạn thử lại sau nhé.');
+            }
+        }
+
+        function bootstrapIntroIfNeeded() {
+            if (isBootstrapped) return;
+            isBootstrapped = true;
+            renderBotMessage(
+                'Xin chào! Mình là trợ lý AI tư vấn khóa học.\nBạn có thể hỏi theo chủ đề, mức giá, hoặc cấp độ muốn học.',
+                []
+            );
+        }
+
+        toggleBtn.addEventListener('click', function() {
+            const currentlyHidden = panel.classList.contains('d-none');
+            setPanelVisible(currentlyHidden);
+            if (currentlyHidden) {
+                bootstrapIntroIfNeeded();
+            }
+        });
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                setPanelVisible(false);
+            });
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            askAdvisor(input.value);
+        });
+
+        widget.querySelectorAll('[data-chat-chip]').forEach(chip => {
+            chip.addEventListener('click', function() {
+                const text = this.getAttribute('data-chat-chip') || '';
+                setPanelVisible(true);
+                bootstrapIntroIfNeeded();
+                askAdvisor(text);
+            });
+        });
     }
 
     /**

@@ -35,26 +35,87 @@
                         });
                     });
                 </script>
-                <!-- Đoạn script cho Nhập giá tiền -->
+                <!-- Price + free course logic -->
                 <script>
                     function formatCurrency(input) {
-                        // Lấy số, bỏ hết ký tự không phải số
+                        const hiddenPrice = document.getElementById('price');
                         let value = input.value.replace(/\D/g, '');
                         if (value === '') {
-                            document.getElementById('price').value = '';
+                            hiddenPrice.value = '0';
                             input.value = '';
                             return;
                         }
-
-                        // Gán giá trị thật cho hidden input
-                        document.getElementById('price').value = value;
-
-                        // Format hiển thị: 1.200.000
+                        hiddenPrice.value = value;
                         input.value = new Intl.NumberFormat('vi-VN').format(value);
                     }
+
+                    function toggleFreeCourse() {
+                        const freeCheckbox = document.getElementById('freeCourse');
+                        const priceDisplay = document.getElementById('priceDisplay');
+                        const hiddenPrice = document.getElementById('price');
+                        const paidHint = document.getElementById('paidHint');
+                        const freeHint = document.getElementById('freeHint');
+
+                        if (freeCheckbox.checked) {
+                            hiddenPrice.value = '0';
+                            priceDisplay.value = 'Miễn phí';
+                            priceDisplay.setAttribute('disabled', 'disabled');
+                            if (paidHint) paidHint.classList.add('d-none');
+                            if (freeHint) freeHint.classList.remove('d-none');
+                            return;
+                        }
+
+                        priceDisplay.removeAttribute('disabled');
+                        if (hiddenPrice.value === '0' || hiddenPrice.value === '') {
+                            priceDisplay.value = '';
+                        } else {
+                            priceDisplay.value = new Intl.NumberFormat('vi-VN').format(hiddenPrice.value);
+                        }
+                        if (paidHint) paidHint.classList.remove('d-none');
+                        if (freeHint) freeHint.classList.add('d-none');
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const hiddenPrice = document.getElementById('price');
+                        const priceDisplay = document.getElementById('priceDisplay');
+                        const freeCheckbox = document.getElementById('freeCourse');
+                        const initialPrice = Number(hiddenPrice.value || 0);
+
+                        if (initialPrice > 0) {
+                            priceDisplay.value = new Intl.NumberFormat('vi-VN').format(initialPrice);
+                        } else {
+                            freeCheckbox.checked = true;
+                        }
+                        toggleFreeCourse();
+                    });
                 </script>
 
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+                <style>
+                    .flow-card {
+                        border: 1px solid #e9ecef;
+                        border-radius: 0.9rem;
+                        transition: all .2s ease;
+                        height: 100%;
+                    }
+
+                    .flow-card:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 0.75rem 1.5rem rgba(13, 110, 253, 0.12);
+                    }
+
+                    .flow-index {
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 50%;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #0d6efd;
+                        background: #e7f1ff;
+                        font-weight: 700;
+                    }
+                </style>
             </head>
 
             <body class="sb-nav-fixed">
@@ -68,18 +129,78 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Create Course</h1>
+                                <h1 class="mt-4">Tạo khóa học</h1>
                                 <ol class="breadcrumb mb-4">
-                                    <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item"><a href="/admin/course">Courses</a></li>
+                                    <li class="breadcrumb-item"><a href="/admin">Bảng điều khiển</a></li>
+                                    <li class="breadcrumb-item"><a href="/admin/course">Danh sách khóa học</a></li>
                                     <li class="breadcrumb-item active">Create</li>
                                 </ol>
+
+                                <div class="card mb-4">
+                                    <div class="card-header fw-semibold">
+                                        <i class="fas fa-diagram-project me-2 text-primary"></i>
+                                        Luồng hệ thống cho Khoá học của tôi
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-lg-6">
+                                                <div class="flow-card p-3">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="flow-index">1</span>
+                                                        <h6 class="mb-0">Thêm khóa học</h6>
+                                                    </div>
+                                                    <p class="mb-2 text-muted small">
+                                                        Nhập thông tin khóa học, gửi (submit) và lưu vào cơ sở dữ liệu
+                                                        (DB). Sau đó khóa học sẽ hiển thị trong mục My Listed Course.
+                                                    </p>
+                                                    <p class="mb-0"><strong>Formula:</strong> finalPrice = price -
+                                                        (price * discount / 100)</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="flow-card p-3">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="flow-index">2</span>
+                                                        <h6 class="mb-0">Thêm chương</h6>
+                                                    </div>
+                                                    <p class="mb-0 text-muted small">
+                                                        Từ trang chi tiết khóa học (course detail), thêm chương
+                                                        (chapter) theo số thứ tự (Sr No), tên phần (section name) và mô
+                                                        tả phần (section description). </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="flow-card p-3">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="flow-index">3</span>
+                                                        <h6 class="mb-0">Thêm bài học (Video)</h6>
+                                                    </div>
+                                                    <p class="mb-0 text-muted small">
+                                                        Vào từng chương (chapter) để thêm chủ đề (topic), tải video lên
+                                                        (upload), lưu đường dẫn file và cập nhật (tăng) số lượng video.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="flow-card p-3">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="flow-index">4</span>
+                                                        <h6 class="mb-0">Học viên mua khóa học</h6>
+                                                    </div>
+                                                    <p class="mb-0 text-muted small">
+                                                        Khóa học trả phí cần thực hiện thanh toán. Khóa học miễn phí có
+                                                        thể học ngay mà không cần checkout. </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- create user -->
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-md-6 col-12 mx-auto">
-                                            <h3>Create a Course</h3>
+                                            <h3>Tạo khóa học</h3>
                                             <hr />
 
                                             <form:form method="POST" action="/admin/course/create"
@@ -109,7 +230,7 @@
 
                                                 <!-- Name course -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Course Name:</label>
+                                                    <label class="form-label">Tên khóa học:</label>
                                                     <form:input path="name"
                                                         cssClass="form-control ${not empty errorName ? 'is-invalid' : ''}" />
                                                     ${errorName}
@@ -117,7 +238,7 @@
 
                                                 <!-- Name course -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Course Author:</label>
+                                                    <label class="form-label">Tác giả khóa học:</label>
                                                     <form:input path="author"
                                                         cssClass="form-control ${not empty errorAuthor ? 'is-invalid' : ''}" />
                                                     ${errorAuthor}
@@ -132,7 +253,7 @@
                                                     ${errorPrice}
                                                 </div> -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Price</label>
+                                                    <label class="form-label">Giá</label>
 
                                                     <div class="input-group">
                                                         <input type="text" id="priceDisplay"
@@ -144,15 +265,26 @@
 
                                                     <!-- input ẩn để submit lên server -->
                                                     <form:hidden path="price" id="price" />
+                                                    <div class="form-check mt-2">
+                                                        <input class="form-check-input" type="checkbox" id="freeCourse"
+                                                            onchange="toggleFreeCourse()">
+                                                        <label class="form-check-label fw-semibold" for="freeCourse">
+                                                            Khóa học miễn phí
+                                                        </label>
+                                                    </div>
+                                                    <small id="paidHint" class="text-muted">Nhập giá tiền nếu là khóa
+                                                        học trả phí.</small>
+                                                    <small id="freeHint" class="text-success d-none">Người học có thể
+                                                        vào học ngay mà không cần thanh toán.</small>
                                                 </div>
 
                                                 <!-- LEVEL -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Level:</label>
+                                                    <label class="form-label">Cấp độ:</label>
                                                     <form:select path="level" class="form-select">
-                                                        <form:option value="BEGINNER">Beginner</form:option>
-                                                        <form:option value="INTERMEDIATE">Intermediate</form:option>
-                                                        <form:option value="ADVANCED">Advanced</form:option>
+                                                        <form:option value="BEGINNER">CƠ BẢN</form:option>
+                                                        <form:option value="INTERMEDIATE">TRUNG CẤP</form:option>
+                                                        <form:option value="ADVANCED">NÂNG CAO</form:option>
                                                     </form:select>
                                                 </div>
 
@@ -171,7 +303,7 @@
 
                                                 <!-- SHORT DESC -->
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label">Short Description:</label>
+                                                    <label class="form-label">Mô tả ngắn:</label>
                                                     <form:textarea path="shortDesc" rows="2"
                                                         cssClass="form-control ${not empty errorShortDesc ? 'is-invalid' : ''}" />
                                                     ${errorShortDesc}
@@ -179,7 +311,7 @@
 
                                                 <!-- DETAIL DESC -->
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label">Detail Description:</label>
+                                                    <label class="form-label">Mô tả chi tiết:</label>
                                                     <form:textarea path="detailDesc" rows="4"
                                                         cssClass="form-control ${not empty errorDetailDesc ? 'is-invalid' : ''}" />
                                                     ${errorDetailDesc}
@@ -187,7 +319,8 @@
 
                                                 <!-- THUMBNAIL UPLOAD -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label for="avatarFile" class="form-label">Course Thumbnail:</label>
+                                                    <label for="avatarFile" class="form-label">Ảnh đại diện khóa
+                                                        học:</label>
                                                     <input class="form-control" type="file" id="avatarFile"
                                                         accept=".png, .jpg, .jpeg" name="thumbnailFile" />
                                                 </div>
@@ -201,7 +334,7 @@
                                                 <!-- SUBMIT -->
                                                 <div class="col-12 mb-5">
                                                     <button type="submit" class="btn btn-primary">
-                                                        Create Course
+                                                        Tạo khóa học
                                                     </button>
                                                 </div>
 

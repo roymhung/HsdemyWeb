@@ -45,7 +45,7 @@
                             <div class="col-lg-2 col-md-6 col-sm-6">
                                 <h6 class="fw-bold mb-3 text-primary">Khóa học</h6>
                                 <ul class="list-unstyled">
-                                    <li class="mb-2"><a href="courses.html"
+                                    <li class="mb-2"><a href="/courses"
                                             class="text-white-50 text-decoration-none hover-primary">Tất cả khóa
                                             học</a></li>
                                     <li class="mb-2"><a href="#"
@@ -140,3 +140,227 @@
                         </div>
                     </div>
                 </footer>
+
+                <div id="courseAdvisorWidget" class="course-advisor-widget">
+                    <button id="courseAdvisorToggle" type="button" class="course-advisor-toggle" aria-label="Mở tư vấn khóa học">
+                        <i class="bi bi-robot"></i>
+                        <span>Tư vấn AI</span>
+                    </button>
+
+                    <div id="courseAdvisorPanel" class="course-advisor-panel d-none">
+                        <div class="course-advisor-header">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Trợ lý tư vấn khóa học</h6>
+                                <small>Hỏi chủ đề, cấp độ, giá mong muốn</small>
+                            </div>
+                            <button id="courseAdvisorClose" type="button" class="btn btn-sm btn-light">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+
+                        <div id="courseAdvisorMessages" class="course-advisor-messages"></div>
+
+                        <div class="course-advisor-quick">
+                            <button type="button" class="course-advisor-chip" data-chat-chip="Gợi ý khóa học miễn phí">Miễn phí</button>
+                            <button type="button" class="course-advisor-chip" data-chat-chip="Tôi mới bắt đầu, học cơ bản">Cho người mới</button>
+                            <button type="button" class="course-advisor-chip" data-chat-chip="Gợi ý khóa học marketing">Marketing</button>
+                        </div>
+
+                        <form id="courseAdvisorForm" class="course-advisor-form">
+                            <input id="courseAdvisorInput" type="text" maxlength="240"
+                                placeholder="Ví dụ: Tôi muốn học Java cơ bản, dưới 2 triệu..." autocomplete="off" />
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <style>
+                    .course-advisor-widget {
+                        position: fixed;
+                        right: 20px;
+                        bottom: 20px;
+                        z-index: 1400;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-end;
+                        gap: .65rem;
+                    }
+
+                    .course-advisor-toggle {
+                        border: none;
+                        border-radius: 999px;
+                        background: linear-gradient(135deg, #6c63ff 0%, #4f46e5 100%);
+                        color: #fff;
+                        font-weight: 700;
+                        padding: .68rem .95rem;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: .45rem;
+                        box-shadow: 0 10px 24px rgba(79, 70, 229, .35);
+                    }
+
+                    .course-advisor-toggle:hover {
+                        filter: brightness(.98);
+                    }
+
+                    .course-advisor-panel {
+                        width: min(390px, calc(100vw - 28px));
+                        max-height: min(72vh, 640px);
+                        background: #fff;
+                        border-radius: 1rem;
+                        border: 1px solid #e6e8ff;
+                        box-shadow: 0 18px 42px rgba(17, 24, 39, .2);
+                        overflow: hidden;
+                        display: flex;
+                        flex-direction: column;
+                    }
+
+                    .course-advisor-header {
+                        background: linear-gradient(135deg, #6c63ff 0%, #4f46e5 100%);
+                        color: #fff;
+                        padding: .8rem .85rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: .8rem;
+                    }
+
+                    .course-advisor-header small {
+                        color: rgba(255, 255, 255, .86);
+                    }
+
+                    .course-advisor-messages {
+                        padding: .8rem;
+                        display: grid;
+                        gap: .6rem;
+                        overflow: auto;
+                        background: #f8f9ff;
+                        min-height: 230px;
+                        max-height: 380px;
+                    }
+
+                    .course-advisor-msg {
+                        max-width: 92%;
+                        border-radius: .8rem;
+                        padding: .55rem .7rem;
+                        font-size: .92rem;
+                        line-height: 1.4;
+                        white-space: pre-wrap;
+                    }
+
+                    .course-advisor-msg.user {
+                        margin-left: auto;
+                        background: #6c63ff;
+                        color: #fff;
+                        border-bottom-right-radius: .35rem;
+                    }
+
+                    .course-advisor-msg.bot {
+                        margin-right: auto;
+                        background: #fff;
+                        color: #111827;
+                        border: 1px solid #e5e7eb;
+                        border-bottom-left-radius: .35rem;
+                    }
+
+                    .course-advisor-suggest {
+                        margin-top: .35rem;
+                        border: 1px solid #e5e7eb;
+                        background: #fff;
+                        border-radius: .75rem;
+                        padding: .5rem;
+                        display: flex;
+                        align-items: center;
+                        gap: .55rem;
+                    }
+
+                    .course-advisor-thumb {
+                        width: 52px;
+                        height: 36px;
+                        border-radius: .4rem;
+                        object-fit: cover;
+                        background: #eef2ff;
+                        flex: 0 0 52px;
+                    }
+
+                    .course-advisor-title {
+                        font-size: .86rem;
+                        font-weight: 700;
+                        color: #111827;
+                        line-height: 1.25;
+                        margin-bottom: .1rem;
+                    }
+
+                    .course-advisor-meta {
+                        font-size: .74rem;
+                        color: #6b7280;
+                    }
+
+                    .course-advisor-link {
+                        margin-left: auto;
+                        white-space: nowrap;
+                        font-size: .78rem;
+                        color: #6c63ff;
+                        text-decoration: none;
+                        font-weight: 700;
+                    }
+
+                    .course-advisor-link:hover {
+                        color: #4f46e5;
+                    }
+
+                    .course-advisor-quick {
+                        padding: .5rem .75rem .2rem;
+                        display: flex;
+                        gap: .45rem;
+                        flex-wrap: wrap;
+                        border-top: 1px solid #eceff8;
+                        background: #fff;
+                    }
+
+                    .course-advisor-chip {
+                        border: 1px solid #d7dbff;
+                        background: #f5f6ff;
+                        color: #4f46e5;
+                        padding: .2rem .5rem;
+                        border-radius: 999px;
+                        font-size: .75rem;
+                        font-weight: 600;
+                    }
+
+                    .course-advisor-form {
+                        padding: .65rem .75rem .75rem;
+                        display: flex;
+                        align-items: center;
+                        gap: .5rem;
+                        border-top: 1px solid #eceff8;
+                        background: #fff;
+                    }
+
+                    .course-advisor-form input {
+                        flex: 1;
+                        border: 1px solid #d6d8e4;
+                        border-radius: .65rem;
+                        padding: .55rem .7rem;
+                        font-size: .9rem;
+                        outline: none;
+                    }
+
+                    .course-advisor-form input:focus {
+                        border-color: #6c63ff;
+                        box-shadow: 0 0 0 2px rgba(108, 99, 255, .15);
+                    }
+
+                    @media (max-width: 768px) {
+                        .course-advisor-widget {
+                            right: 12px;
+                            bottom: 12px;
+                        }
+
+                        .course-advisor-toggle span {
+                            display: none;
+                        }
+                    }
+                </style>

@@ -44,23 +44,59 @@
                         });
                     });
                 </script>
-                <!-- Đoạn script cho Nhập giá tiền -->
+                <!-- Price + free course logic -->
                 <script>
                     function formatCurrency(input) {
-                        // Lấy số, bỏ hết ký tự không phải số
+                        const hiddenPrice = document.getElementById('price');
                         let value = input.value.replace(/\D/g, '');
                         if (value === '') {
-                            document.getElementById('price').value = '';
+                            hiddenPrice.value = '0';
                             input.value = '';
                             return;
                         }
-
-                        // Gán giá trị thật cho hidden input
-                        document.getElementById('price').value = value;
-
-                        // Format hiển thị: 1.200.000
+                        hiddenPrice.value = value;
                         input.value = new Intl.NumberFormat('vi-VN').format(value);
                     }
+
+                    function toggleFreeCourse() {
+                        const freeCheckbox = document.getElementById('freeCourse');
+                        const priceDisplay = document.getElementById('priceDisplay');
+                        const hiddenPrice = document.getElementById('price');
+                        const paidHint = document.getElementById('paidHint');
+                        const freeHint = document.getElementById('freeHint');
+
+                        if (freeCheckbox.checked) {
+                            hiddenPrice.value = '0';
+                            priceDisplay.value = 'Miễn phí';
+                            priceDisplay.setAttribute('disabled', 'disabled');
+                            if (paidHint) paidHint.classList.add('d-none');
+                            if (freeHint) freeHint.classList.remove('d-none');
+                            return;
+                        }
+
+                        priceDisplay.removeAttribute('disabled');
+                        if (hiddenPrice.value === '0' || hiddenPrice.value === '') {
+                            priceDisplay.value = '';
+                        } else {
+                            priceDisplay.value = new Intl.NumberFormat('vi-VN').format(hiddenPrice.value);
+                        }
+                        if (paidHint) paidHint.classList.remove('d-none');
+                        if (freeHint) freeHint.classList.add('d-none');
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const hiddenPrice = document.getElementById('price');
+                        const priceDisplay = document.getElementById('priceDisplay');
+                        const freeCheckbox = document.getElementById('freeCourse');
+                        const initialPrice = Number(hiddenPrice.value || 0);
+
+                        if (initialPrice > 0) {
+                            priceDisplay.value = new Intl.NumberFormat('vi-VN').format(initialPrice);
+                        } else {
+                            freeCheckbox.checked = true;
+                        }
+                        toggleFreeCourse();
+                    });
                 </script>
 
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -76,19 +112,20 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage Course</h1>
+                                <h1 class="mt-4">Quản lý khóa học</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">
-                                            Dashboard
+                                            Bảng điều khiển
                                         </a></li>
-                                    <li class="breadcrumb-item active">Course</li>
+                                    <li class="breadcrumb-item active">Các khóa học</li>
                                 </ol>
+
 
                                 <!-- update user -->
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-md-6 col-12 mx-auto">
-                                            <h3>Update Course</h3>
+                                            <h3>Cập nhật khóa học</h3>
                                             <hr />
 
                                             <form:form method="POST" action="/admin/course/update"
@@ -119,7 +156,7 @@
 
                                                 <!-- NAME -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Course Name</label>
+                                                    <label class="form-label">Tên khóa học</label>
                                                     <form:input path="name"
                                                         cssClass="form-control ${not empty errorName ? 'is-invalid' : ''}" />
                                                     ${errorName}
@@ -127,7 +164,7 @@
 
                                                 <!-- Author -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Course Author</label>
+                                                    <label class="form-label">Tác giả khóa học</label>
                                                     <form:input path="author"
                                                         cssClass="form-control ${not empty errorAuthor ? 'is-invalid' : ''}" />
                                                     ${errorAuthor}
@@ -135,7 +172,7 @@
 
                                                 <!-- PRICE -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Price</label>
+                                                    <label class="form-label">Giá</label>
 
                                                     <div class="input-group">
                                                         <input type="text" id="priceDisplay"
@@ -147,16 +184,27 @@
 
                                                     <!-- input ẩn để submit lên server -->
                                                     <form:hidden path="price" id="price" />
+                                                    <div class="form-check mt-2">
+                                                        <input class="form-check-input" type="checkbox" id="freeCourse"
+                                                            onchange="toggleFreeCourse()">
+                                                        <label class="form-check-label fw-semibold" for="freeCourse">
+                                                            Khóa học miễn phí
+                                                        </label>
+                                                    </div>
+                                                    <small id="paidHint" class="text-muted">Nhập giá tiền nếu là khóa
+                                                        học trả phí.</small>
+                                                    <small id="freeHint" class="text-success d-none">Người học có thể
+                                                        vào học ngay mà không cần thanh toán.</small>
                                                 </div>
 
 
                                                 <!-- LEVEL -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Level</label>
+                                                    <label class="form-label">Cấp độ</label>
                                                     <form:select path="level" class="form-select">
-                                                        <form:option value="BEGINNER">Beginner</form:option>
-                                                        <form:option value="INTERMEDIATE">Intermediate</form:option>
-                                                        <form:option value="ADVANCED">Advanced</form:option>
+                                                        <form:option value="BEGINNER">CƠ BẢN</form:option>
+                                                        <form:option value="INTERMEDIATE">TRUNG CẤP</form:option>
+                                                        <form:option value="ADVANCED">NÂNG CAO</form:option>
                                                     </form:select>
                                                 </div>
 
@@ -174,7 +222,7 @@
 
                                                 <!-- SHORT DESC -->
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label">Short Description</label>
+                                                    <label class="form-label">Mô tả ngắn</label>
                                                     <form:textarea path="shortDesc" rows="2"
                                                         cssClass="form-control ${not empty errorShortDesc ? 'is-invalid' : ''}" />
                                                     ${errorShortDesc}
@@ -182,7 +230,7 @@
 
                                                 <!-- DETAIL DESC -->
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label">Detail Description</label>
+                                                    <label class="form-label">Mô tả chi tiết</label>
                                                     <form:textarea path="detailDesc" rows="4"
                                                         cssClass="form-control ${not empty errorDetailDesc ? 'is-invalid' : ''}" />
                                                     ${errorDetailDesc}
@@ -190,17 +238,17 @@
 
                                                 <!-- UPLOAD THUMBNAIL -->
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label">Change Thumbnail</label>
+                                                    <label class="form-label">Thay đổi ảnh đại diện</label>
                                                     <input class="form-control" type="file" id="avatarFile"
                                                         name="thumbnailFile" accept=".png,.jpg,.jpeg" />
                                                 </div>
 
                                                 <!-- CURRENT THUMBNAIL -->
                                                 <div class="col-12 mb-3">
-                                                    <label class="form-label">Current Thumbnail</label><br />
+                                                    <label class="form-label">Ảnh đại diện hiện tại</label><br />
                                                     <c:if test="${not empty newCourse.thumbnail}">
                                                         <img id="avatarPreview"
-                                                            src="/uploads/course/${course.thumbnail}"
+                                                            src="/images/course/${newCourse.thumbnail}"
                                                             style="max-height: 250px;" />
                                                     </c:if>
                                                 </div>
@@ -208,7 +256,7 @@
                                                 <!-- SUBMIT -->
                                                 <div class="col-12 mb-5">
                                                     <button class="btn btn-warning">
-                                                        Update Course
+                                                        Cập nhật khoá học
                                                     </button>
                                                 </div>
                                             </form:form>

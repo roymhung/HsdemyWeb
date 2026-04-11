@@ -23,12 +23,47 @@
 
                     <!-- Custom CSS -->
                     <link rel="stylesheet" href="/client/css/style.css">
+                    <style>
+                        .featured-course-card .card-body {
+                            display: flex;
+                            flex-direction: column;
+                            min-height: 220px;
+                        }
+
+                        .featured-course-card .course-name {
+                            line-height: 1.35;
+                            min-height: 3.6rem;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2;
+                            -webkit-box-orient: vertical;
+                            overflow: hidden;
+                        }
+
+                        .featured-course-card .course-meta {
+                            min-height: 1.25rem;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        .featured-course-card .course-price-row {
+                            margin-top: auto;
+                        }
+                    </style>
                 </head>
 
                 <body>
                     <!-- Start Header -->
                     <jsp:include page="../layout/header.jsp" />
                     <!-- End Header -->
+
+                    <c:if test="${param.concurrentLogin != null}">
+                        <div class="container mt-5 pt-4">
+                            <div class="alert alert-warning mb-0">
+                                Tài khoản của bạn đang được đăng nhập ở nơi khác. Phiên trước đó đã bị đăng xuất.
+                            </div>
+                        </div>
+                    </c:if>
 
                     <!-- Start banner -->
                     <jsp:include page="../layout/banner.jsp" />
@@ -78,14 +113,14 @@
                         <div class="container">
                             <div class="d-flex justify-content-between align-items-center mb-5">
                                 <h2 class="fw-bold mb-0">Khóa Học Nổi Bật</h2>
-                                <a href="courses.html" class="btn btn-outline-primary">Xem tất cả <i
+                                <a href="/courses" class="btn btn-outline-primary">Xem tất cả <i
                                         class="bi bi-arrow-right"></i></a>
                             </div>
                             <div class="row g-4">
 
                                 <c:forEach var="course" items="${courses}">
                                     <div class="col-lg-4 col-md-6">
-                                        <div class="card course-card h-100 border-0 shadow-sm">
+                                        <div class="card course-card featured-course-card h-100 border-0 shadow-sm">
                                             <div class="position-relative">
                                                 <img src="/images/course/${course.thumbnail}" class="card-img-top"
                                                     alt="course" style="height: 200px; object-fit: cover;">
@@ -96,24 +131,55 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between align-items-start mb-2"><span
-                                                        class="badge bg-primary bg-opacity-10 text-primary">${course.level}</span>
-                                                    <form action="/add-course-to-cart/${course.id}" method="post">
-                                                        <button class="btn btn-sm btn-warning">
-                                                            <i class="bi bi-cart-plus"></i>
-                                                            Thêm vào giỏ
-                                                        </button>
-                                                    </form>
+                                                        class="badge bg-primary bg-opacity-10 text-primary">
+                                                        <c:choose>
+                                                            <c:when test="${course.level == 'BEGINNER' || course.level == 'beginner' || course.level == 'BIGINNER' || course.level == 'biginner'}">CƠ BẢN</c:when>
+                                                            <c:when test="${course.level == 'INTERMEDIATE' || course.level == 'intermediate'}">TRUNG CẤP</c:when>
+                                                            <c:when test="${course.level == 'ADVANCED' || course.level == 'advanced'}">NÂNG CAO</c:when>
+                                                            <c:otherwise>${course.level}</c:otherwise>
+                                                        </c:choose>
+                                                    </span>
+                                                    <c:choose>
+                                                        <c:when test="${not empty enrolledCourseIds and enrolledCourseIds.contains(course.id)}">
+                                                            <a href="/learning/course/${course.id}" class="btn btn-sm btn-primary">
+                                                                <i class="bi bi-play-circle"></i>
+                                                                Vào học ngay
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-warning"
+                                                                data-action="add-to-cart"
+                                                                data-course-id="${course.id}"
+                                                                data-course-title="${course.name}"
+                                                                data-course-price-number="${course.price}"
+                                                                data-course-author="${course.author}"
+                                                                data-course-level="${course.level}"
+                                                                data-course-image="/images/course/${course.thumbnail}">
+                                                                <i class="bi bi-cart-plus"></i>
+                                                                Thêm vào giỏ
+                                                            </button>
+                                                        </c:otherwise>
+                                                    </c:choose>
 
                                                 </div>
-                                                <h5 class="card-title fw-bold">${course.name}</h5>
-                                                <p class="text-muted small mb-2">${course.author}</p>
-                                                <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="card-title fw-bold course-name mb-1">${course.name}</h5>
+                                                <p class="text-muted small mb-2 course-meta">${course.author}</p>
+                                                <div
+                                                    class="d-flex justify-content-between align-items-center course-price-row">
                                                     <div>
-                                                        <span class="fw-bold text-primary fs-5">
-                                                            <fmt:formatNumber value="${course.price}" type="number"
-                                                                groupingUsed="true" maxFractionDigits="0" />
-                                                            ₫
-                                                        </span>
+                                                        <c:choose>
+                                                            <c:when test="${course.price <= 0}">
+                                                                <span class="fw-bold text-primary fs-5">Miễn phí</span>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="fw-bold text-primary fs-5">
+                                                                    <fmt:formatNumber value="${course.price}" type="number"
+                                                                        groupingUsed="true" maxFractionDigits="0" />
+                                                                    ₫
+                                                                </span>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                                     <a href="/course/${course.id}" class="btn btn-sm btn-primary">Xem
                                                         chi
@@ -123,6 +189,14 @@
                                         </div>
                                     </div>
                                 </c:forEach>
+
+                                <c:if test="${empty courses}">
+                                    <div class="col-12">
+                                        <div class="alert alert-warning mb-0">
+                                            Không tìm thấy khóa học phù hợp với từ khóa "<strong>${searchKeyword}</strong>".
+                                        </div>
+                                    </div>
+                                </c:if>
 
                             </div>
                         </div>

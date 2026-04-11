@@ -39,7 +39,7 @@
                             <div class="collapse navbar-collapse" id="navbarNav">
                                 <ul class="navbar-nav me-auto">
                                     <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="courses.html">Khóa học</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/courses">Khóa học</a></li>
                                 </ul>
                                 <div class="d-flex align-items-center gap-3">
                                     <a href="cart.html" class="position-relative text-dark fs-5">
@@ -88,7 +88,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-body p-4 p-md-5">
-                                    <h3 class="fw-bold mb-1">Chào mừng bạn quay lại</h3>
+                                    <h3 class="fw-bold mb-1">Chào mừng bạn</h3>
                                     <p class="text-muted mb-4">Đăng nhập để tiếp tục hành trình học tập.</p>
 
                                     <form method="post" action="/login">
@@ -111,13 +111,23 @@
 
                                         <div class="d-flex justify-content-between align-items-center mb-4">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="remember">
-                                                <label class="form-check-label" for="remember">Ghi nhớ</label>
+                                                <input class="form-check-input" type="checkbox" id="remember-me"
+                                                    name="remember-me">
+                                                <label class="form-check-label" for="remember-me">Ghi nhớ</label>
                                             </div>
-                                            <a href="#" class="small text-decoration-none">Quên mật khẩu?</a>
+                                            <a href="/forgot-password" class="small text-decoration-none">Quên mật
+                                                khẩu?</a>
                                         </div>
                                         <c:if test="${param.error != null}">
                                             <div class="my-2" style="color: red;">Thông tin không chính xác.</div>
+                                        </c:if>
+                                        <c:if test="${param.expired != null}">
+                                            <div class="my-2" style="color: red;">Tài khoản của bạn đã đăng nhập ở nơi
+                                                khác, phiên hiện tại đã bị đăng xuất.</div>
+                                        </c:if>
+                                        <c:if test="${param.resetSuccess != null}">
+                                            <div class="my-2" style="color: green;">Đổi mật khẩu thành công. Vui lòng
+                                                đăng nhập lại.</div>
                                         </c:if>
                                         <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
                                     </form>
@@ -176,7 +186,7 @@
                                 <div class="col-lg-2 col-md-6 col-sm-6">
                                     <h6 class="fw-bold mb-3 text-primary">Khóa học</h6>
                                     <ul class="list-unstyled">
-                                        <li class="mb-2"><a href="courses.html"
+                                        <li class="mb-2"><a href="/courses"
                                                 class="text-white-50 text-decoration-none hover-primary">Tất cả khóa
                                                 học</a></li>
                                         <li class="mb-2"><a href="#"

@@ -1,7 +1,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-        <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
             <!DOCTYPE html>
             <html lang="en">
 
@@ -11,601 +10,464 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content="" />
                 <meta name="author" content="" />
-                <title>Dashboard - SB Admin</title>
-                <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+                <title>Admin Dashboard</title>
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <style>
+                    .dashboard-status-chart-wrap {
+                        position: relative;
+                        max-width: 280px;
+                        margin: 0 auto;
+                    }
+
+                    .dashboard-status-center {
+                        position: absolute;
+                        inset: 0;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        pointer-events: none;
+                    }
+
+                    .dashboard-status-center .label {
+                        font-size: .78rem;
+                        color: #64748b;
+                    }
+
+                    .dashboard-status-center .value {
+                        font-size: 1.65rem;
+                        font-weight: 800;
+                        color: #0f172a;
+                        line-height: 1.1;
+                    }
+
+                    .dashboard-status-list {
+                        display: grid;
+                        gap: .55rem;
+                        margin-top: .9rem;
+                    }
+
+                    .dashboard-status-item {
+                        border: 1px solid #e5e7eb;
+                        border-radius: .75rem;
+                        padding: .5rem .6rem;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: .6rem;
+                    }
+
+                    .dashboard-status-left {
+                        display: flex;
+                        align-items: center;
+                        gap: .45rem;
+                        min-width: 0;
+                    }
+
+                    .dashboard-status-dot {
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50%;
+                        flex: 0 0 10px;
+                    }
+
+                    .dashboard-status-name {
+                        font-size: .82rem;
+                        color: #0f172a;
+                        font-weight: 600;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    .dashboard-status-right {
+                        text-align: right;
+                        white-space: nowrap;
+                    }
+
+                    .dashboard-status-count {
+                        font-size: .82rem;
+                        color: #0f172a;
+                        font-weight: 700;
+                    }
+
+                    .dashboard-status-percent {
+                        font-size: .75rem;
+                        color: #64748b;
+                    }
+                </style>
             </head>
 
             <body class="sb-nav-fixed">
-
-                <!-- Start Header -->
                 <jsp:include page="../layout/header.jsp" />
-                <!-- End Header -->
 
                 <div id="layoutSidenav">
-
-                    <!--Start Side bar -->
                     <jsp:include page="../layout/sidebar.jsp" />
-                    <!--End Side bar -->
 
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Dashboard</h1>
-                                <ol class="breadcrumb mb-4">
-                                    <li class="breadcrumb-item active">Dashboard</li>
-                                </ol>
-                                <div class="row">
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="card bg-primary text-white mb-4">
-                                            <div class="card-body">Primary Card</div>
-                                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="card bg-warning text-white mb-4">
-                                            <div class="card-body">Warning Card</div>
-                                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="card bg-success text-white mb-4">
-                                            <div class="card-body">Success Card</div>
-                                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="card bg-danger text-white mb-4">
-                                            <div class="card-body">Danger Card</div>
-                                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xl-6">
-                                        <div class="card mb-4">
-                                            <div class="card-header">
-                                                <i class="fas fa-chart-area me-1"></i>
-                                                Area Chart Example
-                                            </div>
-                                            <div class="card-body"><canvas id="myAreaChart" width="100%"
-                                                    height="40"></canvas></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6">
-                                        <div class="card mb-4">
-                                            <div class="card-header">
-                                                <i class="fas fa-chart-bar me-1"></i>
-                                                Bar Chart Example
-                                            </div>
-                                            <div class="card-body"><canvas id="myBarChart" width="100%"
-                                                    height="40"></canvas></div>
-                                        </div>
+                                <div class="admin-page-heading">
+                                    <div>
+                                        <h1 class="mt-4 mb-1">Bảng điều khiển quản trị</h1>
+                                        <p class="text-muted mb-4">Trung tâm phân tích người dùng để tối ưu hiệu quả học
+                                            tập
+                                            và chất lượng nội dung.</p>
                                     </div>
                                 </div>
 
-                                <!-- DataTable -->
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-table me-1"></i>
-                                        DataTable Example
+                                <c:if test="${param.concurrentLogin != null}">
+                                    <div class="alert alert-warning">
+                                        Tài khoản của bạn đang được đăng nhập ở nơi khác. Phiên trước đó đã bị đăng
+                                        xuất.
+
+
                                     </div>
-                                    <div class="card-body">
-                                        <table id="datatablesSimple">
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Position</th>
-                                                    <th>Office</th>
-                                                    <th>Age</th>
-                                                    <th>Start date</th>
-                                                    <th>Salary</th>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Position</th>
-                                                    <th>Office</th>
-                                                    <th>Age</th>
-                                                    <th>Start date</th>
-                                                    <th>Salary</th>
-                                                </tr>
-                                            </tfoot>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Tiger Nixon</td>
-                                                    <td>System Architect</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>61</td>
-                                                    <td>2011/04/25</td>
-                                                    <td>$320,800</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Garrett Winters</td>
-                                                    <td>Accountant</td>
-                                                    <td>Tokyo</td>
-                                                    <td>63</td>
-                                                    <td>2011/07/25</td>
-                                                    <td>$170,750</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Ashton Cox</td>
-                                                    <td>Junior Technical Author</td>
-                                                    <td>San Francisco</td>
-                                                    <td>66</td>
-                                                    <td>2009/01/12</td>
-                                                    <td>$86,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Cedric Kelly</td>
-                                                    <td>Senior Javascript Developer</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>22</td>
-                                                    <td>2012/03/29</td>
-                                                    <td>$433,060</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Airi Satou</td>
-                                                    <td>Accountant</td>
-                                                    <td>Tokyo</td>
-                                                    <td>33</td>
-                                                    <td>2008/11/28</td>
-                                                    <td>$162,700</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Brielle Williamson</td>
-                                                    <td>Integration Specialist</td>
-                                                    <td>New York</td>
-                                                    <td>61</td>
-                                                    <td>2012/12/02</td>
-                                                    <td>$372,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Herrod Chandler</td>
-                                                    <td>Sales Assistant</td>
-                                                    <td>San Francisco</td>
-                                                    <td>59</td>
-                                                    <td>2012/08/06</td>
-                                                    <td>$137,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Rhona Davidson</td>
-                                                    <td>Integration Specialist</td>
-                                                    <td>Tokyo</td>
-                                                    <td>55</td>
-                                                    <td>2010/10/14</td>
-                                                    <td>$327,900</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Colleen Hurst</td>
-                                                    <td>Javascript Developer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>39</td>
-                                                    <td>2009/09/15</td>
-                                                    <td>$205,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Sonya Frost</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>23</td>
-                                                    <td>2008/12/13</td>
-                                                    <td>$103,600</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jena Gaines</td>
-                                                    <td>Office Manager</td>
-                                                    <td>London</td>
-                                                    <td>30</td>
-                                                    <td>2008/12/19</td>
-                                                    <td>$90,560</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Quinn Flynn</td>
-                                                    <td>Support Lead</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>22</td>
-                                                    <td>2013/03/03</td>
-                                                    <td>$342,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Charde Marshall</td>
-                                                    <td>Regional Director</td>
-                                                    <td>San Francisco</td>
-                                                    <td>36</td>
-                                                    <td>2008/10/16</td>
-                                                    <td>$470,600</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Haley Kennedy</td>
-                                                    <td>Senior Marketing Designer</td>
-                                                    <td>London</td>
-                                                    <td>43</td>
-                                                    <td>2012/12/18</td>
-                                                    <td>$313,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Tatyana Fitzpatrick</td>
-                                                    <td>Regional Director</td>
-                                                    <td>London</td>
-                                                    <td>19</td>
-                                                    <td>2010/03/17</td>
-                                                    <td>$385,750</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Michael Silva</td>
-                                                    <td>Marketing Designer</td>
-                                                    <td>London</td>
-                                                    <td>66</td>
-                                                    <td>2012/11/27</td>
-                                                    <td>$198,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Paul Byrd</td>
-                                                    <td>Chief Financial Officer (CFO)</td>
-                                                    <td>New York</td>
-                                                    <td>64</td>
-                                                    <td>2010/06/09</td>
-                                                    <td>$725,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Gloria Little</td>
-                                                    <td>Systems Administrator</td>
-                                                    <td>New York</td>
-                                                    <td>59</td>
-                                                    <td>2009/04/10</td>
-                                                    <td>$237,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Bradley Greer</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>London</td>
-                                                    <td>41</td>
-                                                    <td>2012/10/13</td>
-                                                    <td>$132,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Dai Rios</td>
-                                                    <td>Personnel Lead</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>35</td>
-                                                    <td>2012/09/26</td>
-                                                    <td>$217,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jenette Caldwell</td>
-                                                    <td>Development Lead</td>
-                                                    <td>New York</td>
-                                                    <td>30</td>
-                                                    <td>2011/09/03</td>
-                                                    <td>$345,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Yuri Berry</td>
-                                                    <td>Chief Marketing Officer (CMO)</td>
-                                                    <td>New York</td>
-                                                    <td>40</td>
-                                                    <td>2009/06/25</td>
-                                                    <td>$675,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Caesar Vance</td>
-                                                    <td>Pre-Sales Support</td>
-                                                    <td>New York</td>
-                                                    <td>21</td>
-                                                    <td>2011/12/12</td>
-                                                    <td>$106,450</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Doris Wilder</td>
-                                                    <td>Sales Assistant</td>
-                                                    <td>Sidney</td>
-                                                    <td>23</td>
-                                                    <td>2010/09/20</td>
-                                                    <td>$85,600</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Angelica Ramos</td>
-                                                    <td>Chief Executive Officer (CEO)</td>
-                                                    <td>London</td>
-                                                    <td>47</td>
-                                                    <td>2009/10/09</td>
-                                                    <td>$1,200,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Gavin Joyce</td>
-                                                    <td>Developer</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>42</td>
-                                                    <td>2010/12/22</td>
-                                                    <td>$92,575</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jennifer Chang</td>
-                                                    <td>Regional Director</td>
-                                                    <td>Singapore</td>
-                                                    <td>28</td>
-                                                    <td>2010/11/14</td>
-                                                    <td>$357,650</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Brenden Wagner</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>28</td>
-                                                    <td>2011/06/07</td>
-                                                    <td>$206,850</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Fiona Green</td>
-                                                    <td>Chief Operating Officer (COO)</td>
-                                                    <td>San Francisco</td>
-                                                    <td>48</td>
-                                                    <td>2010/03/11</td>
-                                                    <td>$850,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Shou Itou</td>
-                                                    <td>Regional Marketing</td>
-                                                    <td>Tokyo</td>
-                                                    <td>20</td>
-                                                    <td>2011/08/14</td>
-                                                    <td>$163,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Michelle House</td>
-                                                    <td>Integration Specialist</td>
-                                                    <td>Sidney</td>
-                                                    <td>37</td>
-                                                    <td>2011/06/02</td>
-                                                    <td>$95,400</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Suki Burks</td>
-                                                    <td>Developer</td>
-                                                    <td>London</td>
-                                                    <td>53</td>
-                                                    <td>2009/10/22</td>
-                                                    <td>$114,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Prescott Bartlett</td>
-                                                    <td>Technical Author</td>
-                                                    <td>London</td>
-                                                    <td>27</td>
-                                                    <td>2011/05/07</td>
-                                                    <td>$145,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Gavin Cortez</td>
-                                                    <td>Team Leader</td>
-                                                    <td>San Francisco</td>
-                                                    <td>22</td>
-                                                    <td>2008/10/26</td>
-                                                    <td>$235,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Martena Mccray</td>
-                                                    <td>Post-Sales support</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>46</td>
-                                                    <td>2011/03/09</td>
-                                                    <td>$324,050</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Unity Butler</td>
-                                                    <td>Marketing Designer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>47</td>
-                                                    <td>2009/12/09</td>
-                                                    <td>$85,675</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Howard Hatfield</td>
-                                                    <td>Office Manager</td>
-                                                    <td>San Francisco</td>
-                                                    <td>51</td>
-                                                    <td>2008/12/16</td>
-                                                    <td>$164,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Hope Fuentes</td>
-                                                    <td>Secretary</td>
-                                                    <td>San Francisco</td>
-                                                    <td>41</td>
-                                                    <td>2010/02/12</td>
-                                                    <td>$109,850</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Vivian Harrell</td>
-                                                    <td>Financial Controller</td>
-                                                    <td>San Francisco</td>
-                                                    <td>62</td>
-                                                    <td>2009/02/14</td>
-                                                    <td>$452,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Timothy Mooney</td>
-                                                    <td>Office Manager</td>
-                                                    <td>London</td>
-                                                    <td>37</td>
-                                                    <td>2008/12/11</td>
-                                                    <td>$136,200</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jackson Bradshaw</td>
-                                                    <td>Director</td>
-                                                    <td>New York</td>
-                                                    <td>65</td>
-                                                    <td>2008/09/26</td>
-                                                    <td>$645,750</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Olivia Liang</td>
-                                                    <td>Support Engineer</td>
-                                                    <td>Singapore</td>
-                                                    <td>64</td>
-                                                    <td>2011/02/03</td>
-                                                    <td>$234,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Bruno Nash</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>London</td>
-                                                    <td>38</td>
-                                                    <td>2011/05/03</td>
-                                                    <td>$163,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Sakura Yamamoto</td>
-                                                    <td>Support Engineer</td>
-                                                    <td>Tokyo</td>
-                                                    <td>37</td>
-                                                    <td>2009/08/19</td>
-                                                    <td>$139,575</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Thor Walton</td>
-                                                    <td>Developer</td>
-                                                    <td>New York</td>
-                                                    <td>61</td>
-                                                    <td>2013/08/11</td>
-                                                    <td>$98,540</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Finn Camacho</td>
-                                                    <td>Support Engineer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>47</td>
-                                                    <td>2009/07/07</td>
-                                                    <td>$87,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Serge Baldwin</td>
-                                                    <td>Data Coordinator</td>
-                                                    <td>Singapore</td>
-                                                    <td>64</td>
-                                                    <td>2012/04/09</td>
-                                                    <td>$138,575</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Zenaida Frank</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>New York</td>
-                                                    <td>63</td>
-                                                    <td>2010/01/04</td>
-                                                    <td>$125,250</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Zorita Serrano</td>
-                                                    <td>Software Engineer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>56</td>
-                                                    <td>2012/06/01</td>
-                                                    <td>$115,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jennifer Acosta</td>
-                                                    <td>Junior Javascript Developer</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>43</td>
-                                                    <td>2013/02/01</td>
-                                                    <td>$75,650</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Cara Stevens</td>
-                                                    <td>Sales Assistant</td>
-                                                    <td>New York</td>
-                                                    <td>46</td>
-                                                    <td>2011/12/06</td>
-                                                    <td>$145,600</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Hermione Butler</td>
-                                                    <td>Regional Director</td>
-                                                    <td>London</td>
-                                                    <td>47</td>
-                                                    <td>2011/03/21</td>
-                                                    <td>$356,250</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Lael Greer</td>
-                                                    <td>Systems Administrator</td>
-                                                    <td>London</td>
-                                                    <td>21</td>
-                                                    <td>2009/02/27</td>
-                                                    <td>$103,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jonas Alexander</td>
-                                                    <td>Developer</td>
-                                                    <td>San Francisco</td>
-                                                    <td>30</td>
-                                                    <td>2010/07/14</td>
-                                                    <td>$86,500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Shad Decker</td>
-                                                    <td>Regional Director</td>
-                                                    <td>Edinburgh</td>
-                                                    <td>51</td>
-                                                    <td>2008/11/13</td>
-                                                    <td>$183,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Michael Bruce</td>
-                                                    <td>Javascript Developer</td>
-                                                    <td>Singapore</td>
-                                                    <td>29</td>
-                                                    <td>2011/06/27</td>
-                                                    <td>$183,000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Donna Snider</td>
-                                                    <td>Customer Support</td>
-                                                    <td>New York</td>
-                                                    <td>27</td>
-                                                    <td>2011/01/25</td>
-                                                    <td>$112,000</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                </c:if>
+
+                                <div class="admin-hero-card mb-4">
+                                    <div
+                                        class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-start align-items-lg-center">
+                                        <div>
+                                            <span
+                                                class="badge bg-light text-primary mb-2 px-3 py-2 rounded-pill">Learning
+                                                Analytics Hub</span>
+                                            <h4 class="mb-2">Phân tích hành vi học tập để nâng cao chất lượng đào tạo
+                                            </h4>
+                                            <p class="mb-0 text-white-50">
+                                                Dashboard tập trung vào mức độ tham gia của học viên, tỷ lệ thanh toán,
+                                                phân
+                                                bổ category và độ sâu nội dung khóa học.
+                                            </p>
+                                        </div>
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <a href="/admin/purchase" class="btn btn-light btn-sm fw-semibold px-3">
+                                                <i class="fas fa-cart-shopping me-1"></i> Xem Lượt mua
+                                            </a>
+                                            <a href="/admin/order"
+                                                class="btn btn-outline-light btn-sm fw-semibold px-3">
+                                                <i class="fas fa-receipt me-1"></i> Quản lý Đơn hàng
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- DataTable -->
-
                             </div>
-                        </main>
 
-                        <!-- Start footer -->
-                        <jsp:include page="../layout/footer.jsp" />
-                        <!-- End footer -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="admin-stat-card">
+                                        <div class="admin-stat-icon bg-primary-subtle text-primary">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted small">Tổng người dùng</div>
+                                            <h4 class="mb-0">${totalUsers}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="admin-stat-card">
+                                        <div class="admin-stat-icon bg-success-subtle text-success">
+                                            <i class="fas fa-user-check"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted small">Học viên đã thanh toán</div>
+
+                                            <h4 class="mb-0">${paidLearners}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="admin-stat-card">
+                                        <div class="admin-stat-icon bg-warning-subtle text-warning">
+                                            <i class="fas fa-fire"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted small">Học viên hoạt động (30 ngày)</div>
+                                            <h4 class="mb-0">${activeLearners30d}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="admin-stat-card">
+                                        <div class="admin-stat-icon bg-danger-subtle text-danger">
+                                            <i class="fas fa-wallet"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted small">Doanh thu đã thanh toán (VND)</div>
+                                            <h4 class="mb-0">
+                                                <fmt:formatNumber value="${paidRevenue}" type="number"
+                                                    groupingUsed="true" maxFractionDigits="0" />
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-xl-8">
+                                    <div class="card admin-card h-100">
+                                        <div class="card-header bg-white border-0 pb-0">
+                                            <h5 class="fw-semibold mb-1">
+                                                <i class="fas fa-chart-line me-2 text-primary"></i>Xu hướng học viên
+                                                hoạt động (6 tháng)
+                                            </h5>
+                                            <p class="text-muted small mb-0">Số lượng học viên có đơn PAID theo từng
+                                                tháng.</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <canvas id="learnerTrendChart" height="95"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4">
+                                    <div class="card admin-card h-100">
+                                        <div class="card-header bg-white border-0 pb-0">
+                                            <h5 class="fw-semibold mb-1">
+                                                <i class="fas fa-circle-nodes me-2 text-primary"></i>Tỷ lệ trạng thái
+                                                đơn
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="dashboard-status-chart-wrap">
+                                                <canvas id="statusChart"></canvas>
+                                                <div class="dashboard-status-center">
+                                                    <div class="label">Tổng Đơn</div>
+                                                    <div class="value" id="dashboardStatusTotal">0</div>
+                                                </div>
+                                            </div>
+                                            <div class="dashboard-status-list" id="dashboardStatusList"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-xl-6">
+                                    <div class="card admin-card h-100">
+                                        <div class="card-header bg-white">
+                                            <h5 class="fw-semibold mb-0">
+                                                <i class="fas fa-layer-group me-2 text-primary"></i>Phân bổ lượt mua
+                                                theo danh mục
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <canvas id="categoryChart" height="120"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <div class="card admin-card h-100">
+                                        <div class="card-header bg-white">
+                                            <h5 class="fw-semibold mb-0">
+                                                <i class="fas fa-book-open-reader me-2 text-primary"></i>Độ sâu nội dung
+                                                khóa học
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <canvas id="depthChart" height="120"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-12">
+                                    <div class="card admin-card">
+                                        <div class="card-header bg-white">
+                                            <h5 class="fw-semibold mb-0"><i
+                                                    class="fas fa-lightbulb me-2 text-primary"></i>Gợi ý tối ưu hiệu quả
+                                                học tập</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row g-3">
+                                                <div class="col-lg-4">
+                                                    <div class="admin-flow-item h-100">
+                                                        <div class="admin-flow-dot"><i
+                                                                class="fas fa-graduation-cap"></i></div>
+                                                        <div>
+                                                            <h6 class="mb-1">Số bài học trung bình mỗi khóa</h6>
+                                                            <p class="small text-muted mb-0">Trung bình mỗi khóa có
+                                                                <strong>${avgLessonsPerCourse}</strong> bài học. Dùng
+                                                                chỉ số này để chuẩn hóa khung nội dung giữa các khóa.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="admin-flow-item h-100">
+                                                        <div class="admin-flow-dot"><i class="fas fa-eye"></i></div>
+                                                        <div>
+                                                            <h6 class="mb-1">Tỷ lệ bài học xem trước</h6>
+                                                            <p class="small text-muted mb-0">Tỷ lệ bài học preview hiện
+                                                                tại là <strong>${previewRate}%</strong>. Tăng preview ở
+                                                                khóa mới giúp cải thiện chuyển đổi mua.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="admin-flow-item h-100">
+                                                        <div class="admin-flow-dot"><i class="fas fa-chart-simple"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1">Ưu tiên hành động</h6>
+                                                            <p class="small text-muted mb-0">Ưu tiên tối ưu các category
+                                                                có lượt mua cao và các khóa có nội dung mỏng để tăng giữ
+                                                                chân người học.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
+                    </main>
+
+                    <jsp:include page="../layout/footer.jsp" />
                 </div>
+                </div>
+
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
                     crossorigin="anonymous"></script>
-                <script src="js/scripts.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
-                    crossorigin="anonymous"></script>
-                <script src="js/chart-area-demo.js"></script>
-                <script src="js/chart-bar-demo.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-                    crossorigin="anonymous"></script>
-                <script src="js/datatables-simple-demo.js"></script>
+                <script src="/js/scripts.js"></script>
+                <script>
+                    const learnerTrendLabels = [<c:forEach var="l" items="${learnerTrendLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const learnerTrendData = [<c:forEach var="d" items="${learnerTrendData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const statusLabels = [<c:forEach var="l" items="${statusLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const statusData = [<c:forEach var="d" items="${statusData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const categoryLabels = [<c:forEach var="l" items="${categoryLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const categoryData = [<c:forEach var="d" items="${categoryData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const depthLabels = [<c:forEach var="l" items="${depthLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const depthData = [<c:forEach var="d" items="${depthData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const statusColorMap = {
+                        PENDING_PAYMENT: '#f59e0b',
+                        PAID: '#10b981',
+                        FAILED: '#ef4444',
+                        CANCELLED: '#64748b',
+                        REFUNDED: '#8b5cf6',
+                        FREE_ENROLLED: '#06b6d4'
+                    };
+
+                    const statusLabelMap = {
+                        PENDING_PAYMENT: 'Chờ thanh toán',
+                        PAID: 'Thành công',
+                        FAILED: 'Thất bại',
+                        CANCELLED: 'Đã hủy',
+                        REFUNDED: 'Hoàn tiền',
+                        FREE_ENROLLED: 'Ghi danh miễn phí'
+                    };
+                    const formatPercent = (value) => Number(value || 0).toLocaleString('vi-VN', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+
+                    new Chart(document.getElementById('learnerTrendChart'), {
+                        type: 'line',
+                        data: {
+                            labels: learnerTrendLabels,
+                            datasets: [{
+                                label: 'Active learners',
+                                data: learnerTrendData,
+                                borderColor: '#2563eb',
+                                backgroundColor: 'rgba(37, 99, 235, .18)',
+                                fill: true,
+                                tension: 0.35
+                            }]
+                        },
+                        options: { scales: { y: { beginAtZero: true } } }
+                    });
+
+                    new Chart(document.getElementById('statusChart'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: statusLabels.map(code => statusLabelMap[code] || code),
+                            datasets: [{
+                                data: statusData,
+                                backgroundColor: statusLabels.map(code => statusColorMap[code] || '#334155'),
+                                borderWidth: 0,
+                                hoverOffset: 8
+                            }]
+                        },
+                        options: {
+                            cutout: '64%',
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (ctx) => {
+                                            const totalOrders = statusData.reduce((sum, value) => sum + Number(value || 0), 0);
+                                            const value = Number(ctx.raw || 0);
+                                            const percent = totalOrders === 0 ? 0 : (value * 100) / totalOrders;
+                                            return ' ' + ctx.label + ': ' + value.toLocaleString('vi-VN') + ' đơn (' + formatPercent(percent) + '%)';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    const totalOrders = statusData.reduce((sum, value) => sum + Number(value || 0), 0);
+                    document.getElementById('dashboardStatusTotal').textContent = totalOrders.toLocaleString('vi-VN');
+                    const dashboardStatusList = document.getElementById('dashboardStatusList');
+                    statusLabels.forEach((code, idx) => {
+                        const count = Number(statusData[idx] || 0);
+                        const percent = totalOrders === 0 ? 0 : (count * 100) / totalOrders;
+                        const label = statusLabelMap[code] || code;
+                        const color = statusColorMap[code] || '#334155';
+                        const row = document.createElement('div');
+                        row.className = 'dashboard-status-item';
+                        row.innerHTML =
+                            '<div class="dashboard-status-left">' +
+                            '<span class="dashboard-status-dot" style="background:' + color + ';"></span>' +
+                            '<span class="dashboard-status-name">' + label + '</span>' +
+                            '</div>' +
+                            '<div class="dashboard-status-right">' +
+                            '<div class="dashboard-status-count">' + count.toLocaleString('vi-VN') + ' đơn</div>' +
+                            '<div class="dashboard-status-percent">' + formatPercent(percent) + '%</div>' +
+                            '</div>';
+                        dashboardStatusList.appendChild(row);
+                    });
+
+                    new Chart(document.getElementById('categoryChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: categoryLabels,
+                            datasets: [{
+                                label: 'Lượt mua',
+                                data: categoryData,
+                                backgroundColor: 'rgba(14, 165, 233, .75)',
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            plugins: { legend: { display: false } },
+                            scales: { y: { beginAtZero: true } }
+                        }
+                    });
+
+                    new Chart(document.getElementById('depthChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: depthLabels,
+                            datasets: [{
+                                label: 'Số bài học',
+                                data: depthData,
+                                backgroundColor: 'rgba(139, 92, 246, .78)',
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            plugins: { legend: { display: false } },
+                            scales: { x: { beginAtZero: true } }
+                        }
+                    });
+                </script>
             </body>
 
             </html>

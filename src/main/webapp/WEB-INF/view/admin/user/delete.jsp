@@ -39,23 +39,23 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage Order</h1>
+                                <h1 class="mt-4">Quản lý đơn hàng</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">
-                                            Dashboard
+                                            Bảng điều khiển
                                         </a></li>
-                                    <li class="breadcrumb-item active">User</li>
+                                    <li class="breadcrumb-item active">Người dùng</li>
                                 </ol>
 
                                 <!-- delete user -->
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-md-6 col-12 mx-auto">
-                                            <h3>Delete a user user with id = ${id}</h3>
+                                            <h3>Xóa người dùng có ID = ${id}</h3>
                                             <hr />
 
                                             <div class="alert alert-danger">
-                                                Are you sure to delete this user ?
+                                                Bạn có chắc chắn muốn xóa người dùng này không?
                                             </div>
                                             <form:form method="post" action="/admin/user/delete"
                                                 modelAttribute="newUser">
@@ -66,7 +66,7 @@
                                                     <form:input value="${id}" path="id" cssClass="form-control" />
                                                 </div>
 
-                                                <button class="btn btn-danger">Confirm</button>
+                                                <button class="btn btn-danger">Xác nhận</button>
                                             </form:form>
 
                                         </div>

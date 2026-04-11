@@ -1,7 +1,9 @@
 package Hsdemy.vn.HsdemyWeb.controller.admin;
 
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,7 @@ import Hsdemy.vn.HsdemyWeb.service.UserService;
 
 @Controller
 public class UserController {
+    private static final int USERS_PER_PAGE = 9;
 
     // DI : dependency injection
     private final UserService userService;
@@ -48,9 +51,65 @@ public class UserController {
     }
 
     @RequestMapping("/admin/user")
-    public String getUserPage(Model model) {
+    public String getUserPage(
+            @RequestParam(value = "q", required = false) String keyword,
+            @RequestParam(value = "role", required = false, defaultValue = "ALL") String roleFilter,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            Model model) {
         List<User> users = this.userService.getAllUsers();
-        model.addAttribute("users1", users);
+        List<User> filteredUsers = users.stream()
+                .filter(user -> {
+                    if (roleFilter == null || roleFilter.equalsIgnoreCase("ALL")) {
+                        return true;
+                    }
+                    return user.getRole() != null
+                            && user.getRole().getName() != null
+                            && user.getRole().getName().equalsIgnoreCase(roleFilter.trim());
+                })
+                .filter(user -> {
+                    if (keyword == null || keyword.isBlank()) {
+                        return true;
+                    }
+                    String q = keyword.trim().toLowerCase(Locale.ROOT);
+                    String email = user.getEmail() == null ? "" : user.getEmail().toLowerCase(Locale.ROOT);
+                    String fullName = user.getFullName() == null ? "" : user.getFullName().toLowerCase(Locale.ROOT);
+                    String phone = user.getPhone() == null ? "" : user.getPhone().toLowerCase(Locale.ROOT);
+                    return email.contains(q) || fullName.contains(q) || phone.contains(q)
+                            || String.valueOf(user.getId()).contains(q);
+                })
+                .sorted(Comparator.comparingLong(User::getId))
+                .toList();
+
+        int totalUsers = users.size();
+        int adminUsers = (int) users.stream()
+                .filter(user -> user.getRole() != null && "ADMIN".equalsIgnoreCase(user.getRole().getName()))
+                .count();
+        int learnerUsers = totalUsers - adminUsers;
+
+        List<String> roleOptions = users.stream()
+                .filter(user -> user.getRole() != null && user.getRole().getName() != null)
+                .map(user -> user.getRole().getName().toUpperCase(Locale.ROOT))
+                .distinct()
+                .sorted()
+                .toList();
+
+        int totalFiltered = filteredUsers.size();
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalFiltered / USERS_PER_PAGE));
+        int currentPage = Math.max(1, Math.min(page, totalPages));
+        int fromIndex = (currentPage - 1) * USERS_PER_PAGE;
+        int toIndex = Math.min(fromIndex + USERS_PER_PAGE, totalFiltered);
+        List<User> pageUsers = fromIndex >= toIndex ? List.of() : filteredUsers.subList(fromIndex, toIndex);
+
+        model.addAttribute("users1", pageUsers);
+        model.addAttribute("keyword", keyword == null ? "" : keyword.trim());
+        model.addAttribute("selectedRole", roleFilter == null ? "ALL" : roleFilter.toUpperCase(Locale.ROOT));
+        model.addAttribute("roleOptions", roleOptions);
+        model.addAttribute("totalUsers", totalUsers);
+        model.addAttribute("adminUsers", adminUsers);
+        model.addAttribute("learnerUsers", learnerUsers);
+        model.addAttribute("filteredUsers", totalFiltered);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
         return "admin/user/show";
     }
 

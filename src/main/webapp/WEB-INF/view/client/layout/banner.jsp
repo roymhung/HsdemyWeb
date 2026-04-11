@@ -13,7 +13,7 @@
                                     thực tế. Đồng hành cùng bạn trên hành trình phát triển
                                     kỹ năng và sự nghiệp công nghệ.</p>
                                 <div class="d-flex gap-3">
-                                    <a href="courses.html" class="btn btn-light btn-lg">Khám phá khóa học</a>
+                                    <a href="/courses" class="btn btn-light btn-lg">Khám phá khóa học</a>
                                     <a href="#" class="btn btn-outline-light btn-lg">Vào học ngay</a>
                                 </div>
                                 <div class="mt-4 d-flex align-items-center gap-4">
@@ -45,10 +45,7 @@
                                                 class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
 
                                         </div>
-                                        <div class="carousel-item rounded">
-                                            <img src="/client/img/Cplus_lv2.png" class="img-fluid w-100 h-100 rounded"
-                                                alt="Second slide">
-                                        </div>
+
                                         <div class="carousel-item rounded">
                                             <img src="/client/img/English_basic.png"
                                                 class="img-fluid w-100 h-100 rounded" alt="Second slide">
