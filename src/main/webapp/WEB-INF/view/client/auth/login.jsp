@@ -88,7 +88,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-body p-4 p-md-5">
-                                    <h3 class="fw-bold mb-1">Chào mừng bạn quay lại</h3>
+                                    <h3 class="fw-bold mb-1">Chào mừng bạn</h3>
                                     <p class="text-muted mb-4">Đăng nhập để tiếp tục hành trình học tập.</p>
 
                                     <form method="post" action="/login">
@@ -115,16 +115,19 @@
                                                     name="remember-me">
                                                 <label class="form-check-label" for="remember-me">Ghi nhớ</label>
                                             </div>
-                                            <a href="/forgot-password" class="small text-decoration-none">Quên mật khẩu?</a>
+                                            <a href="/forgot-password" class="small text-decoration-none">Quên mật
+                                                khẩu?</a>
                                         </div>
                                         <c:if test="${param.error != null}">
                                             <div class="my-2" style="color: red;">Thông tin không chính xác.</div>
                                         </c:if>
                                         <c:if test="${param.expired != null}">
-                                            <div class="my-2" style="color: red;">Tài khoản của bạn đã đăng nhập ở nơi khác, phiên hiện tại đã bị đăng xuất.</div>
+                                            <div class="my-2" style="color: red;">Tài khoản của bạn đã đăng nhập ở nơi
+                                                khác, phiên hiện tại đã bị đăng xuất.</div>
                                         </c:if>
                                         <c:if test="${param.resetSuccess != null}">
-                                            <div class="my-2" style="color: green;">Đổi mật khẩu thành công. Vui lòng đăng nhập lại.</div>
+                                            <div class="my-2" style="color: green;">Đổi mật khẩu thành công. Vui lòng
+                                                đăng nhập lại.</div>
                                         </c:if>
                                         <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
                                     </form>

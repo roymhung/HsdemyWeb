@@ -86,9 +86,15 @@ public class UserService {
         if (incomingUser.getEmail() != null && !incomingUser.getEmail().isBlank()) {
             currentUser.setEmail(incomingUser.getEmail().trim());
         }
-        currentUser.setFullName(incomingUser.getFullName());
-        currentUser.setPhone(incomingUser.getPhone());
-        currentUser.setAddress(incomingUser.getAddress());
+        if (incomingUser.getFullName() != null && !incomingUser.getFullName().isBlank()) {
+            currentUser.setFullName(incomingUser.getFullName().trim());
+        }
+
+        String normalizedPhone = incomingUser.getPhone() == null ? null : incomingUser.getPhone().trim();
+        currentUser.setPhone(normalizedPhone == null || normalizedPhone.isEmpty() ? null : normalizedPhone);
+
+        String normalizedAddress = incomingUser.getAddress() == null ? null : incomingUser.getAddress().trim();
+        currentUser.setAddress(normalizedAddress == null || normalizedAddress.isEmpty() ? null : normalizedAddress);
         return this.userRepository.save(currentUser);
     }
 

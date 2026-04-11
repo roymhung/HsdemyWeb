@@ -2,6 +2,8 @@
    DevAcademy - Custom Styles
    =================================== */
 
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap");
+
 :root {
   --primary-color: #6c63ff;
   --secondary-color: #ff6b6b;
@@ -16,7 +18,7 @@ button,
 input,
 select,
 textarea {
-  font-family: "Inter", sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
 }
 
 body {

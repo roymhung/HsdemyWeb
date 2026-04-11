@@ -129,12 +129,12 @@ public class OrderController {
     }
 
     private List<AdminOrderRow> applyFilters(List<AdminOrderRow> rows, String keyword, String statusFilter) {
-        List<AdminOrderRow> result = rows;
+        List<AdminOrderRow> result = new ArrayList<>(rows);
         if (statusFilter != null && !statusFilter.equalsIgnoreCase("ALL")) {
             String statusValue = statusFilter.trim().toUpperCase(Locale.ROOT);
             result = result.stream()
                     .filter(row -> row.getStatus().equalsIgnoreCase(statusValue))
-                    .toList();
+                    .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         }
         if (keyword != null && !keyword.isBlank()) {
             String q = keyword.trim().toLowerCase(Locale.ROOT);
@@ -143,7 +143,7 @@ public class OrderController {
                             || row.getUserName().toLowerCase(Locale.ROOT).contains(q)
                             || row.getUserEmail().toLowerCase(Locale.ROOT).contains(q)
                             || row.getCourseNames().toLowerCase(Locale.ROOT).contains(q))
-                    .toList();
+                    .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         }
         return result;
     }

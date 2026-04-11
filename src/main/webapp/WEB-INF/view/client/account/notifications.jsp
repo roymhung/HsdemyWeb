@@ -8,7 +8,14 @@
     <title>Thông báo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/client/css/style.css">
     <style>
+        :root {
+            --notify-primary: #6c63ff;
+            --notify-primary-soft: #efedff;
+            --notify-primary-border: #d8d4ff;
+            --notify-primary-hover: #5a52e5;
+        }
         body { background: #f6f8fc; }
         .notify-card {
             border: 1px solid #e9eef6;
@@ -22,8 +29,8 @@
             background: #fff;
         }
         .notify-item.unread {
-            border-color: #bdd8ff;
-            background: #f4f9ff;
+            border-color: var(--notify-primary-border);
+            background: var(--notify-primary-soft);
         }
         .notify-icon {
             width: 40px;
@@ -33,6 +40,30 @@
             align-items: center;
             justify-content: center;
             font-size: 1rem;
+        }
+        .notify-item .badge.bg-primary {
+            background-color: var(--notify-primary) !important;
+        }
+        .notify-item a {
+            color: var(--notify-primary);
+            font-weight: 600;
+        }
+        .notify-item a:hover {
+            color: var(--notify-primary-hover);
+        }
+        .notify-item .bg-primary-subtle {
+            background-color: var(--notify-primary-soft) !important;
+            color: var(--notify-primary) !important;
+        }
+        .btn-outline-primary {
+            color: var(--notify-primary);
+            border-color: var(--notify-primary);
+        }
+        .btn-outline-primary:hover,
+        .btn-outline-primary:focus {
+            background-color: var(--notify-primary);
+            border-color: var(--notify-primary);
+            color: #fff;
         }
     </style>
 </head>
@@ -112,5 +143,6 @@
 
     <jsp:include page="../layout/footer.jsp" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/client/js/main.js"></script>
 </body>
 </html>

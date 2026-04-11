@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# User uploads (video/image) — too large for GitHub; keep folder in repo
+src/main/webapp/uploads/*
+!src/main/webapp/uploads/.gitkeep

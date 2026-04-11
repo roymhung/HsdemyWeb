@@ -41,6 +41,7 @@
 
                                 <c:choose>
                                     <c:when test="${loggedIn}">
+                                        <span class="d-none" data-cart-user-key="${currentUser.id}"></span>
                                         <a href="/cart" class="position-relative text-dark fs-5" title="Giỏ hàng">
                                             <i class="bi bi-cart3"></i>
                                             <span data-cart-badge
@@ -107,6 +108,16 @@
                         </div>
                     </div>
                 </nav>
+                <c:if test="${not empty flashMessage}">
+                    <div class="container" style="margin-top: 78px;">
+                        <div class="alert alert-${empty flashType ? 'info' : flashType} alert-dismissible fade show mb-2"
+                            role="alert">
+                            ${flashMessage}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    </div>
+                </c:if>
                 <style>
                     .search-suggest-dropdown {
                         position: absolute;

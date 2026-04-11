@@ -23,6 +23,33 @@
 
                     <!-- Custom CSS -->
                     <link rel="stylesheet" href="/client/css/style.css">
+                    <style>
+                        .featured-course-card .card-body {
+                            display: flex;
+                            flex-direction: column;
+                            min-height: 220px;
+                        }
+
+                        .featured-course-card .course-name {
+                            line-height: 1.35;
+                            min-height: 3.6rem;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2;
+                            -webkit-box-orient: vertical;
+                            overflow: hidden;
+                        }
+
+                        .featured-course-card .course-meta {
+                            min-height: 1.25rem;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        .featured-course-card .course-price-row {
+                            margin-top: auto;
+                        }
+                    </style>
                 </head>
 
                 <body>
@@ -93,7 +120,7 @@
 
                                 <c:forEach var="course" items="${courses}">
                                     <div class="col-lg-4 col-md-6">
-                                        <div class="card course-card h-100 border-0 shadow-sm">
+                                        <div class="card course-card featured-course-card h-100 border-0 shadow-sm">
                                             <div class="position-relative">
                                                 <img src="/images/course/${course.thumbnail}" class="card-img-top"
                                                     alt="course" style="height: 200px; object-fit: cover;">
@@ -112,23 +139,34 @@
                                                             <c:otherwise>${course.level}</c:otherwise>
                                                         </c:choose>
                                                     </span>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-warning"
-                                                        data-action="add-to-cart"
-                                                        data-course-id="${course.id}"
-                                                        data-course-title="${course.name}"
-                                                        data-course-price-number="${course.price}"
-                                                        data-course-author="${course.author}"
-                                                        data-course-level="${course.level}"
-                                                        data-course-image="/images/course/${course.thumbnail}">
-                                                        <i class="bi bi-cart-plus"></i>
-                                                        Thêm vào giỏ
-                                                    </button>
+                                                    <c:choose>
+                                                        <c:when test="${not empty enrolledCourseIds and enrolledCourseIds.contains(course.id)}">
+                                                            <a href="/learning/course/${course.id}" class="btn btn-sm btn-primary">
+                                                                <i class="bi bi-play-circle"></i>
+                                                                Vào học ngay
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-warning"
+                                                                data-action="add-to-cart"
+                                                                data-course-id="${course.id}"
+                                                                data-course-title="${course.name}"
+                                                                data-course-price-number="${course.price}"
+                                                                data-course-author="${course.author}"
+                                                                data-course-level="${course.level}"
+                                                                data-course-image="/images/course/${course.thumbnail}">
+                                                                <i class="bi bi-cart-plus"></i>
+                                                                Thêm vào giỏ
+                                                            </button>
+                                                        </c:otherwise>
+                                                    </c:choose>
 
                                                 </div>
-                                                <h5 class="card-title fw-bold">${course.name}</h5>
-                                                <p class="text-muted small mb-2">${course.author}</p>
-                                                <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="card-title fw-bold course-name mb-1">${course.name}</h5>
+                                                <p class="text-muted small mb-2 course-meta">${course.author}</p>
+                                                <div
+                                                    class="d-flex justify-content-between align-items-center course-price-row">
                                                     <div>
                                                         <c:choose>
                                                             <c:when test="${course.price <= 0}">

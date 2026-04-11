@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -85,6 +86,38 @@ public class OrderService {
         return savedOrder;
     }
 
+    public Order createPendingOrderForCourses(User user, List<Course> courses) {
+        if (user == null || courses == null || courses.isEmpty()) {
+            return null;
+        }
+
+        List<Course> validCourses = courses.stream()
+                .filter(course -> course != null && course.getId() != null)
+                .toList();
+        if (validCourses.isEmpty()) {
+            return null;
+        }
+
+        double totalPrice = validCourses.stream().mapToDouble(Course::getPrice).sum();
+
+        Order order = new Order();
+        order.setUser(user);
+        order.setStatus("PENDING_PAYMENT");
+        order.setTotalPrice(totalPrice);
+        order.setCreatedAt(LocalDateTime.now());
+        Order savedOrder = orderRepository.save(order);
+
+        for (Course course : validCourses) {
+            OrderDetail detail = new OrderDetail();
+            detail.setOrder(savedOrder);
+            detail.setCourse(course);
+            detail.setPrice(course.getPrice());
+            orderDetailRepository.save(detail);
+        }
+
+        return savedOrder;
+    }
+
     public Order createFreeEnrollmentForCourse(User user, Course course) {
         if (user == null || course == null || course.getId() == null) {
             return null;
@@ -153,6 +186,18 @@ public class OrderService {
                 .map(OrderDetail::getCourse)
                 .map(Course::getId)
                 .orElse(null);
+    }
+
+    public List<Long> getCourseIdsInOrder(Long orderId) {
+        if (orderId == null) {
+            return List.of();
+        }
+        return orderDetailRepository.findByOrderIdOrderByIdAsc(orderId).stream()
+                .map(OrderDetail::getCourse)
+                .map(Course::getId)
+                .filter(id -> id != null)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     private boolean isSuccessfulOrder(Order order) {

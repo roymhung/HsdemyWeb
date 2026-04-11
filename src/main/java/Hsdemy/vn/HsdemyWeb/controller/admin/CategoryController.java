@@ -58,15 +58,20 @@ public class CategoryController {
             category.displayName = displayLabel(category.key);
         }
 
+        List<CategorySummary> allCategories = new ArrayList<>(categories);
+        allCategories.sort(Comparator.comparing(item -> item.displayName));
+
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
         if (keyword != null && !keyword.isBlank()) {
-            String q = keyword.trim().toLowerCase(Locale.ROOT);
+            String q = normalizedKeyword.toLowerCase(Locale.ROOT);
             categories = categories.stream()
                     .filter(item -> item.key.toLowerCase(Locale.ROOT).contains(q)
                             || item.displayName.toLowerCase(Locale.ROOT).contains(q))
-                    .toList();
+                    .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         }
 
-        applySort(categories, sort);
+        String selectedSort = normalizeSort(sort);
+        applySort(categories, selectedSort);
 
         int totalFilteredCategories = categories.size();
         int totalPages = Math.max(1, (int) Math.ceil((double) totalFilteredCategories / CATEGORIES_PER_PAGE));
@@ -78,12 +83,15 @@ public class CategoryController {
         long uncategorized = courses.stream()
                 .filter(course -> normalizeTitleKey(course.getTitle()).equals("UNCATEGORIZED"))
                 .count();
-        String topCategory = categories.isEmpty() ? "-" : categories.get(0).displayName;
+        String topCategory = allCategories.stream()
+                .max(Comparator.comparingInt(CategorySummary::getCourseCount))
+                .map(CategorySummary::getDisplayName)
+                .orElse("-");
 
         model.addAttribute("categories", pageCategories);
-        model.addAttribute("allCategories", categories);
-        model.addAttribute("selectedSort", sort);
-        model.addAttribute("keyword", keyword == null ? "" : keyword);
+        model.addAttribute("allCategories", allCategories);
+        model.addAttribute("selectedSort", selectedSort);
+        model.addAttribute("keyword", normalizedKeyword);
         model.addAttribute("totalCategoryCount", grouped.size());
         model.addAttribute("totalCourseCount", courses.size());
         model.addAttribute("uncategorizedCount", uncategorized);
@@ -122,6 +130,14 @@ public class CategoryController {
             return;
         }
         categories.sort(Comparator.comparingInt((CategorySummary item) -> item.courseCount).reversed());
+    }
+
+    private String normalizeSort(String sort) {
+        if ("name_asc".equals(sort) || "revenue_desc".equals(sort) || "courses_desc".equals(sort)
+                || "latest_desc".equals(sort)) {
+            return sort;
+        }
+        return "latest_desc";
     }
 
     private String normalizeTitleKey(String rawTitle) {

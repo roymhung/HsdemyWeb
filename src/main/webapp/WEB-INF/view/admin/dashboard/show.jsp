@@ -1,63 +1,156 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-        <!DOCTYPE html>
-        <html lang="en">
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+            <!DOCTYPE html>
+            <html lang="en">
 
-        <head>
-            <meta charset="utf-8" />
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-            <meta name="description" content="" />
-            <meta name="author" content="" />
-            <title>Admin Dashboard</title>
-            <link href="/css/styles.css" rel="stylesheet" />
-            <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        </head>
+            <head>
+                <meta charset="utf-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                <meta name="description" content="" />
+                <meta name="author" content="" />
+                <title>Admin Dashboard</title>
+                <link href="/css/styles.css" rel="stylesheet" />
+                <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <style>
+                    .dashboard-status-chart-wrap {
+                        position: relative;
+                        max-width: 280px;
+                        margin: 0 auto;
+                    }
 
-        <body class="sb-nav-fixed">
-            <jsp:include page="../layout/header.jsp" />
+                    .dashboard-status-center {
+                        position: absolute;
+                        inset: 0;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        pointer-events: none;
+                    }
 
-            <div id="layoutSidenav">
-                <jsp:include page="../layout/sidebar.jsp" />
+                    .dashboard-status-center .label {
+                        font-size: .78rem;
+                        color: #64748b;
+                    }
 
-                <div id="layoutSidenav_content">
-                    <main>
-                        <div class="container-fluid px-4">
-                            <div class="admin-page-heading">
-                                <div>
-                                    <h1 class="mt-4 mb-1">Bảng điều khiển quản trị</h1>
-                                    <p class="text-muted mb-4">Trung tâm phân tích người dùng để tối ưu hiệu quả học tập
-                                        và chất lượng nội dung.</p>
-                                </div>
-                            </div>
+                    .dashboard-status-center .value {
+                        font-size: 1.65rem;
+                        font-weight: 800;
+                        color: #0f172a;
+                        line-height: 1.1;
+                    }
 
-                            <c:if test="${param.concurrentLogin != null}">
-                                <div class="alert alert-warning">
-                                    Tài khoản của bạn đang được đăng nhập ở nơi khác. Phiên trước đó đã bị đăng xuất.
-                                </div>
-                            </c:if>
+                    .dashboard-status-list {
+                        display: grid;
+                        gap: .55rem;
+                        margin-top: .9rem;
+                    }
 
-                            <div class="admin-hero-card mb-4">
-                                <div
-                                    class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-start align-items-lg-center">
+                    .dashboard-status-item {
+                        border: 1px solid #e5e7eb;
+                        border-radius: .75rem;
+                        padding: .5rem .6rem;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: .6rem;
+                    }
+
+                    .dashboard-status-left {
+                        display: flex;
+                        align-items: center;
+                        gap: .45rem;
+                        min-width: 0;
+                    }
+
+                    .dashboard-status-dot {
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50%;
+                        flex: 0 0 10px;
+                    }
+
+                    .dashboard-status-name {
+                        font-size: .82rem;
+                        color: #0f172a;
+                        font-weight: 600;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    .dashboard-status-right {
+                        text-align: right;
+                        white-space: nowrap;
+                    }
+
+                    .dashboard-status-count {
+                        font-size: .82rem;
+                        color: #0f172a;
+                        font-weight: 700;
+                    }
+
+                    .dashboard-status-percent {
+                        font-size: .75rem;
+                        color: #64748b;
+                    }
+                </style>
+            </head>
+
+            <body class="sb-nav-fixed">
+                <jsp:include page="../layout/header.jsp" />
+
+                <div id="layoutSidenav">
+                    <jsp:include page="../layout/sidebar.jsp" />
+
+                    <div id="layoutSidenav_content">
+                        <main>
+                            <div class="container-fluid px-4">
+                                <div class="admin-page-heading">
                                     <div>
-                                        <span class="badge bg-light text-primary mb-2 px-3 py-2 rounded-pill">Learning
-                                            Analytics Hub</span>
-                                        <h4 class="mb-2">Phân tích hành vi học tập để nâng cao chất lượng đào tạo</h4>
-                                        <p class="mb-0 text-white-50">
-                                            Dashboard tập trung vào mức độ tham gia của học viên, tỷ lệ thanh toán, phân
-                                            bổ category và độ sâu nội dung khóa học.
-                                        </p>
+                                        <h1 class="mt-4 mb-1">Bảng điều khiển quản trị</h1>
+                                        <p class="text-muted mb-4">Trung tâm phân tích người dùng để tối ưu hiệu quả học
+                                            tập
+                                            và chất lượng nội dung.</p>
                                     </div>
-                                    <div class="d-flex gap-2 flex-wrap">
-                                        <a href="/admin/purchase" class="btn btn-light btn-sm fw-semibold px-3">
-                                            <i class="fas fa-cart-shopping me-1"></i> Xem Lượt mua
-                                        </a>
-                                        <a href="/admin/order" class="btn btn-outline-light btn-sm fw-semibold px-3">
-                                            <i class="fas fa-receipt me-1"></i> Quản lý Đơn hàng
-                                        </a>
+                                </div>
+
+                                <c:if test="${param.concurrentLogin != null}">
+                                    <div class="alert alert-warning">
+                                        Tài khoản của bạn đang được đăng nhập ở nơi khác. Phiên trước đó đã bị đăng
+                                        xuất.
+
+
+                                    </div>
+                                </c:if>
+
+                                <div class="admin-hero-card mb-4">
+                                    <div
+                                        class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-start align-items-lg-center">
+                                        <div>
+                                            <span
+                                                class="badge bg-light text-primary mb-2 px-3 py-2 rounded-pill">Learning
+                                                Analytics Hub</span>
+                                            <h4 class="mb-2">Phân tích hành vi học tập để nâng cao chất lượng đào tạo
+                                            </h4>
+                                            <p class="mb-0 text-white-50">
+                                                Dashboard tập trung vào mức độ tham gia của học viên, tỷ lệ thanh toán,
+                                                phân
+                                                bổ category và độ sâu nội dung khóa học.
+                                            </p>
+                                        </div>
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <a href="/admin/purchase" class="btn btn-light btn-sm fw-semibold px-3">
+                                                <i class="fas fa-cart-shopping me-1"></i> Xem Lượt mua
+                                            </a>
+                                            <a href="/admin/order"
+                                                class="btn btn-outline-light btn-sm fw-semibold px-3">
+                                                <i class="fas fa-receipt me-1"></i> Quản lý Đơn hàng
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -81,6 +174,7 @@
                                         </div>
                                         <div>
                                             <div class="text-muted small">Học viên đã thanh toán</div>
+
                                             <h4 class="mb-0">${paidLearners}</h4>
                                         </div>
                                     </div>
@@ -104,8 +198,8 @@
                                         <div>
                                             <div class="text-muted small">Doanh thu đã thanh toán (VND)</div>
                                             <h4 class="mb-0">
-                                                <fmt:formatNumber value="${paidRevenue}" type="number" groupingUsed="true"
-                                                    maxFractionDigits="0" />
+                                                <fmt:formatNumber value="${paidRevenue}" type="number"
+                                                    groupingUsed="true" maxFractionDigits="0" />
                                             </h4>
                                         </div>
                                     </div>
@@ -137,7 +231,14 @@
                                             </h5>
                                         </div>
                                         <div class="card-body">
-                                            <canvas id="statusChart"></canvas>
+                                            <div class="dashboard-status-chart-wrap">
+                                                <canvas id="statusChart"></canvas>
+                                                <div class="dashboard-status-center">
+                                                    <div class="label">Tổng Đơn</div>
+                                                    <div class="value" id="dashboardStatusTotal">0</div>
+                                                </div>
+                                            </div>
+                                            <div class="dashboard-status-list" id="dashboardStatusList"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -224,89 +325,149 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                    </div>
                     </main>
 
                     <jsp:include page="../layout/footer.jsp" />
                 </div>
-            </div>
+                </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-                crossorigin="anonymous"></script>
-            <script src="/js/scripts.js"></script>
-            <script>
-                const learnerTrendLabels = [<c:forEach var="l" items="${learnerTrendLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
-                const learnerTrendData = [<c:forEach var="d" items="${learnerTrendData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
-                const statusLabels = [<c:forEach var="l" items="${statusLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
-                const statusData = [<c:forEach var="d" items="${statusData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
-                const categoryLabels = [<c:forEach var="l" items="${categoryLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
-                const categoryData = [<c:forEach var="d" items="${categoryData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
-                const depthLabels = [<c:forEach var="l" items="${depthLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
-                const depthData = [<c:forEach var="d" items="${depthData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+                    crossorigin="anonymous"></script>
+                <script src="/js/scripts.js"></script>
+                <script>
+                    const learnerTrendLabels = [<c:forEach var="l" items="${learnerTrendLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const learnerTrendData = [<c:forEach var="d" items="${learnerTrendData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const statusLabels = [<c:forEach var="l" items="${statusLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const statusData = [<c:forEach var="d" items="${statusData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const categoryLabels = [<c:forEach var="l" items="${categoryLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const categoryData = [<c:forEach var="d" items="${categoryData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const depthLabels = [<c:forEach var="l" items="${depthLabels}" varStatus="s">'${l}'<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const depthData = [<c:forEach var="d" items="${depthData}" varStatus="s">${d}<c:if test="${!s.last}">,</c:if></c:forEach>];
+                    const statusColorMap = {
+                        PENDING_PAYMENT: '#f59e0b',
+                        PAID: '#10b981',
+                        FAILED: '#ef4444',
+                        CANCELLED: '#64748b',
+                        REFUNDED: '#8b5cf6',
+                        FREE_ENROLLED: '#06b6d4'
+                    };
 
-                new Chart(document.getElementById('learnerTrendChart'), {
-                    type: 'line',
-                    data: {
-                        labels: learnerTrendLabels,
-                        datasets: [{
-                            label: 'Active learners',
-                            data: learnerTrendData,
-                            borderColor: '#2563eb',
-                            backgroundColor: 'rgba(37, 99, 235, .18)',
-                            fill: true,
-                            tension: 0.35
-                        }]
-                    },
-                    options: { scales: { y: { beginAtZero: true } } }
-                });
+                    const statusLabelMap = {
+                        PENDING_PAYMENT: 'Chờ thanh toán',
+                        PAID: 'Thành công',
+                        FAILED: 'Thất bại',
+                        CANCELLED: 'Đã hủy',
+                        REFUNDED: 'Hoàn tiền',
+                        FREE_ENROLLED: 'Ghi danh miễn phí'
+                    };
+                    const formatPercent = (value) => Number(value || 0).toLocaleString('vi-VN', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
 
-                new Chart(document.getElementById('statusChart'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: statusLabels,
-                        datasets: [{
-                            data: statusData,
-                            backgroundColor: ['#f59e0b', '#10b981', '#ef4444', '#6b7280', '#8b5cf6']
-                        }]
-                    },
-                    options: { plugins: { legend: { position: 'bottom' } } }
-                });
+                    new Chart(document.getElementById('learnerTrendChart'), {
+                        type: 'line',
+                        data: {
+                            labels: learnerTrendLabels,
+                            datasets: [{
+                                label: 'Active learners',
+                                data: learnerTrendData,
+                                borderColor: '#2563eb',
+                                backgroundColor: 'rgba(37, 99, 235, .18)',
+                                fill: true,
+                                tension: 0.35
+                            }]
+                        },
+                        options: { scales: { y: { beginAtZero: true } } }
+                    });
 
-                new Chart(document.getElementById('categoryChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: categoryLabels,
-                        datasets: [{
-                            label: 'Lượt mua',
-                            data: categoryData,
-                            backgroundColor: 'rgba(14, 165, 233, .75)',
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
-                    }
-                });
+                    new Chart(document.getElementById('statusChart'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: statusLabels.map(code => statusLabelMap[code] || code),
+                            datasets: [{
+                                data: statusData,
+                                backgroundColor: statusLabels.map(code => statusColorMap[code] || '#334155'),
+                                borderWidth: 0,
+                                hoverOffset: 8
+                            }]
+                        },
+                        options: {
+                            cutout: '64%',
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (ctx) => {
+                                            const totalOrders = statusData.reduce((sum, value) => sum + Number(value || 0), 0);
+                                            const value = Number(ctx.raw || 0);
+                                            const percent = totalOrders === 0 ? 0 : (value * 100) / totalOrders;
+                                            return ' ' + ctx.label + ': ' + value.toLocaleString('vi-VN') + ' đơn (' + formatPercent(percent) + '%)';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
 
-                new Chart(document.getElementById('depthChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: depthLabels,
-                        datasets: [{
-                            label: 'Số bài học',
-                            data: depthData,
-                            backgroundColor: 'rgba(139, 92, 246, .78)',
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        plugins: { legend: { display: false } },
-                        scales: { x: { beginAtZero: true } }
-                    }
-                });
-            </script>
-        </body>
+                    const totalOrders = statusData.reduce((sum, value) => sum + Number(value || 0), 0);
+                    document.getElementById('dashboardStatusTotal').textContent = totalOrders.toLocaleString('vi-VN');
+                    const dashboardStatusList = document.getElementById('dashboardStatusList');
+                    statusLabels.forEach((code, idx) => {
+                        const count = Number(statusData[idx] || 0);
+                        const percent = totalOrders === 0 ? 0 : (count * 100) / totalOrders;
+                        const label = statusLabelMap[code] || code;
+                        const color = statusColorMap[code] || '#334155';
+                        const row = document.createElement('div');
+                        row.className = 'dashboard-status-item';
+                        row.innerHTML =
+                            '<div class="dashboard-status-left">' +
+                            '<span class="dashboard-status-dot" style="background:' + color + ';"></span>' +
+                            '<span class="dashboard-status-name">' + label + '</span>' +
+                            '</div>' +
+                            '<div class="dashboard-status-right">' +
+                            '<div class="dashboard-status-count">' + count.toLocaleString('vi-VN') + ' đơn</div>' +
+                            '<div class="dashboard-status-percent">' + formatPercent(percent) + '%</div>' +
+                            '</div>';
+                        dashboardStatusList.appendChild(row);
+                    });
 
-        </html>
+                    new Chart(document.getElementById('categoryChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: categoryLabels,
+                            datasets: [{
+                                label: 'Lượt mua',
+                                data: categoryData,
+                                backgroundColor: 'rgba(14, 165, 233, .75)',
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            plugins: { legend: { display: false } },
+                            scales: { y: { beginAtZero: true } }
+                        }
+                    });
+
+                    new Chart(document.getElementById('depthChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: depthLabels,
+                            datasets: [{
+                                label: 'Số bài học',
+                                data: depthData,
+                                backgroundColor: 'rgba(139, 92, 246, .78)',
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            plugins: { legend: { display: false } },
+                            scales: { x: { beginAtZero: true } }
+                        }
+                    });
+                </script>
+            </body>
+
+            </html>

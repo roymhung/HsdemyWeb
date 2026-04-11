@@ -38,6 +38,10 @@ public class VnpayService {
                 && vnpHashSecret != null && !vnpHashSecret.isBlank();
     }
 
+    public boolean isSandboxMode() {
+        return vnpPayUrl != null && vnpPayUrl.contains("sandbox.vnpayment.vn");
+    }
+
     public String createPaymentUrl(Long orderId, long amountVnd, String orderInfo, String bankCode, String language,
             HttpServletRequest request) {
         String txnRef = orderId + "-" + System.currentTimeMillis();

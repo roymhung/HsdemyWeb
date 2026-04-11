@@ -106,20 +106,20 @@ public class PurchaseController {
 
     private List<PurchaseRow> applyFilters(List<PurchaseRow> rows, String keyword, String statusFilter,
             String categoryFilter) {
-        List<PurchaseRow> result = rows;
+        List<PurchaseRow> result = new ArrayList<>(rows);
 
         if (statusFilter != null && !statusFilter.equalsIgnoreCase("ALL")) {
             String filter = statusFilter.trim().toUpperCase(Locale.ROOT);
             result = result.stream()
                     .filter(row -> row.getStatus().equalsIgnoreCase(filter))
-                    .toList();
+                    .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         }
 
         if (categoryFilter != null && !categoryFilter.equalsIgnoreCase("ALL")) {
             String filter = categoryFilter.trim().toUpperCase(Locale.ROOT);
             result = result.stream()
                     .filter(row -> row.getCategory().equalsIgnoreCase(filter))
-                    .toList();
+                    .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         }
 
         if (keyword != null && !keyword.isBlank()) {
@@ -129,7 +129,7 @@ public class PurchaseController {
                             || row.getStudentName().toLowerCase(Locale.ROOT).contains(q)
                             || row.getStudentEmail().toLowerCase(Locale.ROOT).contains(q)
                             || row.getCourseName().toLowerCase(Locale.ROOT).contains(q))
-                    .toList();
+                    .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         }
         return result;
     }

@@ -55,7 +55,7 @@
                                     <div class="admin-page-heading">
                                         <h1 class="mt-4 mb-1">Quản lý danh mục</h1>
                                         <p class="text-muted mb-4">Quản trị nhóm chủ đề khóa học, theo dõi hiệu quả và
-                                            chuẩn hóa category.</p>
+                                            cập nhật danh mục hàng loạt.</p>
                                     </div>
 
                                     <c:if test="${not empty message}">
@@ -150,8 +150,8 @@
                                             <div class="card admin-card h-100">
                                                 <div class="card-header bg-white">
                                                     <h5 class="fw-semibold mb-0"><i
-                                                            class="fas fa-wand-magic-sparkles me-2 text-primary"></i>Chuẩn
-                                                        hóa danh mục</h5>
+                                                            class="fas fa-wand-magic-sparkles me-2 text-primary"></i>Cập
+                                                        nhật danh mục hàng loạt</h5>
                                                 </div>
                                                 <div class="card-body">
                                                     <form method="post" action="/admin/category/rename"

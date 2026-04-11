@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Hsdemy.vn.HsdemyWeb.domain.Course;
 import Hsdemy.vn.HsdemyWeb.domain.Order;
@@ -83,6 +84,7 @@ public class ClientAccountController {
             @RequestParam("avatarFile") MultipartFile avatarFile,
             HttpServletRequest request,
             HttpServletResponse response,
+            RedirectAttributes redirectAttributes,
             Principal principal) {
         User currentUser = getCurrentUser(principal);
         if (currentUser == null) {
@@ -92,22 +94,34 @@ public class ClientAccountController {
         boolean emailChanged = newUser.getEmail() != null
                 && !newUser.getEmail().equalsIgnoreCase(currentUser.getEmail());
 
-        userService.updateProfile(currentUser.getId(), newUser);
-        User savedUser = userService.getUserById(currentUser.getId());
+        try {
+            userService.updateProfile(currentUser.getId(), newUser);
+            User savedUser = userService.getUserById(currentUser.getId());
 
-        if (savedUser != null && avatarFile != null && !avatarFile.isEmpty()) {
-            uploadService.handleDeleteUploadFile(savedUser.getAvatar(), "avatar");
-            String newAvatar = uploadService.handleSaveUploadFile(avatarFile, "avatar");
-            savedUser.setAvatar(newAvatar);
-            userService.handleSaveUser(savedUser);
+            if (savedUser != null && avatarFile != null && !avatarFile.isEmpty()) {
+                uploadService.handleDeleteUploadFile(savedUser.getAvatar(), "avatar");
+                String newAvatar = uploadService.handleSaveUploadFile(avatarFile, "avatar");
+                savedUser.setAvatar(newAvatar);
+                userService.handleSaveUser(savedUser);
+            }
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("flashType", "danger");
+            redirectAttributes.addFlashAttribute("flashMessage",
+                    "Cập nhật hồ sơ thất bại. Vui lòng kiểm tra lại số điện thoại và thông tin đã nhập.");
+            return "redirect:/account/profile";
         }
 
         if (emailChanged) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             new SecurityContextLogoutHandler().logout(request, response, authentication);
+            redirectAttributes.addFlashAttribute("flashType", "warning");
+            redirectAttributes.addFlashAttribute("flashMessage",
+                    "Đã cập nhật hồ sơ. Bạn đã đổi email nên cần đăng nhập lại.");
             return "redirect:/login";
         }
 
+        redirectAttributes.addFlashAttribute("flashType", "success");
+        redirectAttributes.addFlashAttribute("flashMessage", "Cập nhật hồ sơ thành công.");
         return "redirect:/account/profile";
     }
 

@@ -1,6 +1,8 @@
 package Hsdemy.vn.HsdemyWeb.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 
@@ -26,5 +28,18 @@ public class LessonService {
 
     public Lesson save(Lesson lesson) {
         return lessonRepository.save(lesson);
+    }
+
+    public Map<Long, Integer> getVideoCountMapByCourseIds(List<Long> courseIds) {
+        Map<Long, Integer> result = new HashMap<>();
+        if (courseIds == null || courseIds.isEmpty()) {
+            return result;
+        }
+        lessonRepository.countVideoByCourseIds(courseIds).forEach(item -> {
+            if (item != null && item.getCourseId() != null) {
+                result.put(item.getCourseId(), item.getVideoCount() == null ? 0 : item.getVideoCount().intValue());
+            }
+        });
+        return result;
     }
 }

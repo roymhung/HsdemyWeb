@@ -43,6 +43,14 @@
                         max-width: 700px;
                     }
 
+                    .hero-stat {
+                        border: 1px solid rgba(255, 255, 255, .18);
+                        border-radius: .75rem;
+                        background: rgba(255, 255, 255, .08);
+                        padding: .72rem .8rem;
+                        height: 100%;
+                    }
+
                     .filter-card {
                         position: sticky;
                         top: 92px;
@@ -70,11 +78,36 @@
 
                 <section class="page-hero py-5">
                     <div class="container py-4">
-                        <p class="page-hero-kicker">Trang chủ / Khóa học</p>
+                        <p class="page-hero-kicker">Danh mục khóa học</p>
                         <h1 class="page-hero-title">Tất Cả Khóa Học</h1>
-                        <p class="page-hero-desc">
-                            Khám phá danh sách khóa học phù hợp với nhu cầu của bạn.
-                        </p>
+                        <p class="page-hero-desc mb-4">Khám phá danh sách khóa học phù hợp với mục tiêu và trình độ của
+                            bạn.</p>
+                        <div class="row g-2 g-md-3">
+                            <div class="col-6 col-md-3">
+                                <div class="hero-stat">
+                                    <div class="fw-bold fs-5">${totalItems}</div>
+                                    <div class="small text-white-50">Khóa học đang hiển thị</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="hero-stat">
+                                    <div class="fw-bold fs-5">${totalPages}</div>
+                                    <div class="small text-white-50">Trang kết quả</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="hero-stat">
+                                    <div class="fw-bold fs-5">4.8/5</div>
+                                    <div class="small text-white-50">Đánh giá học viên</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="hero-stat">
+                                    <div class="fw-bold fs-5">24/7</div>
+                                    <div class="small text-white-50">Học mọi lúc</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
